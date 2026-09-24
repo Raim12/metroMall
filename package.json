@@ -11,16 +11,22 @@
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
     "db:up": "docker start metro-pg",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "admin:password": "node scripts/admin-password.mjs",
+    "warm": "node scripts/warm-dev.mjs",
+    "test:webhook": "node scripts/test-webhook.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
+    "@sfpy/node-sdk": "^3.0.2",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dotenv": "^18.0.3",
     "framer-motion": "^13.2.0",
+    "jose": "^6.2.12",
     "lucide-react": "^1.46.0",
     "next": "15.5.25",
     "next-themes": "^0.4.6",
@@ -40,6 +46,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",

@@ -134,6 +134,59 @@ npm run dev
 After the first run, `npm run db:up` restarts the existing container.
 `npm run db:studio` opens Prisma Studio to browse orders and enquiries.
 
+## Admin dashboard (`/admin`)
+
+Owner-only. One password, no user accounts.
+
+```bash
+npm run admin:password -- "your-chosen-password"
+# paste both printed lines into .env, then restart
+```
+
+| Page | What it does |
+| --- | --- |
+| `/admin` | Revenue, order counts, best sellers, stock alerts |
+| `/admin/orders` | Filter by status, search by order no / name / email / phone |
+| `/admin/orders/[id]` | Full order, customer, address; mark paid / fulfilled / cancelled / refunded |
+| `/admin/products` | Inline stock editing, publish state, low-stock badges |
+| `/admin/products/[id]` | Edit every field, upload and reorder photos, hide/publish |
+| `/admin/products/new` | Create a product |
+| `/admin/enquiries` | Export and support messages; mark handled |
+
+### Security notes
+
+- The password is stored **only** as a bcrypt hash (`ADMIN_PASSWORD_HASH`);
+  the plaintext is never written anywhere.
+- `middleware.ts` gates every `/admin` route on a signed JWT, and each Server
+  Action **re-checks the session itself** — an action is a POST endpoint that
+  can be called directly, so it must not trust the middleware having run.
+- Login is rate limited to 8 attempts per IP per 15 minutes. That counter is
+  in-memory, so it resets on restart and is per-instance — move it to Redis
+  before running more than one instance.
+- Sessions last 12 hours. Rotating `ADMIN_SESSION_SECRET` signs everyone out.
+
+### Two traps worth knowing about
+
+**Escape `$` in `ADMIN_PASSWORD_HASH` inside `.env`.** Next expands `$VAR` in
+env files, which silently eats most of a bcrypt hash and makes a correct
+password look wrong. `npm run admin:password` prints the escaped form for you.
+Hosting dashboards don't expand, so paste the raw hash there.
+
+**Uploaded photos are not stored in `public/`.** Next indexes that directory at
+build time, so a file written at runtime 404s under `next start`. Uploads go to
+`uploads/` at the project root and are streamed by
+`src/app/api/uploads/[...path]/route.ts`. This needs a persistent disk — on
+serverless (Vercel), swap `src/lib/admin/storage.ts` for a blob client; nothing
+else changes, since everything else just stores a URL string.
+
+### Stock
+
+`Product.stock` is decremented inside the checkout transaction using a
+conditional `updateMany` (`where: { stock: { gte: quantity } }`). If two
+customers race for the last unit, one update matches zero rows and that order
+is rejected rather than overselling. `trackStock: false` opts a product out
+entirely. Re-running `db:seed` never overwrites stock on existing products.
+
 ### API routes
 
 | Route | Purpose |
@@ -162,7 +215,52 @@ After the first run, `npm run db:up` restarts the existing container.
   guessing that crypto would mean accepting forged payment callbacks. COD is
   fully implemented and needs no gateway.
 
-### To enable Safepay
+### Enabling Safepay
+
+**Webhook URL to register** in the Safepay dashboard (Developers → Webhooks):
+
+```
+https://<your-domain>/api/webhooks/payment
+```
+
+Safepay must reach this from the internet, so `localhost` will not work. For
+sandbox testing before you deploy, open a tunnel and register the tunnel URL:
+
+```bash
+npx cloudflared tunnel --url http://localhost:3000
+# or: ngrok http 3000
+```
+
+Then set `NEXT_PUBLIC_SITE_URL` to that same public URL, so the customer is
+redirected back to a reachable address after paying.
+
+**Environment variables:**
+
+```bash
+PAYMENT_PROVIDER="safepay"
+SAFEPAY_CLIENT_KEY="..."       # Developers > API Keys
+SAFEPAY_SECRET_KEY="..."       # Developers > API Keys
+SAFEPAY_WEBHOOK_SECRET="..."   # Developers > Webhooks - a third, separate value
+SAFEPAY_ENVIRONMENT="sandbox"  # or production
+NEXT_PUBLIC_SITE_URL="https://<your-domain>"
+```
+
+The client key is sent to Safepay as `client`, and the secret key is the SDK's
+`v1Secret`. If authentication fails, try swapping the two — Safepay's dashboard
+labelling and the SDK's parameter names don't line up cleanly.
+
+**Verify the amount on your first sandbox payment.** The SDK doesn't document
+whether PKR is sent in rupees or paisa, and its own samples disagree. We send
+rupees. If Safepay's checkout page shows an amount 100× out, flip
+`AMOUNT_IN_PAISA` in `src/lib/payments/safepay.ts` — that's the only change
+needed.
+
+**How payment status is decided:** the webhook, never the browser redirect. The
+customer returns to the confirmation page regardless, and that page shows
+"confirming payment" until the webhook marks the order PAID. Don't move status
+logic into the redirect — a redirect can be forged or simply never happen.
+
+### Older notes on Safepay
 
 `src/lib/payments/safepay.ts` carries the confirmed parts of their API (SDK
 name, `session.setup` shape, sandbox/live hosts). Two things must come from your

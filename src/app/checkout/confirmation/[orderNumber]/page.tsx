@@ -37,6 +37,10 @@ export default async function ConfirmationPage({
   if (!order) notFound();
 
   const isCod = order.paymentMethod === "COD";
+  // A gateway order stays PENDING until the webhook confirms settlement, so
+  // don't tell the customer their payment succeeded before it actually has.
+  const awaitingPayment = !isCod && order.status === "PENDING";
+  const paymentFailed = order.status === "FAILED";
 
   return (
     <div className="metro-wash">
@@ -49,8 +53,25 @@ export default async function ConfirmationPage({
             Thanks, {order.firstName}!
           </h1>
           <p className="mt-3 text-muted-foreground">
-            Your order is confirmed. We&apos;ve emailed a copy to{" "}
-            <span className="font-medium text-foreground">{order.email}</span>.
+            {paymentFailed ? (
+              <>
+                Your payment did not go through, so this order is on hold.
+                Nothing has been charged.
+              </>
+            ) : awaitingPayment ? (
+              <>
+                Your order is placed and we&apos;re confirming the payment with
+                your bank. This usually takes a moment.
+              </>
+            ) : (
+              <>
+                Your order is confirmed. We&apos;ve emailed a copy to{" "}
+                <span className="font-medium text-foreground">
+                  {order.email}
+                </span>
+                .
+              </>
+            )}
           </p>
           <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2 font-heading text-sm font-bold">
             Order <span className="text-brand-600">{order.orderNumber}</span>

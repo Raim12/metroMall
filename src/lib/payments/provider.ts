@@ -22,6 +22,11 @@ export interface WebhookResult {
   orderNumber: string;
   outcome: "paid" | "failed" | "ignored";
   providerRef?: string;
+  /**
+   * Amount the gateway says was settled, in whole PKR. When present, the route
+   * refuses to mark an order paid unless it matches the order total.
+   */
+  amount?: number;
 }
 
 export interface PaymentProvider {

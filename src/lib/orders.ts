@@ -106,6 +106,15 @@ export async function priceCart(
       );
     }
 
+    if (product.trackStock && product.stock < item.quantity) {
+      throw new CheckoutError(
+        product.stock === 0
+          ? `${product.name} is out of stock.`
+          : `Only ${product.stock} left of ${product.name} — please reduce the quantity.`,
+        409,
+      );
+    }
+
     return {
       productId: product.id,
       name: product.name,
@@ -176,11 +185,46 @@ export async function createOrder(
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      return await prisma.order.create({
-        data: { ...data, orderNumber: orderCode() },
-        include: { items: true },
+      return await prisma.$transaction(async (tx) => {
+        // Decrement stock with the quantity check in the WHERE clause. Two
+        // shoppers buying the last unit at once means one `updateMany` matches
+        // zero rows, and that order is rejected instead of overselling.
+        for (const line of cart.lines) {
+          const { count } = await tx.product.updateMany({
+            where: {
+              id: line.productId,
+              trackStock: true,
+              stock: { gte: line.quantity },
+            },
+            data: { stock: { decrement: line.quantity } },
+          });
+
+          if (count === 0) {
+            // Either it is untracked (fine) or stock ran out between pricing
+            // and commit (not fine).
+            const current = await tx.product.findUnique({
+              where: { id: line.productId },
+              select: { trackStock: true, stock: true },
+            });
+
+            if (current?.trackStock) {
+              throw new CheckoutError(
+                `${line.name} sold out while you were checking out. Please adjust your cart.`,
+                409,
+              );
+            }
+          }
+        }
+
+        return tx.order.create({
+          data: { ...data, orderNumber: orderCode() },
+          include: { items: true },
+        });
       });
     } catch (error) {
+      // A genuine stock conflict must surface, not be retried.
+      if (error instanceof CheckoutError) throw error;
+
       const isUniqueViolation =
         typeof error === "object" &&
         error !== null &&

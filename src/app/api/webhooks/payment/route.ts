@@ -34,12 +34,29 @@ export async function POST(request: Request) {
 
     const order = await prisma.order.findUnique({
       where: { orderNumber: result.orderNumber },
-      select: { id: true, status: true },
+      select: { id: true, status: true, total: true },
     });
 
     if (!order) {
       console.warn(`[webhook] unknown order ${result.orderNumber}`);
       return NextResponse.json({ error: "Unknown order." }, { status: 404 });
+    }
+
+    // Never mark an order paid for a different amount than it is owed. A
+    // mismatch means something is wrong (tampering, a partial capture, or a
+    // currency mix-up) and deserves a human, not an automatic fulfilment.
+    if (
+      result.outcome === "paid" &&
+      typeof result.amount === "number" &&
+      result.amount !== order.total
+    ) {
+      console.error(
+        `[webhook] amount mismatch on ${result.orderNumber}: gateway says ${result.amount}, order total is ${order.total}. Not marking paid.`,
+      );
+      return NextResponse.json(
+        { error: "Amount does not match the order total." },
+        { status: 409 },
+      );
     }
 
     // Gateways retry, so the same event can arrive several times. Only move an

@@ -12,6 +12,9 @@ import type { CategorySlug } from "../src/types";
  * creating duplicates. Safe to run against a populated database.
  */
 
+/** Opening stock for a newly seeded product, so the shop is usable at once. */
+const SEED_STOCK = 25;
+
 const CATEGORY: Record<CategorySlug, Category> = {
   "ceiling-fans": Category.CEILING_FANS,
   "false-ceiling-fans": Category.FALSE_CEILING_FANS,
@@ -53,7 +56,9 @@ async function main() {
 
     const product = await prisma.product.upsert({
       where: { slug: p.slug },
-      create: { slug: p.slug, ...scalars },
+      // Stock is set only on first insert. Re-seeding must never overwrite
+      // live inventory the owner has adjusted in the admin dashboard.
+      create: { slug: p.slug, ...scalars, stock: SEED_STOCK },
       update: scalars,
     });
 

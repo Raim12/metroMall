@@ -48,7 +48,15 @@ model Product {
   reviewCount Int      @default(0)
   inTheBox    String[] @default([])
   featured    Boolean  @default(false)
+  /// Hidden from the storefront when false, without deleting order history.
   active      Boolean  @default(true)
+
+  /// Units on hand. Decremented inside the checkout transaction.
+  stock Int @default(0)
+  /// Flags the product amber on the admin dashboard at or below this level.
+  lowStockThreshold Int @default(5)
+  /// When false the product can always be ordered, regardless of `stock`.
+  trackStock Boolean @default(true)
 
   colors   ProductColor[]
   features ProductFeature[]
@@ -60,6 +68,7 @@ model Product {
 
   @@index([category, active])
   @@index([featured])
+  @@index([stock])
 }
 
 model ProductColor {
