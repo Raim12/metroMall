@@ -1,0 +1,254 @@
+// Metro Electric Co. — Phase 2 data model.
+//
+// Money is stored as whole PKR in Int columns. Pakistani Rupee prices are
+// always whole rupees here, and integers avoid the float-rounding class of bug
+// entirely. Never introduce a Float for a price.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+// Prisma 7 moved the connection URL out of the schema: migrations read it from
+// prisma.config.ts, and the runtime client gets it via a driver adapter
+// (see src/lib/prisma.ts).
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * ------------------------------ Catalogue ------------------------------
+ */
+
+enum Category {
+  CEILING_FANS       @map("ceiling-fans")
+  FALSE_CEILING_FANS @map("false-ceiling-fans")
+  PEDESTAL_FANS      @map("pedestal-fans")
+  EXHAUST_FANS       @map("exhaust-fans")
+  BRACKET_FANS       @map("bracket-fans")
+}
+
+model Product {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  tagline        String
+  description    String
+  /// Whole PKR.
+  price          Int
+  /// Optional strike-through price, whole PKR.
+  compareAtPrice Int?
+  category       Category
+  /// e.g. ["56\"", "48\""]
+  sizes          String[]
+  /// FanVariant key driving the generated SVG when `images` is empty.
+  illustration   String
+  /// Real photography; takes precedence over the illustration when present.
+  images         String[] @default([])
+  badge          String?
+  rating         Float    @default(0)
+  reviewCount    Int      @default(0)
+  inTheBox       String[] @default([])
+  featured       Boolean  @default(false)
+  active         Boolean  @default(true)
+
+  colors     ProductColor[]
+  features   ProductFeature[]
+  specs      ProductSpec[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category, active])
+  @@index([featured])
+}
+
+model ProductColor {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  name     String
+  hex      String
+  trim     String
+  position Int    @default(0)
+
+  @@unique([productId, name])
+  @@index([productId])
+}
+
+model ProductFeature {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// Lucide icon key resolved in product-tabs.tsx.
+  icon     String
+  title    String
+  body     String
+  position Int    @default(0)
+
+  @@index([productId])
+}
+
+model ProductSpec {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  speed Int
+  watts Int
+  rpm   Int
+
+  @@unique([productId, speed])
+  @@index([productId])
+}
+
+/**
+ * -------------------------------- Orders -------------------------------
+ */
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+  FULFILLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  COD
+  CARD
+  EASYPAISA
+  JAZZCASH
+}
+
+model Order {
+  id          String @id @default(cuid())
+  /// Human-facing reference, e.g. MEC-4X7QK2.
+  orderNumber String @unique
+
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod
+
+  // Customer
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+
+  // Shipping address
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  province     String
+  postalCode   String?
+  notes        String?
+
+  /// All whole PKR. Recomputed server-side — never trusted from the client.
+  subtotal Int
+  shipping Int    @default(0)
+  total    Int
+  currency String @default("PKR")
+
+  /// Gateway tracker/session reference, once a provider is wired up.
+  providerRef String?
+  paidAt      DateTime?
+
+  items OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([email])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  /// Kept nullable so deleting a product never destroys order history.
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  // Snapshot of what was actually bought — prices and names change later.
+  name         String
+  slug         String
+  size         String
+  colorName    String
+  colorHex     String
+  colorTrim    String
+  illustration String
+  unitPrice    Int
+  quantity     Int
+
+  @@index([orderId])
+}
+
+/**
+ * ------------------------- Enquiries & careers -------------------------
+ */
+
+enum QueryType {
+  EXPORT
+  CONTACT
+}
+
+model Query {
+  id   String    @id @default(cuid())
+  type QueryType
+
+  firstName String
+  lastName  String?
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+
+  handled Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@index([type, handled])
+  @@index([createdAt])
+}
+
+enum ApplicationStatus {
+  NEW
+  REVIEWING
+  SHORTLISTED
+  REJECTED
+  HIRED
+}
+
+model JobApplication {
+  id String @id @default(cuid())
+
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  address   String
+
+  qualification String
+  marks         String
+  field         String
+  institute     String
+  experience    String
+
+  /// Blob-storage URL once file uploads are wired; filename is kept meanwhile.
+  resumeUrl      String?
+  resumeFilename String?
+
+  status ApplicationStatus @default(NEW)
+
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+}
