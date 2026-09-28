@@ -140,29 +140,6 @@ export const SAVINGS = {
   monthlySavingPkr: 1850,
 } as const;
 
-export const CERTIFICATIONS = [
-  {
-    title: "ISO 14001:2015",
-    caption: "Environmental Management System Certified",
-    icon: "shield" as const,
-  },
-  {
-    title: "ISO 9001",
-    caption: "Quality Management System Certified",
-    icon: "shield" as const,
-  },
-  {
-    title: "PSQCA Certified",
-    caption: "Pakistan Standards Quality Control Authority",
-    icon: "award" as const,
-  },
-  {
-    title: "NEECA Rated",
-    caption: "Industry Excellence Award by NEECA Pakistan",
-    icon: "star" as const,
-  },
-];
-
 export const HOME_FAQS = [
   {
     q: "What is your return policy?",

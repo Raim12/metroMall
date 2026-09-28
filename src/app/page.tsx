@@ -6,7 +6,6 @@ import { FeaturedProducts } from "@/components/home/featured-products";
 import { BldcHighlight } from "@/components/home/bldc-highlight";
 import { FaqSection } from "@/components/home/faq-section";
 import { CtaBanner } from "@/components/home/cta-banner";
-import { Certifications } from "@/components/home/certifications";
 import { getFeaturedProducts, getProductBySlug } from "@/lib/products";
 
 export const revalidate = 300;
@@ -25,7 +24,6 @@ export default async function HomePage() {
       <BldcHighlight />
       <FaqSection />
       <CtaBanner />
-      <Certifications />
     </>
   );
 }

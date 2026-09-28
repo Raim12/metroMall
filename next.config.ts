@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
     "*.loca.lt", // localtunnel
     "*.trycloudflare.com", // cloudflared quick tunnels
     "*.ngrok-free.app", // ngrok (free)
+    "*.ngrok-free.dev", // ngrok (free, newer accounts)
     "*.ngrok.app",
     "*.ngrok.io",
   ],
