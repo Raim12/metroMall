@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { FanIllustration } from "@/components/product/fan-illustration";
+import { ProductImage } from "@/components/product/product-image";
 import { useCartStore, selectSubtotal } from "@/store/cart-store";
-import { formatPkr } from "@/lib/utils";
+import { formatPkr, variantLabel } from "@/lib/utils";
 
 export function CartSheet() {
   const isOpen = useCartStore((s) => s.isOpen);
@@ -76,12 +76,7 @@ export function CartSheet() {
                         onClick={() => setOpen(false)}
                         className="metro-tile grid size-20 shrink-0 place-items-center rounded-lg p-1.5"
                       >
-                        <FanIllustration
-                          variant={item.illustration}
-                          color={item.color.hex}
-                          trim={item.color.trim}
-                          title={item.name}
-                        />
+                        <ProductImage src={item.image} alt={item.name} illustration={item.illustration} color={item.color.hex} trim={item.color.trim} sizes="80px" />
                       </Link>
 
                       <div className="flex min-w-0 flex-1 flex-col">
@@ -104,7 +99,7 @@ export function CartSheet() {
                         </div>
 
                         <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                          {item.size} · {item.color.name}
+                          {variantLabel(item.size, item.color.name)}
                         </p>
 
                         <div className="mt-auto flex items-center justify-between pt-2">

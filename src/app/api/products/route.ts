@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getAllProducts } from "@/lib/products";
+import { CATEGORIES as CATEGORY_LIST } from "@/lib/constants";
 import type { CategorySlug } from "@/types";
 
 /**
@@ -8,21 +9,17 @@ import type { CategorySlug } from "@/types";
  * Optional query params:
  *   ?category=ceiling-fans   filter by category slug
  *   ?featured=true           only featured products
+ *   ?brand=royal             filter by brand slug
  *   ?q=nitro                 name/tagline/description search
  */
 
-const CATEGORIES: CategorySlug[] = [
-  "ceiling-fans",
-  "false-ceiling-fans",
-  "pedestal-fans",
-  "exhaust-fans",
-  "bracket-fans",
-];
+const CATEGORIES: CategorySlug[] = CATEGORY_LIST.map((c) => c.slug);
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const category = searchParams.get("category");
   const featured = searchParams.get("featured");
+  const brand = searchParams.get("brand");
   const q = searchParams.get("q")?.trim().toLowerCase();
 
   if (category && !CATEGORIES.includes(category as CategorySlug)) {
@@ -36,6 +33,7 @@ export async function GET(request: Request) {
     let products = await getAllProducts();
 
     if (category) products = products.filter((p) => p.category === category);
+    if (brand) products = products.filter((p) => p.brand === brand);
     if (featured === "true") products = products.filter((p) => p.featured);
     if (q) {
       products = products.filter(

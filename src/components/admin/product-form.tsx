@@ -11,14 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { createProduct, updateProduct } from "@/lib/admin/actions";
 import type { ActionResult } from "@/lib/admin/actions";
+import { BRANDS, CATEGORIES as CATEGORY_LIST } from "@/lib/constants";
 
-const CATEGORIES = [
-  { value: "CEILING_FANS", label: "Ceiling Fans" },
-  { value: "FALSE_CEILING_FANS", label: "False Ceiling Fans" },
-  { value: "PEDESTAL_FANS", label: "Pedestal Fans" },
-  { value: "EXHAUST_FANS", label: "Exhaust Fans" },
-  { value: "BRACKET_FANS", label: "Bracket Fans" },
-];
+/** "ceiling-fans" -> "CEILING_FANS" (the Prisma enum value). */
+const CATEGORIES = CATEGORY_LIST.map((c) => ({
+  value: c.slug.toUpperCase().replace(/-/g, "_"),
+  label: c.name,
+}));
 
 const ILLUSTRATIONS = [
   "ceiling-3",
@@ -37,6 +36,7 @@ export interface ProductFormValues {
   slug: string;
   tagline: string;
   description: string;
+  brand: string;
   price: number;
   compareAtPrice: number | null;
   category: string;
@@ -148,6 +148,21 @@ export function ProductForm({ product }: { product?: ProductFormValues }) {
         </Field>
 
         <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Brand" htmlFor="brand">
+            <select
+              id="brand"
+              name="brand"
+              defaultValue={product?.brand ?? BRANDS[0].slug}
+              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+            >
+              {BRANDS.map((b) => (
+                <option key={b.slug} value={b.slug}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+          </Field>
+
           <Field label="Category" htmlFor="category">
             <select
               id="category"

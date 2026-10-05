@@ -24,6 +24,14 @@ enum Category {
   PEDESTAL_FANS      @map("pedestal-fans")
   EXHAUST_FANS       @map("exhaust-fans")
   BRACKET_FANS       @map("bracket-fans")
+  TABLE_FANS         @map("table-fans")
+  AIR_COOLERS        @map("air-coolers")
+  WATER_HEATERS      @map("water-heaters")
+  WASHING_MACHINES   @map("washing-machines")
+  KITCHEN_APPLIANCES @map("kitchen-appliances")
+  WATER_DISPENSERS   @map("water-dispensers")
+  HEATERS            @map("heaters")
+  OTHER_APPLIANCES   @map("other-appliances")
 }
 
 model Product {
@@ -37,6 +45,15 @@ model Product {
   /// Optional strike-through price, whole PKR.
   compareAtPrice Int?
   category    Category
+  /// Brand slug, e.g. "royal", "super-asia" — labels live in BRANDS (constants.ts).
+  brand       String   @default("metro")
+  /// Manufacturer's page this listing was imported from, for reference.
+  sourceUrl   String?
+  /// Brand's own price as last seen by the price sync (whole PKR). When
+  /// `price` still equals this, the sync keeps `price` in step with the brand;
+  /// once the owner sets a different price in the admin, the sync leaves it.
+  sourcePrice Int?
+  sourceCheckedAt DateTime?
   /// e.g. ["56\"", "48\""]
   sizes       String[]
   /// FanVariant key driving the generated SVG when `images` is empty.
@@ -67,6 +84,7 @@ model Product {
   updatedAt DateTime @updatedAt
 
   @@index([category, active])
+  @@index([brand, active])
   @@index([featured])
   @@index([stock])
 }
@@ -189,6 +207,8 @@ model OrderItem {
   colorHex     String
   colorTrim    String
   illustration String
+  /// First product photo at time of purchase, if it had one.
+  image        String?
   unitPrice    Int
   quantity     Int
 

@@ -21,7 +21,15 @@ export type CategorySlug =
   | "pedestal-fans"
   | "exhaust-fans"
   | "false-ceiling-fans"
-  | "bracket-fans";
+  | "bracket-fans"
+  | "table-fans"
+  | "air-coolers"
+  | "water-heaters"
+  | "washing-machines"
+  | "kitchen-appliances"
+  | "water-dispensers"
+  | "heaters"
+  | "other-appliances";
 
 export interface ProductColor {
   /** Human readable name shown in the Select + tooltip. */
@@ -56,6 +64,8 @@ export interface Product {
   /** Optional strike-through price, in PKR. */
   compareAtPrice?: number;
   category: CategorySlug;
+  /** Brand slug — see BRANDS in constants.ts for display names. */
+  brand: string;
   /** e.g. ['56"', '48"'] */
   sizes: string[];
   colors: ProductColor[];

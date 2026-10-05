@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
 
   /**
+   * `next dev` gets its own output folder. Sharing `.next` with `next build`
+   * means starting the dev server overwrites the production manifests, and the
+   * next `next start` crashes with "routesManifest.dataRoutes is not iterable".
+   */
+  distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
+
+  /**
    * Hosts allowed to request `/_next/*` in development.
    *
    * Needed when the dev server is reached through a tunnel (exposing localhost

@@ -58,6 +58,7 @@ export default async function AdminProductPage({
             price: product.price,
             compareAtPrice: product.compareAtPrice,
             category: product.category,
+            brand: product.brand,
             sizes: product.sizes,
             illustration: product.illustration,
             stock: product.stock,
@@ -89,9 +90,9 @@ export default async function AdminProductPage({
               ))}
             </ul>
             <p className="mt-3 text-xs text-muted-foreground">
-              Colourways, feature blocks and the speed/watt table are seeded from
+              Colourways are imported from
               <code className="mx-1 rounded bg-muted px-1 py-0.5 font-mono">
-                prisma/seed-data.ts
+                prisma/data/catalog.json
               </code>
               . Editing them here is not built yet.
             </p>

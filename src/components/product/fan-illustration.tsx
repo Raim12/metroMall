@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
 import type { FanVariant } from "@/types";
 
@@ -6,7 +6,7 @@ import type { FanVariant } from "@/types";
  * Parametric fan artwork.
  *
  * Phase 1 ships without photography, so every product renders as a generated
- * SVG driven by its colourway â€” which means the colour swatches on the
+ * SVG driven by its colourway — which means the colour swatches on the
  * catalogue and product pages change the actual image. Products that later
  * gain real photos set `images[]` and the callers render an <Image> instead.
  */

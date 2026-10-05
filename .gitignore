@@ -15,6 +15,7 @@
 
 # next.js
 /.next/
+/.next-dev/
 /out/
 
 # production
@@ -46,3 +47,6 @@ next-env.d.ts
 
 # generated prisma client (recreated by postinstall)
 /src/generated/
+
+# nightly price-sync reports
+/logs/

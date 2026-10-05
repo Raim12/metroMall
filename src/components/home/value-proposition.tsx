@@ -1,4 +1,4 @@
-﻿import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Reveal } from "@/components/shared/reveal";
 import { SAVINGS } from "@/lib/constants";
 
@@ -14,7 +14,7 @@ const STATS = [
     label: "Metro Inverter Fan",
     value: SAVINGS.inverterWatts,
     unit: "Watts",
-    note: "per hour Â±10%",
+    note: "per hour ±10%",
   },
   {
     label: "Savings",

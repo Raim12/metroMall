@@ -6,9 +6,9 @@ import { CheckCircle2, Package, Truck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { FanIllustration } from "@/components/product/fan-illustration";
+import { ProductImage } from "@/components/product/product-image";
 import { getOrderByNumber } from "@/lib/orders";
-import { formatPkr } from "@/lib/utils";
+import { formatPkr, variantLabel } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
 import type { FanVariant } from "@/types";
 
@@ -85,12 +85,7 @@ export default async function ConfirmationPage({
             {order.items.map((item) => (
               <li key={item.id} className="flex items-center gap-3">
                 <div className="metro-tile grid size-14 shrink-0 place-items-center rounded-lg p-1">
-                  <FanIllustration
-                    variant={item.illustration as FanVariant}
-                    color={item.colorHex}
-                    trim={item.colorTrim}
-                    title={item.name}
-                  />
+                  <ProductImage src={item.image} alt={item.name} illustration={item.illustration as FanVariant} color={item.colorHex} trim={item.colorTrim} sizes="56px" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <Link
@@ -100,7 +95,7 @@ export default async function ConfirmationPage({
                     {item.name}
                   </Link>
                   <p className="text-xs text-muted-foreground">
-                    {item.size} · {item.colorName} · Qty {item.quantity}
+                    {[variantLabel(item.size, item.colorName), `Qty ${item.quantity}`].filter(Boolean).join(" · ")}
                   </p>
                 </div>
                 <span className="text-sm font-bold tabular-nums">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -164,7 +164,7 @@ export function ExportForm() {
           ) : (
             <Send className="size-4" aria-hidden />
           )}
-          {submitting ? "Sendingâ€¦" : "Send Message"}
+          {submitting ? "Sending…" : "Send Message"}
         </Button>
 
         <p className="text-center text-xs text-muted-foreground">

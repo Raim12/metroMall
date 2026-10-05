@@ -1,4 +1,4 @@
-﻿import { Battery, Wrench, Zap } from "lucide-react";
+import { Battery, Wrench, Zap } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
@@ -8,7 +8,7 @@ const PILLARS = [
   {
     icon: Zap,
     title: "Energy Efficiency Redefined",
-    body: "Reduced power consumption from 110W to just 50â€“55W per hour â€” cutting electricity bills by nearly half.",
+    body: "Reduced power consumption from 110W to just 50–55W per hour — cutting electricity bills by nearly half.",
   },
   {
     icon: Wrench,
@@ -18,7 +18,7 @@ const PILLARS = [
   {
     icon: Battery,
     title: "AC/DC Innovation",
-    body: "Runs on efficient 12V DC instead of traditional 220V AC â€” safer, smarter, and future-ready.",
+    body: "Runs on efficient 12V DC instead of traditional 220V AC — safer, smarter, and future-ready.",
   },
 ];
 
@@ -26,7 +26,7 @@ export function BldcHighlight() {
   return (
     <Section className="metro-wash">
       <SectionHeading
-        eyebrow="ðŸ‡µðŸ‡° Pakistan's First"
+        eyebrow="🇵🇰 Pakistan's First"
         title="Revolutionizing Fans with"
         highlight="BLDC Technology"
       />
@@ -73,7 +73,7 @@ export function BldcHighlight() {
               99.99% pure copper windings
             </strong>
             . With electronic commutation replacing mechanical brushes, we
-            eliminated wear, noise and energy waste â€” achieving unmatched
+            eliminated wear, noise and energy waste — achieving unmatched
             efficiency and reliability.
           </p>
 
@@ -85,7 +85,7 @@ export function BldcHighlight() {
 
           <p>
             Today, Metro Electric Co. stands among the market leaders in AC/DC
-            fans â€” driving national progress, creating jobs, and building a
+            fans — driving national progress, creating jobs, and building a
             legacy Pakistanis can be proud of.
           </p>
 

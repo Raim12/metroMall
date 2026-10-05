@@ -3,24 +3,37 @@ import { ValueProposition } from "@/components/home/value-proposition";
 import { TechShowcase } from "@/components/home/tech-showcase";
 import { ProductCategories } from "@/components/home/product-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
+import { BrandStrip } from "@/components/home/brand-strip";
 import { BldcHighlight } from "@/components/home/bldc-highlight";
 import { FaqSection } from "@/components/home/faq-section";
 import { CtaBanner } from "@/components/home/cta-banner";
-import { getFeaturedProducts, getProductBySlug } from "@/lib/products";
+import {
+  getCatalogueFacets,
+  getCategoryCovers,
+  getFeaturedProducts,
+} from "@/lib/products";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const featured = await getFeaturedProducts();
-  const showcase = (await getProductBySlug("metro-astro-inverter")) ?? featured[0];
+  const [featured, covers, facets] = await Promise.all([
+    getFeaturedProducts(),
+    getCategoryCovers(),
+    getCatalogueFacets(),
+  ]);
+  // The showcase talks about inverter fans, so prefer a featured one.
+  const showcase =
+    featured.find((p) => p.category === "ceiling-fans" && /inverter|ac\s*\/?\s*dc|30\s*w/i.test(p.name)) ??
+    featured[0];
 
   return (
     <>
-      <HeroSlider products={featured} />
-      <TechShowcase product={showcase} />
+      {featured.length ? <HeroSlider products={featured} /> : null}
+      {showcase ? <TechShowcase product={showcase} /> : null}
       <ValueProposition />
-      <ProductCategories />
+      <ProductCategories covers={covers} counts={facets.categories} />
       <FeaturedProducts products={featured} />
+      <BrandStrip counts={facets.brands} />
       <BldcHighlight />
       <FaqSection />
       <CtaBanner />

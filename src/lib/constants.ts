@@ -95,43 +95,137 @@ export const FOOTER_COLUMNS: { heading: string; links: NavLink[] }[] = [
   },
 ];
 
+export type CategoryGroup = "fans" | "appliances";
+
 export const CATEGORIES: {
   slug: CategorySlug;
   name: string;
+  /** Singular, for taglines like "Royal · Ceiling Fan". */
+  singular: string;
+  group: CategoryGroup;
   blurb: string;
-  illustration: "ceiling-3" | "pedestal" | "exhaust" | "false-ceiling" | "bracket";
+  /** Fallback artwork when a product has no photo (fan categories only). */
+  illustration?: "ceiling-3" | "pedestal" | "exhaust" | "false-ceiling" | "bracket";
 }[] = [
   {
     slug: "ceiling-fans",
     name: "Ceiling Fans",
-    blurb: "Inverter and AC/DC ceiling fans from 48\" to 60\".",
+    singular: "Ceiling Fan",
+    group: "fans",
+    blurb: "AC, AC/DC and 30-watt inverter ceiling fans from every major brand.",
     illustration: "ceiling-3",
-  },
-  {
-    slug: "false-ceiling-fans",
-    name: "False Ceiling Fans",
-    blurb: "Flush-mount cassette fans for modern interiors.",
-    illustration: "false-ceiling",
   },
   {
     slug: "pedestal-fans",
     name: "Pedestal Fans",
-    blurb: "Portable BLDC pedestal fans with remote control.",
+    singular: "Pedestal Fan",
+    group: "fans",
+    blurb: "Portable pedestal and stand fans, AC and AC/DC.",
     illustration: "pedestal",
-  },
-  {
-    slug: "exhaust-fans",
-    name: "Exhaust Fans",
-    blurb: "High-extraction kitchen and washroom exhausts.",
-    illustration: "exhaust",
   },
   {
     slug: "bracket-fans",
     name: "Bracket Fans",
-    blurb: "Wall-mounted heavy-duty fans for shops and halls.",
+    singular: "Bracket Fan",
+    group: "fans",
+    blurb: "Wall-mounted bracket and louvre fans for rooms, shops and halls.",
     illustration: "bracket",
   },
+  {
+    slug: "exhaust-fans",
+    name: "Exhaust & Ventilation",
+    singular: "Exhaust Fan",
+    group: "fans",
+    blurb: "Kitchen and washroom exhausts, duct fans and air curtains.",
+    illustration: "exhaust",
+  },
+  {
+    slug: "table-fans",
+    name: "Table & Louvre Fans",
+    singular: "Table Fan",
+    group: "fans",
+    blurb: "Table, TCP, circumatic and louvre fans.",
+    illustration: "pedestal",
+  },
+  {
+    slug: "false-ceiling-fans",
+    name: "False Ceiling Fans",
+    singular: "False Ceiling Fan",
+    group: "fans",
+    blurb: "Flush-mount 2x2 fans for gypsum and false ceilings.",
+    illustration: "false-ceiling",
+  },
+  {
+    slug: "air-coolers",
+    name: "Air Coolers",
+    singular: "Air Cooler",
+    group: "appliances",
+    blurb: "Room air coolers — AC, AC/DC and inverter.",
+  },
+  {
+    slug: "water-heaters",
+    name: "Geysers & Water Heaters",
+    singular: "Water Heater",
+    group: "appliances",
+    blurb: "Gas, electric, instant and hybrid geysers.",
+  },
+  {
+    slug: "washing-machines",
+    name: "Washing Machines",
+    singular: "Washing Machine",
+    group: "appliances",
+    blurb: "Twin-tub, single-tub washers and spin dryers.",
+  },
+  {
+    slug: "kitchen-appliances",
+    name: "Kitchen Appliances",
+    singular: "Kitchen Appliance",
+    group: "appliances",
+    blurb: "Hoods, hobs, cooking ranges, ovens and small kitchen appliances.",
+  },
+  {
+    slug: "water-dispensers",
+    name: "Water Dispensers & Coolers",
+    singular: "Water Dispenser",
+    group: "appliances",
+    blurb: "Hot and cold water dispensers and water coolers.",
+  },
+  {
+    slug: "heaters",
+    name: "Room Heaters",
+    singular: "Room Heater",
+    group: "appliances",
+    blurb: "Gas, electric, halogen and dish heaters.",
+  },
+  {
+    slug: "other-appliances",
+    name: "Other Appliances",
+    singular: "Home Appliance",
+    group: "appliances",
+    blurb: "Air purifiers, irons and other home essentials.",
+  },
 ];
+
+export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
+
+/** The brands we stock. `slug` is what Product.brand stores. */
+export const BRANDS: { slug: string; name: string; website: string }[] = [
+  { slug: "pak-fans", name: "Pak Fans", website: "https://www.pakfansofficial.com" },
+  { slug: "royal", name: "Royal", website: "https://royalfans.com" },
+  { slug: "super-asia", name: "Super Asia", website: "https://superasiastore.com" },
+  { slug: "sk", name: "SK Fans", website: "https://www.skfans.com.pk" },
+  { slug: "tamoor", name: "Tamoor Fans", website: "https://www.tamoorfans.com" },
+  { slug: "sonex", name: "Sonex", website: "https://www.sonexfan.com" },
+  { slug: "gfc", name: "GFC", website: "https://gfcfans.com" },
+  { slug: "wester", name: "Wester Fans", website: "https://westerfanofficial.pk" },
+  { slug: "voldam", name: "Voldam", website: "https://voldam.com.pk" },
+  { slug: "orient", name: "Orient", website: "https://www.orientappliances.pk" },
+  { slug: "jackpot", name: "Jackpot", website: "https://www.jackpotappliances.pk" },
+  { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
+  { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
+];
+
+export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
 
 export const SAVINGS = {
   regularWatts: 119,

@@ -38,9 +38,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { FanIllustration } from "@/components/product/fan-illustration";
+import { ProductImage } from "@/components/product/product-image";
 import { useCartStore, selectSubtotal } from "@/store/cart-store";
-import { formatPkr, cn } from "@/lib/utils";
+import { formatPkr, cn, variantLabel } from "@/lib/utils";
 import { PROVINCES, shippingSchema, type ShippingValues } from "@/lib/validation";
 
 const METHOD_META: Record<
@@ -516,17 +516,12 @@ export function CheckoutForm({
           {items.map((item) => (
             <li key={item.key} className="flex items-center gap-3">
               <div className="metro-tile grid size-14 shrink-0 place-items-center rounded-lg p-1">
-                <FanIllustration
-                  variant={item.illustration}
-                  color={item.color.hex}
-                  trim={item.color.trim}
-                  title={item.name}
-                />
+                <ProductImage src={item.image} alt={item.name} illustration={item.illustration} color={item.color.hex} trim={item.color.trim} sizes="56px" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold">{item.name}</p>
                 <p className="text-xs text-muted-foreground">
-                  {item.size} · {item.color.name} · Qty {item.quantity}
+                  {[variantLabel(item.size, item.color.name), `Qty ${item.quantity}`].filter(Boolean).join(" · ")}
                 </p>
               </div>
               <span className="text-sm font-bold tabular-nums">

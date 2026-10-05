@@ -1,84 +1,73 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
-import { RevealGroup, RevealItem, Reveal } from "@/components/shared/reveal";
-import { FanIllustration } from "@/components/product/fan-illustration";
-import { CATEGORIES } from "@/lib/constants";
+import { RevealGroup, RevealItem } from "@/components/shared/reveal";
+import { ProductImage } from "@/components/product/product-image";
+import { CATEGORIES, type CategoryGroup } from "@/lib/constants";
+import type { CategorySlug } from "@/types";
 
-/** The four small categories sit left; Ceiling Fans gets a tall feature tile. */
-export function ProductCategories() {
-  const small = CATEGORIES.filter((c) => c.slug !== "ceiling-fans");
-  const feature = CATEGORIES.find((c) => c.slug === "ceiling-fans")!;
+const GROUPS: { group: CategoryGroup; title: string }[] = [
+  { group: "fans", title: "Fans" },
+  { group: "appliances", title: "Home Appliances" },
+];
 
+/** Category tiles, each fronted by a real product photo from that category. */
+export function ProductCategories({
+  covers,
+  counts,
+}: {
+  covers: Partial<Record<CategorySlug, string>>;
+  counts: Partial<Record<CategorySlug, number>>;
+}) {
   return (
     <Section className="bg-muted/40">
       <SectionHeading
         eyebrow="Browse the range"
         title="Product"
         highlight="Categories"
-        description="From flush-mount cassettes to 60-inch designer ceiling fans â€” every unit built around the same BLDC platform."
+        description="Fans and home appliances from Pakistan's leading brands — all genuine, all with official brand warranty."
       />
 
-      <div className="mt-12 grid gap-4 lg:grid-cols-3">
-        <RevealGroup className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
-          {small.map((category) => (
-            <RevealItem key={category.slug}>
-              <Link
-                href={`/catalogue?category=${category.slug}`}
-                className="block h-full"
-              >
-                <Card className="group h-full gap-0 overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl hover:shadow-ink-950/10">
-                  <div className="metro-tile aspect-[16/10] p-6 transition-transform duration-500 group-hover:scale-[1.04]">
-                    <FanIllustration
-                      variant={category.illustration}
-                      color="#2b2320"
-                      trim="#b87333"
-                      title={category.name}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-heading text-base font-bold transition-colors group-hover:text-brand-700">
-                      {category.name}
-                    </h3>
-                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {category.blurb}
-                    </p>
-                  </div>
-                </Card>
-              </Link>
-            </RevealItem>
-          ))}
-        </RevealGroup>
-
-        <Reveal direction="left" delay={0.1} className="h-full">
-          <Link href={`/catalogue?category=${feature.slug}`} className="block h-full">
-            <Card className="group flex h-full flex-col justify-between gap-0 overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl hover:shadow-ink-950/10">
-              <div className="metro-tile flex-1 p-8 transition-transform duration-500 group-hover:scale-[1.04]">
-                <div className="mx-auto aspect-square w-full max-w-xs">
-                  <FanIllustration
-                    variant={feature.illustration}
-                    color="#1f2224"
-                    trim="#c9a227"
-                    spin
-                    title={feature.name}
-                  />
-                </div>
-              </div>
-              <div className="p-6 text-center">
-                <h3 className="font-heading text-2xl font-extrabold transition-colors group-hover:text-brand-700">
-                  {feature.name}
-                </h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">
-                  {feature.blurb}
-                </p>
-              </div>
-            </Card>
-          </Link>
-        </Reveal>
-      </div>
+      {GROUPS.map(({ group, title }) => {
+        const categories = CATEGORIES.filter((c) => c.group === group && counts[c.slug]);
+        if (!categories.length) return null;
+        return (
+          <div key={group} className="mt-12">
+            <h3 className="mb-4 font-heading text-xl font-extrabold">{title}</h3>
+            <RevealGroup className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+              {categories.map((category) => (
+                <RevealItem key={category.slug}>
+                  <Link href={`/catalogue?category=${category.slug}`} className="block h-full">
+                    <Card className="group h-full gap-0 overflow-hidden p-0 transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl hover:shadow-ink-950/10">
+                      <div className="aspect-[4/3] bg-white p-4 transition-transform duration-500 group-hover:scale-[1.04]">
+                        <ProductImage
+                          src={covers[category.slug]}
+                          alt={category.name}
+                          illustration={category.illustration ?? "ceiling-3"}
+                          color="#2b2320"
+                          trim="#b87333"
+                          sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                        />
+                      </div>
+                      <div className="border-t p-4">
+                        <h4 className="font-heading text-sm font-bold transition-colors group-hover:text-brand-700 sm:text-base">
+                          {category.name}
+                        </h4>
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {counts[category.slug]} products
+                        </p>
+                      </div>
+                    </Card>
+                  </Link>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+        );
+      })}
 
       <div className="mt-10 flex justify-center">
         <Button

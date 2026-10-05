@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import Link from "next/link";
@@ -11,7 +11,8 @@ import {
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { FanIllustration } from "@/components/product/fan-illustration";
+import { ProductImage } from "@/components/product/product-image";
+import { brandName } from "@/lib/constants";
 import { formatPkr, cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -70,18 +71,18 @@ export function HeroSlider({ products }: { products: Product[] }) {
               className="order-2 lg:order-1"
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3 py-1 text-xs font-bold uppercase tracking-[0.16em] text-brand-700">
-                Introducing
+                {brandName(product.brand)}
               </span>
 
-              <h1 className="mt-4 font-heading text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-ink-900 sm:text-6xl lg:text-7xl">
-                {product.name.replace("Metro ", "")}
+              <h1 className="mt-4 line-clamp-3 font-heading text-4xl font-extrabold uppercase leading-[0.95] tracking-tight text-ink-900 sm:text-5xl lg:text-6xl">
+                {product.name}
               </h1>
 
               <p className="mt-2 text-sm font-semibold uppercase tracking-widest text-brand-600">
                 {product.tagline}
               </p>
 
-              <p className="mt-5 max-w-lg text-sm leading-relaxed text-foreground/75 sm:text-base">
+              <p className="mt-5 line-clamp-3 max-w-lg text-sm leading-relaxed text-foreground/75 sm:text-base">
                 {product.description}
               </p>
 
@@ -120,12 +121,15 @@ export function HeroSlider({ products }: { products: Product[] }) {
                 // child rotates forces a blur re-rasterization every frame.
                 className="mx-auto aspect-square w-full max-w-[26rem] lg:max-w-[30rem]"
               >
-                <FanIllustration
-                  variant={product.illustration}
+                <ProductImage
+                  src={product.images?.[0]}
+                  alt={product.name}
+                  illustration={product.illustration}
                   color={color.hex}
                   trim={color.trim}
+                  sizes="(min-width: 1024px) 40vw, 90vw"
+                  priority={index === 0}
                   spin
-                  title={`${product.name} in ${color.name}`}
                 />
               </motion.div>
             </AnimatePresence>

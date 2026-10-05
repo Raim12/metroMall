@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as React from "react";
 import Link from "next/link";
@@ -165,7 +165,7 @@ export function ContactForm({
               <FormControl>
                 <Textarea
                   rows={5}
-                  placeholder="Please provide as much detail as possibleâ€¦"
+                  placeholder="Please provide as much detail as possible…"
                   className={fieldClass}
                   {...field}
                 />
@@ -228,7 +228,7 @@ export function ContactForm({
           ) : (
             <Send className="size-4" aria-hidden />
           )}
-          {submitting ? "Sendingâ€¦" : "Send Message"}
+          {submitting ? "Sending…" : "Send Message"}
         </Button>
       </form>
     </Form>

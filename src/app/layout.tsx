@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 import { Navbar } from "@/components/layout/navbar";
@@ -52,8 +52,8 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     // `suppressHydrationWarning` applies to this element's own attributes only
-    // (not its subtree). Browser extensions â€” QuillBot injects
-    // `data-qb-installed`, password managers and translators do similar â€” stamp
+    // (not its subtree). Browser extensions — QuillBot injects
+    // `data-qb-installed`, password managers and translators do similar — stamp
     // attributes onto <html> before React hydrates, which React would otherwise
     // report as a server/client mismatch.
     <html lang="en" suppressHydrationWarning>

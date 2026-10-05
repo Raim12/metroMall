@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 
 import { Card } from "@/components/ui/card";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
@@ -9,7 +9,7 @@ import { CORE_ETHOS, SITE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Metro Electric Co. has built high-efficiency fans in Karachi, Pakistan for decades â€” engineering-led, quality first, and locally developed BLDC technology.",
+    "Metro Electric Co. has built high-efficiency fans in Karachi, Pakistan for decades — engineering-led, quality first, and locally developed BLDC technology.",
 };
 
 const MILESTONES = [
@@ -37,7 +37,7 @@ export default function AboutPage() {
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
               {SITE.name} began as a small electrical workshop and grew into one
-              of the country&apos;s most respected fan manufacturers â€” not by
+              of the country&apos;s most respected fan manufacturers — not by
               chasing volume, but by refusing to ship anything we would not
               install in our own homes.
             </p>
@@ -54,7 +54,7 @@ export default function AboutPage() {
             </h2>
             <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-ink-200/90 sm:text-base">
               To manufacture fans with zero compromise on quality. From the very
-              beginning, profit maximisation was never our primary objective â€”
+              beginning, profit maximisation was never our primary objective —
               since day one our focus has been on delivering the utmost level of
               quality and performance possible, even when it requires us to
               invest more than what is commercially convenient. This philosophy

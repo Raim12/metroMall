@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
@@ -9,7 +9,7 @@ import { SITE, WHATSAPP_LINK } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Call, email, WhatsApp or visit Metro Electric Co. on M.A. Jinnah Road, Karachi â€” our team replies within one business day.",
+    "Call, email, WhatsApp or visit Metro Electric Co. on M.A. Jinnah Road, Karachi — our team replies within one business day.",
 };
 
 interface Channel {

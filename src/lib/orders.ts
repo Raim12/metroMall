@@ -51,6 +51,7 @@ export interface PricedLine {
   colorHex: string;
   colorTrim: string;
   illustration: string;
+  image: string | null;
   unitPrice: number;
   quantity: number;
   lineTotal: number;
@@ -124,6 +125,7 @@ export async function priceCart(
       colorHex: color.hex,
       colorTrim: color.trim,
       illustration: product.illustration,
+      image: product.images[0] ?? null,
       unitPrice: product.price,
       quantity: item.quantity,
       lineTotal: product.price * item.quantity,
@@ -177,6 +179,7 @@ export async function createOrder(
         colorHex: l.colorHex,
         colorTrim: l.colorTrim,
         illustration: l.illustration,
+        image: l.image,
         unitPrice: l.unitPrice,
         quantity: l.quantity,
       })),

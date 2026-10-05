@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Logo } from "@/components/shared/logo";
@@ -111,7 +111,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/15 pt-6 sm:flex-row">
           <p className="text-xs text-ink-300/70">
-            Â© {year} {SITE.name}. All rights reserved.
+            © {year} {SITE.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             {[

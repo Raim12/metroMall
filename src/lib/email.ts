@@ -2,7 +2,7 @@ import "server-only";
 
 import { Resend } from "resend";
 import { SITE } from "@/lib/constants";
-import { formatPkr } from "@/lib/utils";
+import { formatPkr, variantLabel } from "@/lib/utils";
 import type { OrderWithItems } from "@/lib/orders";
 
 /**
@@ -85,7 +85,7 @@ function itemRows(order: OrderWithItems): string {
       (i) => `<tr>
         <td style="padding:8px 0;border-bottom:1px solid #eee">
           <strong>${escapeHtml(i.name)}</strong><br>
-          <span style="color:#777;font-size:13px">${escapeHtml(i.size)} · ${escapeHtml(i.colorName)} · Qty ${i.quantity}</span>
+          <span style="color:#777;font-size:13px">${escapeHtml([variantLabel(i.size, i.colorName), `Qty ${i.quantity}`].filter(Boolean).join(" · "))}</span>
         </td>
         <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;white-space:nowrap">
           ${formatPkr(i.unitPrice * i.quantity)}

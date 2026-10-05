@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export function CtaBanner({
   title = "Ready to Elevate Your Experience?",
-  body = "Experience powerful cooling and energy efficiency â€” explore our latest fan collection today.",
+  body = "Experience powerful cooling and energy efficiency — explore our latest fan collection today.",
   cta = "Shop Now",
   href = "/catalogue",
   className,

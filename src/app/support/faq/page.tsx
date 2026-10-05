@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import {
@@ -16,7 +16,7 @@ import { SITE, SUPPORT_FAQS } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "FAQs",
   description:
-    "Answers to common questions about Metro Electric Co. fans â€” the difference between AC/DC and inverter models, warranty cover and service.",
+    "Answers to common questions about Metro Electric Co. fans — the difference between AC/DC and inverter models, warranty cover and service.",
 };
 
 const TAB_LABELS = {

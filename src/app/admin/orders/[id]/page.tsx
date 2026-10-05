@@ -6,9 +6,9 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import { OrderStatusControl } from "@/components/admin/order-status-control";
-import { FanIllustration } from "@/components/product/fan-illustration";
+import { ProductImage } from "@/components/product/product-image";
 import { getOrder } from "@/lib/admin/queries";
-import { formatPkr } from "@/lib/utils";
+import { formatPkr, variantLabel } from "@/lib/utils";
 import type { FanVariant } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -66,12 +66,7 @@ export default async function AdminOrderPage({
             {order.items.map((item) => (
               <li key={item.id} className="flex items-center gap-3 px-5 py-4">
                 <div className="metro-tile grid size-14 shrink-0 place-items-center rounded-lg p-1">
-                  <FanIllustration
-                    variant={item.illustration as FanVariant}
-                    color={item.colorHex}
-                    trim={item.colorTrim}
-                    title={item.name}
-                  />
+                  <ProductImage src={item.image} alt={item.name} illustration={item.illustration as FanVariant} color={item.colorHex} trim={item.colorTrim} sizes="56px" />
                 </div>
                 <div className="min-w-0 flex-1">
                   <Link
@@ -82,7 +77,7 @@ export default async function AdminOrderPage({
                     {item.name}
                   </Link>
                   <p className="text-xs text-muted-foreground">
-                    {item.size} · {item.colorName} · {formatPkr(item.unitPrice)}{" "}
+                    {[variantLabel(item.size, item.colorName), formatPkr(item.unitPrice)].filter(Boolean).join(" · ")}{" "}
                     each
                   </p>
                 </div>
