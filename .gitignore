@@ -55,3 +55,6 @@ next-env.d.ts
 
 # nightly price-sync reports
 /logs/
+
+# one-off backup from scripts/split-ceiling-categories.mjs
+*.before-ceiling-split

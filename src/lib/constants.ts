@@ -108,6 +108,35 @@ export const CATEGORIES: {
   illustration?: "ceiling-3" | "pedestal" | "exhaust" | "false-ceiling" | "bracket";
 }[] = [
   {
+    slug: "ceiling-fans-standard",
+    name: "Normal Ceiling Fans",
+    singular: "Ceiling Fan",
+    group: "fans",
+    blurb:
+      "Classic copper-wound ceiling fans that run on mains and work with any dimmer or regulator.",
+    illustration: "ceiling-3",
+  },
+  {
+    slug: "ceiling-fans-acdc",
+    name: "AC/DC 45W Ceiling Fans",
+    singular: "AC/DC Ceiling Fan",
+    group: "fans",
+    blurb:
+      "Run on 220V mains or 12V DC from a solar panel or battery — around 45 watts, so they keep going through load-shedding.",
+    illustration: "ceiling-3",
+  },
+  {
+    slug: "ceiling-fans-inverter",
+    name: "30W Inverter Ceiling Fans",
+    singular: "Inverter Ceiling Fan",
+    group: "fans",
+    blurb:
+      "BLDC inverter fans drawing as little as 30 watts, with remote control and multiple speeds.",
+    illustration: "ceiling-3",
+  },
+  {
+    // Legacy slug, kept so old links and any unclassified product still
+    // resolve. The sidebar hides it automatically when nothing uses it.
     slug: "ceiling-fans",
     name: "Ceiling Fans",
     singular: "Ceiling Fan",

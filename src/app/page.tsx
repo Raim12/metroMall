@@ -21,9 +21,11 @@ export default async function HomePage() {
     getCategoryCovers(),
     getCatalogueFacets(),
   ]);
-  // The showcase talks about inverter fans, so prefer a featured one.
+  // The showcase talks about inverter fans, so prefer a featured one — falling
+  // back to AC/DC, which is the other energy-saving motor type.
   const showcase =
-    featured.find((p) => p.category === "ceiling-fans" && /inverter|ac\s*\/?\s*dc|30\s*w/i.test(p.name)) ??
+    featured.find((p) => p.category === "ceiling-fans-inverter") ??
+    featured.find((p) => p.category === "ceiling-fans-acdc") ??
     featured[0];
 
   return (

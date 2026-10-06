@@ -16,6 +16,9 @@ import type { CategorySlug, FanVariant, Product, ProductFeature } from "@/types"
  */
 
 const CATEGORY_TO_SLUG: Record<Category, CategorySlug> = {
+  [Category.CEILING_FANS_STANDARD]: "ceiling-fans-standard",
+  [Category.CEILING_FANS_ACDC]: "ceiling-fans-acdc",
+  [Category.CEILING_FANS_INVERTER]: "ceiling-fans-inverter",
   [Category.CEILING_FANS]: "ceiling-fans",
   [Category.FALSE_CEILING_FANS]: "false-ceiling-fans",
   [Category.PEDESTAL_FANS]: "pedestal-fans",

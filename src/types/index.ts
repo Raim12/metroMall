@@ -17,6 +17,15 @@ export type FanVariant =
   | "socket-light";
 
 export type CategorySlug =
+  /**
+   * Ceiling fans are split by motor type, which is the distinction customers
+   * actually shop on. `ceiling-fans` is kept as a legacy fallback so older
+   * links and any unclassified import still resolve; it is hidden from the
+   * sidebar whenever no product uses it.
+   */
+  | "ceiling-fans-standard"
+  | "ceiling-fans-acdc"
+  | "ceiling-fans-inverter"
   | "ceiling-fans"
   | "pedestal-fans"
   | "exhaust-fans"

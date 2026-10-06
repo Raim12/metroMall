@@ -57,7 +57,7 @@ export function TechShowcase({ product }: { product: Product }) {
             size="lg"
             className="mt-8 bg-brand-600 font-semibold hover:bg-brand-700"
           >
-            <Link href="/catalogue?category=ceiling-fans&q=inverter">
+            <Link href="/catalogue?category=ceiling-fans-inverter">
               Explore inverter fans
               <ArrowRight className="size-4" aria-hidden />
             </Link>

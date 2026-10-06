@@ -1,0 +1,72 @@
+# Render blueprint for the client-review deployment.
+#
+# Render reads this on "New > Blueprint" and provisions both the web service
+# and the database. Railway can use the same build/start commands, set by hand
+# in its dashboard.
+#
+# After the first deploy, seed the catalogue once from the service shell:
+#   npm run db:seed
+#
+# Product photos (112 MB in uploads/products/) ship with the repo and serve
+# fine. Photos uploaded later through the admin dashboard live on the instance
+# disk and are lost on redeploy — attach a Render Disk mounted at
+# /opt/render/project/src/uploads to make them durable, or move
+# src/lib/admin/storage.ts onto object storage.
+
+services:
+  - type: web
+    name: metro-electric
+    runtime: node
+    plan: starter
+    region: singapore # closest Render region to Pakistan
+    buildCommand: npm ci && npm run build
+    # migrate deploy runs on every boot; it is a no-op when nothing is pending.
+    startCommand: npm run start:prod
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: metro-db
+          property: connectionString
+
+      # Render injects the public URL; Safepay redirects and robots.ts use it.
+      - key: NEXT_PUBLIC_SITE_URL
+        fromService:
+          type: web
+          name: metro-electric
+          envVarKey: RENDER_EXTERNAL_URL
+
+      # Keep the review site out of search results. Only set "true" on the
+      # real production domain.
+      - key: NEXT_PUBLIC_ALLOW_INDEXING
+        value: "false"
+
+      # --- set these in the Render dashboard, never in this file ---
+      - key: ADMIN_PASSWORD_HASH
+        sync: false # paste the raw hash; no backslash escaping outside .env
+      - key: ADMIN_SESSION_SECRET
+        sync: false
+      - key: PAYMENT_PROVIDER
+        value: safepay
+      - key: SAFEPAY_ENVIRONMENT
+        value: sandbox
+      - key: SAFEPAY_CLIENT_KEY
+        sync: false
+      - key: SAFEPAY_SECRET_KEY
+        sync: false
+      - key: SAFEPAY_WEBHOOK_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: EMAIL_TO_INTERNAL
+        sync: false
+
+databases:
+  - name: metro-db
+    plan: basic-256mb
+    region: singapore

@@ -15,7 +15,8 @@
     "admin:password": "node scripts/admin-password.mjs",
     "warm": "node scripts/warm-dev.mjs",
     "test:webhook": "node scripts/test-webhook.mjs",
-    "sync:prices": "tsx scripts/sync-prices.ts"
+    "sync:prices": "tsx scripts/sync-prices.ts",
+    "start:prod": "prisma migrate deploy && next start -p ${PORT:-3000}"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

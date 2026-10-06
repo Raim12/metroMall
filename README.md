@@ -116,6 +116,83 @@ WhatsApp buttons — that's WhatsApp's own brand mark and should stay.
 
 ---
 
+## Deploying for client review
+
+`render.yaml` is a Render blueprint that provisions the web service and a
+Postgres database together. Railway works the same way with these commands set
+by hand.
+
+**Before sharing the URL with anyone:**
+
+1. **Change the admin password.** The development one has been shared in plain
+   text and must not guard real orders:
+   ```bash
+   npm run admin:password -- "a-long-password-you-choose"
+   ```
+   Paste the **raw** hash (no backslashes) into the host's env vars — backslash
+   escaping is only needed in a local `.env`, because Next expands `$VAR` there.
+2. Confirm `NEXT_PUBLIC_ALLOW_INDEXING` is **not** `"true"`, so `robots.txt`
+   stays `Disallow: /`. A review site carries placeholder copy and test orders;
+   getting that indexed under the client's brand is hard to undo.
+3. Point Safepay's webhook at the new host and set `NEXT_PUBLIC_SITE_URL` to
+   the same origin.
+
+**Deploy:**
+
+| Setting | Value |
+| --- | --- |
+| Build | `npm ci && npm run build` |
+| Start | `npm run start:prod` (applies migrations, then serves) |
+| Node | 22 |
+
+Then seed the catalogue once from the service shell: `npm run db:seed`.
+
+**Product photos.** The 112 MB in `uploads/products/` ships with the repo and
+serves fine. Photos uploaded *later* through the admin dashboard land on the
+instance disk and are lost on redeploy — attach a persistent disk mounted at
+the project's `uploads/`, or move `src/lib/admin/storage.ts` onto object
+storage. Note that mounting an empty volume over `uploads/` would hide the
+repo's photos, so copy them in on first boot if you take that route.
+
+## Daily startup (after a reboot)
+
+Docker does not start at boot and the cloudflared URL changes every run, so:
+
+**1. Database** — one terminal, or just leave Docker Desktop running:
+
+```bash
+# start Docker Desktop first, then:
+npm run db:up          # docker start metro-pg
+```
+
+**2. Dev server** — terminal 1:
+
+```bash
+npm run dev
+npm run warm           # optional, terminal 3: pre-compiles routes
+```
+
+Browsing at `http://localhost:3000` is enough for everything except Safepay.
+
+**3. Tunnel** — only needed for Safepay. Terminal 2, and **leave it open**:
+
+```bash
+cloudflared tunnel --url http://localhost:3000
+```
+
+**4. The step people forget.** The tunnel URL is new every time, so update
+*both* places or webhooks silently stop working:
+
+- `.env` → `NEXT_PUBLIC_SITE_URL="https://<new-url>.trycloudflare.com"`
+- Safepay dashboard → Developers → Endpoints → edit the URL to
+  `https://<new-url>.trycloudflare.com/api/webhooks/payment`
+
+Then restart `npm run dev` — `.env` is only read at startup.
+
+Do the Safepay part of testing on the **tunnel URL**, not localhost: the cart
+and admin session live in `localStorage`/cookies, which are per-origin, and
+Safepay redirects back to whatever `NEXT_PUBLIC_SITE_URL` says.
+
 ## Phase 2 setup (database + API)
 
 ```bash
