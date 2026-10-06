@@ -19,11 +19,18 @@ services:
     runtime: node
     plan: starter
     region: singapore # closest Render region to Pakistan
-    # `--include=dev` is required: NODE_ENV=production (below, and Render's
-    # default) makes npm omit devDependencies, but Tailwind and its PostCSS
-    # plugin are build-time tools that live there. Without this the build fails
-    # with "Cannot find module '@tailwindcss/postcss'".
-    buildCommand: npm ci --include=dev && npm run build
+    # Three things, in this order:
+    #
+    #  1. `--include=dev` is required: NODE_ENV=production (below, and Render's
+    #     default) makes npm omit devDependencies, but Tailwind and its PostCSS
+    #     plugin are build-time tools that live there.
+    #  2. `migrate deploy` must run BEFORE the build, not just at startup:
+    #     `next build` prerenders catalogue pages, which query the database, so
+    #     the tables have to exist by then. Running it only in startCommand
+    #     deadlocks — the build fails before the start that would create them.
+    #  3. Then build. An empty (but migrated) database is fine here: the pages
+    #     render empty and fill in once `npm run db:seed` is run.
+    buildCommand: npm ci --include=dev && npx prisma migrate deploy && npm run build
     # migrate deploy runs on every boot; it is a no-op when nothing is pending.
     startCommand: npm run start:prod
     healthCheckPath: /
