@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProductImage } from "@/components/product/product-image";
+import { ClearCartOnOrder } from "@/components/cart/clear-cart-on-order";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatPkr, variantLabel } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
@@ -44,6 +45,13 @@ export default async function ConfirmationPage({
 
   return (
     <div className="metro-wash">
+      {/* The order exists, so the basket has served its purpose. Left alone on
+          a failed payment, in case the customer wants to retry. */}
+      <ClearCartOnOrder
+        orderNumber={order.orderNumber}
+        shouldClear={!paymentFailed}
+      />
+
       <div className="mx-auto w-full max-w-3xl px-4 py-14 sm:px-6 lg:py-20">
         <div className="text-center">
           <div className="mx-auto grid size-16 place-items-center rounded-full bg-brand-100">

@@ -84,7 +84,6 @@ export function CheckoutForm({
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore(selectSubtotal);
   const hasHydrated = useCartStore((s) => s.hasHydrated);
-  const clear = useCartStore((s) => s.clear);
 
   const [step, setStep] = React.useState<Step>("shipping");
   const [method, setMethod] = React.useState(availableMethods[0] ?? "COD");
@@ -139,7 +138,9 @@ export function CheckoutForm({
         return;
       }
 
-      clear();
+      // The cart is emptied by <ClearCartOnOrder> on the confirmation page, so
+      // both payment paths behave the same — a gateway payment leaves the site
+      // and only returns there.
       router.push(`/checkout/confirmation/${data.orderNumber}`);
     } catch (error) {
       toast.error("Order not placed", {
