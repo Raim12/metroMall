@@ -90,11 +90,7 @@ export default async function AdminProductPage({
               ))}
             </ul>
             <p className="mt-3 text-xs text-muted-foreground">
-              Colourways are imported from
-              <code className="mx-1 rounded bg-muted px-1 py-0.5 font-mono">
-                prisma/data/catalog.json
-              </code>
-              . Editing them here is not built yet.
+              Colours customers can choose from for this product.
             </p>
           </div>
         </div>

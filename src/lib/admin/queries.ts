@@ -105,6 +105,7 @@ export async function getRecentOrders(limit = 8) {
       total: true,
       status: true,
       paymentMethod: true,
+      source: true,
       createdAt: true,
     },
   });

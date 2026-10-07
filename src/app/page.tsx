@@ -4,6 +4,7 @@ import { TechShowcase } from "@/components/home/tech-showcase";
 import { ProductCategories } from "@/components/home/product-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import { BrandStrip } from "@/components/home/brand-strip";
+import { HouseBrands } from "@/components/home/house-brands";
 import { BldcHighlight } from "@/components/home/bldc-highlight";
 import { FaqSection } from "@/components/home/faq-section";
 import { CtaBanner } from "@/components/home/cta-banner";
@@ -31,6 +32,7 @@ export default async function HomePage() {
   return (
     <>
       {featured.length ? <HeroSlider products={featured} /> : null}
+      <HouseBrands />
       {showcase ? <TechShowcase product={showcase} /> : null}
       <ValueProposition />
       <ProductCategories covers={covers} counts={facets.categories} />

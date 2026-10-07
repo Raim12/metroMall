@@ -6,7 +6,8 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
-import { ADMIN_COOKIE, verifySessionToken } from "@/lib/admin/auth";
+import { ADMIN_COOKIE } from "@/lib/admin/auth";
+import { requireAdmin } from "@/lib/admin/guard";
 import {
   UploadError,
   deleteProductImage,
@@ -15,19 +16,9 @@ import {
 import { Category, OrderStatus } from "@/generated/prisma/client";
 
 /**
- * Admin mutations.
- *
- * Every action re-checks the session itself. `middleware.ts` guards page
- * navigations, but a Server Action is a POST endpoint that can be invoked
- * directly, so it must not rely on the middleware having run.
+ * Admin mutations. Every action re-checks the session itself (requireAdmin).
+ * Order creation/editing lives in order-actions.ts.
  */
-
-async function requireAdmin(): Promise<void> {
-  const token = (await cookies()).get(ADMIN_COOKIE)?.value;
-  if (!(await verifySessionToken(token))) {
-    redirect("/admin/login");
-  }
-}
 
 export type ActionResult = { ok: true; message?: string } | { ok: false; error: string };
 

@@ -53,7 +53,7 @@ export const ProductCard = React.memo(function ProductCard({
     >
       <Link
         href={`/product/${product.slug}`}
-        className="relative block aspect-[4/3] overflow-hidden bg-white p-4"
+        className="metro-tile relative block aspect-[4/3] overflow-hidden p-4"
       >
         {product.badge ? (
           <Badge className="absolute left-3 top-3 z-10 bg-brand-600 text-white hover:bg-brand-600">

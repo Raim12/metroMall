@@ -38,6 +38,15 @@ enum Category {
   WATER_DISPENSERS   @map("water-dispensers")
   HEATERS            @map("heaters")
   OTHER_APPLIANCES   @map("other-appliances")
+  // Gas appliances, split out of KITCHEN_APPLIANCES.
+  GAS_HOBS           @map("gas-hobs")
+  GAS_STOVES         @map("gas-stoves")
+  KITCHEN_HOODS      @map("kitchen-hoods")
+  // Fancy lights — no products yet; the categories appear once stocked.
+  WALL_LIGHTS        @map("wall-lights")
+  CHANDELIERS        @map("chandeliers")
+  DOWN_LIGHTS        @map("down-lights")
+  OUTDOOR_LIGHTS     @map("outdoor-lights")
 }
 
 model Product {
@@ -182,6 +191,10 @@ model Order {
   total    Int
   currency String @default("PKR")
 
+  /// "web" for storefront checkouts, "admin" for orders recorded by staff
+  /// (phone or walk-in), so the two can be told apart in reports.
+  source String @default("web")
+
   /// Gateway tracker/session reference, once a provider is wired up.
   providerRef String?
   paidAt      DateTime?
@@ -279,5 +292,23 @@ model JobApplication {
   createdAt DateTime @default(now())
 
   @@index([status])
+  @@index([createdAt])
+}
+
+/// "Notify me" sign-ups from the house-brand launch page (/legends).
+/// One row per phone per brand: signing up twice updates the row instead of
+/// duplicating it, so the launch-day list stays clean.
+model LaunchSignup {
+  id    String @id @default(cuid())
+  /// House brand slug: "legends", "karetek" or "mtek".
+  brand String
+  name  String
+  phone String
+  city  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([brand, phone])
   @@index([createdAt])
 }

@@ -38,7 +38,14 @@ export type CategorySlug =
   | "kitchen-appliances"
   | "water-dispensers"
   | "heaters"
-  | "other-appliances";
+  | "other-appliances"
+  | "gas-hobs"
+  | "gas-stoves"
+  | "kitchen-hoods"
+  | "wall-lights"
+  | "chandeliers"
+  | "down-lights"
+  | "outdoor-lights";
 
 export interface ProductColor {
   /** Human readable name shown in the Select + tooltip. */

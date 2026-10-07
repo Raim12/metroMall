@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from "next/font/google";
+import { Archivo, Inter } from "next/font/google";
 
 import { Navbar } from "@/components/layout/navbar";
+import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { CartSheet } from "@/components/cart/cart-sheet";
@@ -16,9 +17,12 @@ const inter = Inter({
   display: "swap",
 });
 
-const jakarta = Plus_Jakarta_Sans({
+/** Headings: a heavy grotesque that matches the Metro wordmark's lettering. */
+const archivo = Archivo({
   variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["600", "700", "800", "900"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -56,10 +60,15 @@ export default function RootLayout({
     // `data-qb-installed`, password managers and translators do similar — stamp
     // attributes onto <html> before React hydrates, which React would otherwise
     // report as a server/client mismatch.
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${jakarta.variable} min-h-dvh bg-background antialiased`}
-      >
+    // The font variables live on <html> because that is where globals.css
+    // applies `font-sans`; set on <body> they were out of scope there and the
+    // whole site fell back to the browser's default serif.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${archivo.variable}`}
+    >
+      <body className="min-h-dvh bg-background antialiased">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white"
@@ -67,6 +76,7 @@ export default function RootLayout({
           Skip to content
         </a>
 
+        <AnnouncementBar />
         <Navbar />
         <main id="main">{children}</main>
         <Footer />

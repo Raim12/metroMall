@@ -9,6 +9,7 @@ import {
   MessageSquare,
   Package,
   ShoppingCart,
+  Sparkles,
 } from "lucide-react";
 
 import { signOut } from "@/lib/admin/actions";
@@ -19,6 +20,7 @@ const LINKS = [
   { href: "/admin/orders", label: "Orders", Icon: ShoppingCart },
   { href: "/admin/products", label: "Products", Icon: Package },
   { href: "/admin/enquiries", label: "Enquiries", Icon: MessageSquare },
+  { href: "/admin/launch-list", label: "Launch list", Icon: Sparkles },
 ];
 
 export function AdminNav() {
@@ -29,7 +31,9 @@ export function AdminNav() {
 
   return (
     <header className="border-b bg-ink-900 text-ink-100">
-      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3 sm:px-6 lg:px-8">
+      {/* Phones: brand + actions on one row, links in a swipeable row below.
+          From md up everything sits on a single line. */}
+      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-2.5 sm:px-6 md:flex-nowrap lg:px-8">
         <Link href="/admin" className="flex items-center gap-2 font-heading">
           <span className="text-base font-extrabold tracking-tight">
             METR<span className="text-brand-500">O</span>
@@ -39,13 +43,13 @@ export function AdminNav() {
           </span>
         </Link>
 
-        <nav className="flex flex-1 flex-wrap items-center gap-1">
+        <nav className="no-scrollbar order-last -mx-1 flex w-full items-center gap-1 overflow-x-auto px-1 md:order-none md:mx-0 md:w-auto md:flex-1 md:px-0">
           {LINKS.map(({ href, label, Icon, exact }) => (
             <Link
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                "flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
                 isActive(href, exact)
                   ? "bg-white/15 text-white"
                   : "text-ink-200/80 hover:bg-white/10 hover:text-white",
@@ -57,24 +61,26 @@ export function AdminNav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-1">
           <Link
             href="/"
             target="_blank"
             rel="noreferrer"
+            aria-label="View site"
             className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-ink-200/80 transition-colors hover:bg-white/10 hover:text-white"
           >
             <ExternalLink className="size-4" aria-hidden />
-            View site
+            <span className="hidden sm:inline">View site</span>
           </Link>
 
           <form action={signOut}>
             <button
               type="submit"
+              aria-label="Sign out"
               className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-ink-200/80 transition-colors hover:bg-white/10 hover:text-white"
             >
               <LogOut className="size-4" aria-hidden />
-              Sign out
+              <span className="hidden sm:inline">Sign out</span>
             </button>
           </form>
         </div>

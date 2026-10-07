@@ -3,16 +3,13 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { PaymentMethod, type Prisma } from "@/generated/prisma/client";
+import { SELLABLE } from "@/lib/sellable";
 import type { CheckoutValues } from "@/lib/validation";
 
-/** Free delivery at or above this order value (whole PKR). */
-export const FREE_SHIPPING_THRESHOLD = 20000;
-/** Flat delivery charge below the threshold (whole PKR). */
-export const FLAT_SHIPPING_FEE = 350;
+import { calculateShipping } from "@/lib/order-pricing";
 
-export function calculateShipping(subtotal: number): number {
-  return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : FLAT_SHIPPING_FEE;
-}
+// Re-exported for existing imports (checkout page).
+export { FLAT_SHIPPING_FEE, FREE_SHIPPING_THRESHOLD, calculateShipping } from "@/lib/order-pricing";
 
 /**
  * Human-facing reference, e.g. `MEC-7QK2XB`.
@@ -77,7 +74,7 @@ export async function priceCart(
   const slugs = [...new Set(items.map((i) => i.slug))];
 
   const products = await prisma.product.findMany({
-    where: { slug: { in: slugs }, active: true },
+    where: { slug: { in: slugs }, ...SELLABLE },
     include: { colors: true },
   });
 
@@ -153,7 +150,7 @@ export async function createOrder(
   input: CheckoutValues,
   cart: PricedCart,
 ): Promise<OrderWithItems> {
-  const data = {
+  return persistOrder({
     status: "PENDING" as const,
     paymentMethod: input.paymentMethod as PaymentMethod,
     firstName: input.firstName,
@@ -184,8 +181,35 @@ export async function createOrder(
         quantity: l.quantity,
       })),
     },
-  };
+  }, cart.lines);
+}
 
+/** Line items in the shape the order snapshot table stores. */
+export function snapshotLines(lines: PricedLine[]) {
+  return lines.map((l) => ({
+    productId: l.productId,
+    name: l.name,
+    slug: l.slug,
+    size: l.size,
+    colorName: l.colorName,
+    colorHex: l.colorHex,
+    colorTrim: l.colorTrim,
+    illustration: l.illustration,
+    image: l.image,
+    unitPrice: l.unitPrice,
+    quantity: l.quantity,
+  }));
+}
+
+/**
+ * Shared by storefront checkout and admin-recorded orders: decrements tracked
+ * stock and creates the order atomically, retrying on an order-number clash.
+ */
+export async function persistOrder(
+  data: Omit<Prisma.OrderCreateInput, "orderNumber">,
+  lines: Pick<PricedLine, "productId" | "name" | "quantity">[],
+): Promise<OrderWithItems> {
+  const cart = { lines };
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
       return await prisma.$transaction(async (tx) => {

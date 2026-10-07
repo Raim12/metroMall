@@ -8,7 +8,7 @@ import { ChevronDown, Menu, ShoppingCart, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
-import { NAV_LINKS } from "@/lib/constants";
+import { NAV_LINKS, SITE } from "@/lib/constants";
 import { useCartStore, selectItemCount } from "@/store/cart-store";
 import { cn } from "@/lib/utils";
 
@@ -66,7 +66,13 @@ export function Navbar() {
               : "border-white/60 bg-white/75 shadow-sm backdrop-blur-sm",
           )}
         >
-          <Logo />
+          <div className="flex min-w-0 items-center gap-3">
+            <Logo />
+            {/* Set in the wordmark's own style: heavy italic caps beside an orange rule. */}
+            <span className="max-w-[7rem] border-l-2 border-cta-400 pl-2.5 font-heading text-[0.7rem] font-black uppercase italic leading-tight tracking-tight text-ink-900 sm:max-w-none sm:pl-3 sm:text-sm lg:text-base">
+              {SITE.slogan}
+            </span>
+          </div>
 
           {/* Desktop links */}
           <ul className="hidden items-center gap-1 lg:flex">
@@ -82,6 +88,11 @@ export function Navbar() {
                   )}
                 >
                   {link.label}
+                  {link.badge ? (
+                    <span className="coming-soon-blink rounded-full bg-[#c9a227] px-1.5 py-px text-[0.6rem] font-bold uppercase tracking-wider text-[#14100c]">
+                      {link.badge}
+                    </span>
+                  ) : null}
                   {link.children ? (
                     <ChevronDown
                       className="size-3.5 transition-transform group-hover:rotate-180"
@@ -180,7 +191,21 @@ export function Navbar() {
                           : "hover:bg-muted",
                       )}
                     >
-                      {link.label}
+                      <span className="flex items-center gap-2">
+
+                        {link.label}
+
+                        {link.badge ? (
+
+                          <span className="coming-soon-blink rounded-full bg-[#c9a227] px-1.5 py-px text-[0.6rem] font-bold uppercase tracking-wider text-[#14100c]">
+
+                            {link.badge}
+
+                          </span>
+
+                        ) : null}
+
+                      </span>
                     </Link>
                     {link.children ? (
                       <ul className="ml-3 border-l pl-3">

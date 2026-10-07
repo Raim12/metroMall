@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 
@@ -8,6 +9,7 @@ import { WHATSAPP_LINK } from "@/lib/constants";
 
 /** Fixed bottom-right WhatsApp button + scroll-to-top. */
 export function FloatingActions() {
+  const pathname = usePathname();
   const [showTop, setShowTop] = React.useState(false);
 
   React.useEffect(() => {
@@ -26,6 +28,9 @@ export function FloatingActions() {
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);
+
+  // Shopper-facing: on admin pages it only covered order totals on phones.
+  if (pathname.startsWith("/admin")) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-40 flex flex-col items-center gap-3 print:hidden">

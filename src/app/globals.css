@@ -276,6 +276,82 @@
 }
 
 /*
+ * "Coming soon" blink for the house brands (LEGENDS, KARETEK, M.TEK). A soft
+ * fade + glow rather than a hard on/off, which reads as premium and is gentler
+ * on the eyes. Opacity/box-shadow only, so it stays off the layout path.
+ */
+@keyframes coming-soon-blink {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgb(201 162 39 / 0.55);
+  }
+  50% {
+    opacity: 0.45;
+    box-shadow: 0 0 0 6px rgb(201 162 39 / 0);
+  }
+}
+
+.coming-soon-blink {
+  animation: coming-soon-blink 1.6s ease-in-out infinite;
+}
+
+/*
+ * LEGENDS emblem cycling through its gold, silver and black finishes. Three
+ * stacked images share one 12s timeline, each offset by a third.
+ */
+@keyframes legends-finish {
+  0%,
+  28% {
+    opacity: 1;
+  }
+  33%,
+  95% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.legends-finish {
+  opacity: 0;
+  animation: legends-finish 12s ease-in-out infinite;
+}
+
+/*
+ * Light sweeping across the gold LEGENDS emblem on /legends. The highlight is
+ * masked to the emblem's own shape (--shimmer-mask), so it only ever lights
+ * the metal, never the background.
+ */
+@keyframes legends-shimmer {
+  0% {
+    background-position: 150% 0;
+  }
+  55%,
+  100% {
+    background-position: -50% 0;
+  }
+}
+
+.legends-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgb(255 248 220 / 0.85) 50%,
+    transparent 60%
+  );
+  background-size: 250% 100%;
+  mix-blend-mode: overlay;
+  -webkit-mask: var(--shimmer-mask) center / contain no-repeat;
+  mask: var(--shimmer-mask) center / contain no-repeat;
+  animation: legends-shimmer 4.5s ease-in-out infinite;
+}
+
+/*
  * Scroll reveals (see components/shared/reveal.tsx). Elements start offset and
  * transparent, then a shared IntersectionObserver flips `data-shown` and the
  * compositor handles the transition. Only opacity + transform are animated, so
@@ -317,8 +393,20 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fan-spin {
+  .fan-spin,
+  .coming-soon-blink {
     animation: none;
+  }
+  .legends-shimmer {
+    display: none;
+  }
+  /* Show the gold emblem only, without cycling. */
+  .legends-finish {
+    animation: none;
+    opacity: 0;
+  }
+  .legends-finish:first-child {
+    opacity: 1;
   }
   *,
   *::before,

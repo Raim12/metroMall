@@ -15,6 +15,8 @@ const NEXT: { status: OrderStatus; label: string; primary?: boolean }[] = [
   { status: OrderStatus.FULFILLED, label: "Mark fulfilled", primary: true },
   { status: OrderStatus.CANCELLED, label: "Cancel" },
   { status: OrderStatus.REFUNDED, label: "Refund" },
+  // Lets a mis-click be undone.
+  { status: OrderStatus.PENDING, label: "Mark pending" },
 ];
 
 export function OrderStatusControl({

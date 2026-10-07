@@ -54,7 +54,7 @@ export function ProductDetail({ product }: { product: Product }) {
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
       {/* ---------------------------- Gallery ---------------------------- */}
       <div>
-        <div className="relative aspect-square overflow-hidden rounded-2xl border bg-white p-6 shadow-sm sm:p-10">
+        <div className="metro-tile relative aspect-square overflow-hidden rounded-2xl border p-6 shadow-sm sm:p-10">
           {product.badge ? (
             <Badge className="absolute left-4 top-4 z-10 bg-brand-600 text-white hover:bg-brand-600">
               {product.badge}
@@ -95,7 +95,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 aria-label={`View photo ${i + 1}`}
                 aria-current={i === imageIndex}
                 className={cn(
-                  "size-20 shrink-0 overflow-hidden rounded-xl border bg-white p-1.5 transition-all",
+                  "metro-tile size-20 shrink-0 overflow-hidden rounded-xl border p-1.5 transition-all",
                   i === imageIndex
                     ? "border-brand-500 ring-2 ring-brand-500/30"
                     : "hover:border-brand-300",

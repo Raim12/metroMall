@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight, LayoutGrid, Search, SlidersHorizontal, X } f
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/product-card";
-import { BRANDS, CATEGORIES, brandName, categoryBySlug } from "@/lib/constants";
+import { BRANDS, CATEGORIES, CATEGORY_GROUPS, brandName, categoryBySlug } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import type { CatalogueSort } from "@/lib/products";
 import type { CategorySlug, Product } from "@/types";
@@ -91,13 +91,30 @@ export function CatalogueBrowser({
 
   const sidebar = (
     <nav aria-label="Product filters" className="space-y-7">
-      {(["fans", "appliances"] as const).map((group) => (
+      {CATEGORY_GROUPS.map(({ group, title }) => {
+        const stocked = CATEGORIES.filter((c) => c.group === group && facets.categories[c.slug]);
+        // Lights are announced before they are stocked; other empty categories stay hidden.
+        const upcoming =
+          group === "lights" ? CATEGORIES.filter((c) => c.group === group && !facets.categories[c.slug]) : [];
+        if (!stocked.length && !upcoming.length) return null;
+        return (
         <div key={group}>
           <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            {group === "fans" ? "Fans" : "Home Appliances"}
+            {title}
           </h2>
           <ul className="space-y-0.5">
-            {CATEGORIES.filter((c) => c.group === group && facets.categories[c.slug]).map((c) => (
+            {upcoming.map((c) => (
+              <li
+                key={c.slug}
+                className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-sm text-muted-foreground"
+              >
+                {c.name}
+                <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[0.65rem] font-semibold text-brand-700">
+                  Coming soon
+                </span>
+              </li>
+            ))}
+            {stocked.map((c) => (
               <li key={c.slug}>
                 <Link
                   href={hrefFor(filters, {
@@ -126,7 +143,8 @@ export function CatalogueBrowser({
             ))}
           </ul>
         </div>
-      ))}
+        );
+      })}
 
       <div>
         <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">

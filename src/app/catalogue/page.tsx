@@ -47,7 +47,7 @@ export async function generateMetadata({
 
 export default async function CataloguePage({ searchParams }: { searchParams: SearchParams }) {
   const filters = parse(await searchParams);
-  const [result, facets] = await Promise.all([getCatalogue(filters), getCatalogueFacets()]);
+  const [result, facets] = await Promise.all([getCatalogue(filters), getCatalogueFacets(filters.category)]);
 
   const heading = [
     filters.brand && brandName(filters.brand),

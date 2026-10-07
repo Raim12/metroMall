@@ -20,22 +20,22 @@ export function Footer() {
           <div>
             <Logo tone="light" className="h-11 w-auto sm:h-12" />
 
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-300/85">
+            <p className="mt-4 max-w-md text-base leading-relaxed text-ink-300/85">
               {SITE.description}
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-3">
               {FOOTER_COLUMNS.map((column) => (
                 <div key={column.heading}>
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-cta-300">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-cta-300">
                     {column.heading}
                   </h3>
-                  <ul className="mt-3 space-y-2.5">
+                  <ul className="mt-4 space-y-3">
                     {column.links.map((link) => (
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className="text-sm text-ink-200/85 transition-colors hover:text-cta-300"
+                          className="text-base text-ink-200/85 transition-colors hover:text-cta-300"
                         >
                           {link.label}
                         </Link>
@@ -50,16 +50,16 @@ export function Footer() {
           {/* Right: contact + map */}
           <div className="space-y-4">
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-              <li className="flex items-start gap-3 text-sm">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-cta-300" aria-hidden />
+              <li className="flex items-start gap-3 text-base">
+                <MapPin className="mt-1 size-5 shrink-0 text-cta-300" aria-hidden />
                 <span className="text-ink-200/85">
                   {SITE.address.line1}
                   <br />
                   {SITE.address.line2}
                 </span>
               </li>
-              <li className="flex items-start gap-3 text-sm">
-                <Phone className="mt-0.5 size-4 shrink-0 text-cta-300" aria-hidden />
+              <li className="flex items-start gap-3 text-base">
+                <Phone className="mt-1 size-5 shrink-0 text-cta-300" aria-hidden />
                 <span className="flex flex-col gap-0.5">
                   <a
                     href={`tel:+${SITE.phoneDigits}`}
@@ -78,8 +78,8 @@ export function Footer() {
                   ))}
                 </span>
               </li>
-              <li className="flex items-center gap-3 text-sm">
-                <Mail className="size-4 shrink-0 text-cta-300" aria-hidden />
+              <li className="flex items-center gap-3 text-base">
+                <Mail className="size-5 shrink-0 text-cta-300" aria-hidden />
                 <a
                   href={`mailto:${SITE.email}`}
                   className="text-ink-200/85 transition-colors hover:text-cta-300"
@@ -102,7 +102,7 @@ export function Footer() {
               href={SITE.mapLink}
               target="_blank"
               rel="noreferrer noopener"
-              className="inline-flex text-xs font-semibold text-cta-300 underline-offset-4 hover:underline"
+              className="inline-flex text-sm font-semibold text-cta-300 underline-offset-4 hover:underline"
             >
               Open in Google Maps
             </a>
@@ -110,7 +110,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/15 pt-6 sm:flex-row">
-          <p className="text-xs text-ink-300/70">
+          <p className="text-sm text-ink-300/70">
             © {year} {SITE.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
@@ -125,9 +125,9 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer noopener"
                 aria-label={label}
-                className="grid size-9 place-items-center rounded-lg border border-white/15 text-ink-200 transition-colors hover:border-cta-300 hover:text-cta-300"
+                className="grid size-10 place-items-center rounded-lg border border-white/15 text-ink-200 transition-colors hover:border-cta-300 hover:text-cta-300"
               >
-                <Icon className="size-4" aria-hidden />
+                <Icon className="size-5" aria-hidden />
               </a>
             ))}
           </div>

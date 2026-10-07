@@ -70,6 +70,9 @@ export const PROVINCES = [
 
 export const PAYMENT_METHODS = ["COD", "CARD", "EASYPAISA", "JAZZCASH"] as const;
 
+/** Stored as the address of admin-recorded orders that have none (shop pickup). */
+export const WALK_IN_ADDRESS = "Shop pickup / not provided";
+
 /**
  * A requested line. Note there is no price field — the server looks every price
  * up in the database. A client-supplied price is never trusted.

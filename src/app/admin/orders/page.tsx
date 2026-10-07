@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { OrderStatusBadge } from "@/components/admin/order-status-badge";
+import { OrderCards } from "@/components/admin/order-cards";
 import { listOrders } from "@/lib/admin/queries";
 import { formatPkr, cn } from "@/lib/utils";
 import { OrderStatus } from "@/generated/prisma/client";
@@ -22,7 +23,7 @@ const FILTERS: { label: string; value?: OrderStatus }[] = [
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; q?: string; page?: string }>;
+  searchParams: Promise<{ status?: string; q?: string; page?: string; deleted?: string }>;
 }) {
   const params = await searchParams;
 
@@ -46,12 +47,24 @@ export default async function AdminOrdersPage({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-extrabold">Orders</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          {total} order{total === 1 ? "" : "s"} total
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-2xl font-extrabold">Orders</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {total} order{total === 1 ? "" : "s"} total
+          </p>
+        </div>
+        <Button asChild className="w-full bg-brand-600 hover:bg-brand-700 sm:w-auto">
+          <Link href="/admin/orders/new">
+            <Plus className="size-4" aria-hidden />
+            New order
+          </Link>
+        </Button>
       </div>
+
+      {params.deleted ? (
+        <p className="rounded-xl border bg-white px-4 py-3 text-sm">Order deleted.</p>
+      ) : null}
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex flex-wrap gap-1.5">
@@ -95,7 +108,12 @@ export default async function AdminOrdersPage({
             No orders match this view.
           </p>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          <OrderCards
+            className="sm:hidden"
+            orders={orders.map((o) => ({ ...o, units: o.items.reduce((sum, i) => sum + i.quantity, 0) }))}
+          />
+          <div className="hidden overflow-x-auto sm:block">
             <table className="w-full min-w-[46rem] text-sm">
               <thead>
                 <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
@@ -141,7 +159,12 @@ export default async function AdminOrdersPage({
                         </p>
                       </td>
                       <td className="px-5 py-3 tabular-nums">{units}</td>
-                      <td className="px-5 py-3 text-xs">{order.paymentMethod}</td>
+                      <td className="px-5 py-3 text-xs">
+                        {order.paymentMethod}
+                        {order.source === "admin" ? (
+                          <p className="text-[0.65rem] font-semibold uppercase tracking-wide text-muted-foreground">Staff</p>
+                        ) : null}
+                      </td>
                       <td className="px-5 py-3">
                         <OrderStatusBadge status={order.status} />
                       </td>
@@ -154,6 +177,7 @@ export default async function AdminOrdersPage({
               </tbody>
             </table>
           </div>
+          </>
         )}
       </Card>
 

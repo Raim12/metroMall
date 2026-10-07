@@ -4,6 +4,8 @@ export const SITE = {
   name: "Metro Electric Co.",
   shortName: "Metro Electric",
   tagline: "High-Efficiency BLDC Fans, Engineered in Pakistan",
+  /** Shown beside the logo in the header. */
+  slogan: "Now we are online!",
   description:
     "Metro Electric Co. builds AC/DC inverter ceiling, pedestal and exhaust fans that cut power consumption by up to 64% without compromising airflow.",
   url: "https://metroelectricco.com.pk",
@@ -41,12 +43,15 @@ export const WHATSAPP_LINK = `https://wa.me/${SITE.whatsappDigits}?text=${encode
 export interface NavLink {
   label: string;
   href: string;
+  /** Small tag shown beside the label, e.g. "Soon". */
+  badge?: string;
   children?: { label: string; href: string; description?: string }[];
 }
 
 export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/catalogue" },
+  { label: "LEGENDS", href: "/legends", badge: "Soon" },
   { label: "About Us", href: "/about" },
   { label: "Export Queries", href: "/export" },
   { label: "Join Us", href: "/join-us" },
@@ -95,7 +100,15 @@ export const FOOTER_COLUMNS: { heading: string; links: NavLink[] }[] = [
   },
 ];
 
-export type CategoryGroup = "fans" | "appliances";
+export type CategoryGroup = "fans" | "appliances" | "gas" | "lights";
+
+/** Section headings, in display order (catalogue sidebar + homepage). */
+export const CATEGORY_GROUPS: { group: CategoryGroup; title: string }[] = [
+  { group: "fans", title: "Fans" },
+  { group: "appliances", title: "Home Appliances" },
+  { group: "gas", title: "Gas Appliances" },
+  { group: "lights", title: "Fancy Lights" },
+];
 
 export const CATEGORIES: {
   slug: CategorySlug;
@@ -210,7 +223,7 @@ export const CATEGORIES: {
     name: "Kitchen Appliances",
     singular: "Kitchen Appliance",
     group: "appliances",
-    blurb: "Hoods, hobs, cooking ranges, ovens and small kitchen appliances.",
+    blurb: "Ovens, microwaves, electric cooktops, blenders and small kitchen appliances.",
   },
   {
     slug: "water-dispensers",
@@ -232,6 +245,55 @@ export const CATEGORIES: {
     singular: "Home Appliance",
     group: "appliances",
     blurb: "Air purifiers, irons and other home essentials.",
+  },
+  {
+    slug: "gas-hobs",
+    name: "Built-in Gas Hobs",
+    singular: "Gas Hob",
+    group: "gas",
+    blurb: "Built-in glass and stainless-steel gas hobs, 2 to 5 burners.",
+  },
+  {
+    slug: "gas-stoves",
+    name: "Gas Stoves & Cooking Ranges",
+    singular: "Gas Stove",
+    group: "gas",
+    blurb: "Table-top gas stoves and full cooking ranges with ovens.",
+  },
+  {
+    slug: "kitchen-hoods",
+    name: "Kitchen Hoods",
+    singular: "Kitchen Hood",
+    group: "gas",
+    blurb: "Kitchen hoods and chimneys, from 60cm to 90cm.",
+  },
+  {
+    slug: "wall-lights",
+    name: "Wall Lights",
+    singular: "Wall Light",
+    group: "lights",
+    blurb: "Decorative indoor wall lights and sconces.",
+  },
+  {
+    slug: "chandeliers",
+    name: "Chandeliers",
+    singular: "Chandelier",
+    group: "lights",
+    blurb: "Crystal, modern and classic chandeliers.",
+  },
+  {
+    slug: "down-lights",
+    name: "Down Lights",
+    singular: "Down Light",
+    group: "lights",
+    blurb: "LED down lights and spotlights for false ceilings.",
+  },
+  {
+    slug: "outdoor-lights",
+    name: "Outdoor Lights",
+    singular: "Outdoor Light",
+    group: "lights",
+    blurb: "Gate, garden and facade lights built for the weather.",
   },
 ];
 
@@ -255,6 +317,24 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
 ];
 
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
+
+/**
+ * Metro's own home-appliance brands, launching soon. LEGENDS is the lead brand
+ * and gets the logo; the others show as wordmarks until their artwork exists.
+ * When one launches, add it to BRANDS (to sell its products) and take it off this list.
+ */
+export const HOUSE_BRANDS: { slug: string; name: string; tagline: string; lead?: boolean }[] = [
+  { slug: "legends", name: "LEGENDS", tagline: "Home Appliances", lead: true },
+  { slug: "karetek", name: "KARETEK", tagline: "Home Appliances" },
+  { slug: "mtek", name: "M.TEK", tagline: "Home Appliances" },
+];
+
+/**
+ * The brands whose fans we sell. Other brands (Super Asia, Voldam, NasGas…)
+ * are stocked for their home appliances only, so their fans are hidden from
+ * every fan category. Add a slug here to start selling that brand's fans.
+ */
+export const FAN_BRANDS = ["pak-fans", "royal", "sk", "tamoor", "gfc", "orient", "sonex"];
 
 export const SAVINGS = {
   regularWatts: 119,

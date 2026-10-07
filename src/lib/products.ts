@@ -1,7 +1,8 @@
 import "server-only";
 
 import { prisma } from "@/lib/prisma";
-import { Category } from "@/generated/prisma/client";
+import { CATEGORY_TO_SLUG, SLUG_TO_CATEGORY } from "@/lib/category-map";
+import { SELLABLE } from "@/lib/sellable";
 import type { Prisma } from "@/generated/prisma/client";
 import type { CategorySlug, FanVariant, Product, ProductFeature } from "@/types";
 
@@ -15,28 +16,8 @@ import type { CategorySlug, FanVariant, Product, ProductFeature } from "@/types"
  * which would otherwise leak the database client into the browser bundle.
  */
 
-const CATEGORY_TO_SLUG: Record<Category, CategorySlug> = {
-  [Category.CEILING_FANS_STANDARD]: "ceiling-fans-standard",
-  [Category.CEILING_FANS_ACDC]: "ceiling-fans-acdc",
-  [Category.CEILING_FANS_INVERTER]: "ceiling-fans-inverter",
-  [Category.CEILING_FANS]: "ceiling-fans",
-  [Category.FALSE_CEILING_FANS]: "false-ceiling-fans",
-  [Category.PEDESTAL_FANS]: "pedestal-fans",
-  [Category.EXHAUST_FANS]: "exhaust-fans",
-  [Category.BRACKET_FANS]: "bracket-fans",
-  [Category.TABLE_FANS]: "table-fans",
-  [Category.AIR_COOLERS]: "air-coolers",
-  [Category.WATER_HEATERS]: "water-heaters",
-  [Category.WASHING_MACHINES]: "washing-machines",
-  [Category.KITCHEN_APPLIANCES]: "kitchen-appliances",
-  [Category.WATER_DISPENSERS]: "water-dispensers",
-  [Category.HEATERS]: "heaters",
-  [Category.OTHER_APPLIANCES]: "other-appliances",
-};
-
-export const SLUG_TO_CATEGORY = Object.fromEntries(
-  Object.entries(CATEGORY_TO_SLUG).map(([cat, slug]) => [slug, cat]),
-) as Record<CategorySlug, Category>;
+// Re-exported: admin code and scripts import the mapping from here.
+export { SLUG_TO_CATEGORY };
 
 /** Child rows are ordered here so the UI never has to sort. */
 const withRelations = {
@@ -93,7 +74,7 @@ function toListing(row: ProductRow): Product {
 
 export async function getAllProducts(): Promise<Product[]> {
   const rows = await prisma.product.findMany({
-    where: { active: true },
+    where: { ...SELLABLE },
     include: withRelations,
     orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
   });
@@ -104,7 +85,7 @@ export async function getProductBySlug(
   slug: string,
 ): Promise<Product | undefined> {
   const row = await prisma.product.findFirst({
-    where: { slug, active: true },
+    where: { slug, ...SELLABLE },
     include: withRelations,
   });
   return row ? toProduct(row) : undefined;
@@ -112,7 +93,7 @@ export async function getProductBySlug(
 
 export async function getFeaturedProducts(): Promise<Product[]> {
   const rows = await prisma.product.findMany({
-    where: { active: true, featured: true },
+    where: { ...SELLABLE, featured: true },
     include: withRelations,
     orderBy: { createdAt: "asc" },
   });
@@ -141,7 +122,7 @@ export async function getCatalogue(query: CatalogueQuery) {
   const terms = (query.q ?? "").trim().split(/\s+/).filter(Boolean).slice(0, 6);
 
   const where: Prisma.ProductWhereInput = {
-    active: true,
+    ...SELLABLE,
     ...(query.category ? { category: SLUG_TO_CATEGORY[query.category] } : {}),
     ...(query.brand ? { brand: query.brand } : {}),
     // Every word must appear somewhere in the name, tagline or brand.
@@ -182,11 +163,19 @@ export async function getCatalogue(query: CatalogueQuery) {
   };
 }
 
-/** Product counts for the filter chips, so empty categories/brands can be hidden. */
-export async function getCatalogueFacets() {
+/**
+ * Product counts for the filter chips, so empty categories/brands can be hidden.
+ * Brand counts follow the selected category: inside a fan category only the
+ * brands whose fans we sell appear.
+ */
+export async function getCatalogueFacets(category?: CategorySlug) {
   const [byCategory, byBrand] = await Promise.all([
-    prisma.product.groupBy({ by: ["category"], where: { active: true }, _count: true }),
-    prisma.product.groupBy({ by: ["brand"], where: { active: true }, _count: true }),
+    prisma.product.groupBy({ by: ["category"], where: { ...SELLABLE }, _count: true }),
+    prisma.product.groupBy({
+      by: ["brand"],
+      where: { ...SELLABLE, ...(category ? { category: SLUG_TO_CATEGORY[category] } : {}) },
+      _count: true,
+    }),
   ]);
   return {
     categories: Object.fromEntries(
@@ -199,7 +188,7 @@ export async function getCatalogueFacets() {
 /** One representative photo per category, for the homepage tiles. */
 export async function getCategoryCovers(): Promise<Partial<Record<CategorySlug, string>>> {
   const rows = await prisma.product.findMany({
-    where: { active: true, NOT: { images: { isEmpty: true } } },
+    where: { ...SELLABLE, NOT: { images: { isEmpty: true } } },
     select: { category: true, images: true },
     orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
     distinct: ["category"],
@@ -216,13 +205,13 @@ export async function getRelatedProducts(
   limit = 3,
 ): Promise<Product[]> {
   const current = await prisma.product.findFirst({
-    where: { slug, active: true },
+    where: { slug, ...SELLABLE },
     select: { id: true, category: true },
   });
 
   if (!current) {
     const fallback = await prisma.product.findMany({
-      where: { active: true },
+      where: { ...SELLABLE },
       include: withRelations,
       take: limit,
     });
@@ -230,7 +219,7 @@ export async function getRelatedProducts(
   }
 
   const sameCategory = await prisma.product.findMany({
-    where: { active: true, category: current.category, id: { not: current.id } },
+    where: { ...SELLABLE, category: current.category, id: { not: current.id } },
     include: withRelations,
     take: limit,
   });
@@ -241,7 +230,7 @@ export async function getRelatedProducts(
 
   const others = await prisma.product.findMany({
     where: {
-      active: true,
+      ...SELLABLE,
       id: { notIn: [current.id, ...sameCategory.map((p) => p.id)] },
     },
     include: withRelations,
@@ -254,7 +243,7 @@ export async function getRelatedProducts(
 /** Used by `generateStaticParams` and the sitemap. */
 export async function getAllProductSlugs(): Promise<string[]> {
   const rows = await prisma.product.findMany({
-    where: { active: true },
+    where: { ...SELLABLE },
     select: { slug: true },
   });
   return rows.map((r) => r.slug);

@@ -5,6 +5,7 @@ import {
   Clock,
   MessageSquare,
   PackageX,
+  Plus,
   Receipt,
   TrendingUp,
   Wallet,
@@ -12,6 +13,8 @@ import {
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { OrderCards } from "@/components/admin/order-cards";
 import { OrderStatusBadge } from "@/components/admin/order-status-badge";
 import {
   getDashboardStats,
@@ -64,12 +67,20 @@ export default async function AdminDashboard() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="font-heading text-2xl font-extrabold">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Revenue counts paid and fulfilled orders only — Cash on Delivery is
-          not income until the courier collects it.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0">
+          <h1 className="font-heading text-2xl font-extrabold">Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Revenue counts paid and fulfilled orders only — Cash on Delivery is
+            not income until the courier collects it.
+          </p>
+        </div>
+        <Button asChild className="w-full bg-brand-600 hover:bg-brand-700 sm:w-auto">
+          <Link href="/admin/orders/new">
+            <Plus className="size-4" aria-hidden />
+            New order
+          </Link>
+        </Button>
       </div>
 
       {/* Stat tiles */}
@@ -151,7 +162,8 @@ export default async function AdminDashboard() {
         </div>
       ) : null}
 
-      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+      {/* [&>*]:min-w-0 lets the columns shrink on phones instead of widening the page. */}
+      <div className="grid gap-6 lg:grid-cols-[1.5fr_1fr] [&>*]:min-w-0">
         {/* Recent orders */}
         <Card className="gap-0 p-0">
           <div className="flex items-center justify-between border-b px-5 py-4">
@@ -170,7 +182,9 @@ export default async function AdminDashboard() {
               No orders yet. They will appear here the moment one is placed.
             </p>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+            <OrderCards orders={recent} className="sm:hidden" />
+            <div className="hidden overflow-x-auto sm:block">
               <table className="w-full min-w-[34rem] text-sm">
                 <thead>
                   <tr className="border-b text-left text-xs uppercase tracking-wider text-muted-foreground">
@@ -214,6 +228,7 @@ export default async function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+            </>
           )}
         </Card>
 
