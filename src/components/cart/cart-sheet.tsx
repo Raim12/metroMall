@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 
 import {
@@ -62,7 +62,7 @@ export function CartSheet() {
               <ul className="space-y-3">
                 <AnimatePresence initial={false}>
                   {items.map((item) => (
-                    <motion.li
+                    <m.li
                       key={item.key}
                       layout
                       initial={{ opacity: 0, y: 12 }}
@@ -129,7 +129,7 @@ export function CartSheet() {
                           </span>
                         </div>
                       </div>
-                    </motion.li>
+                    </m.li>
                   ))}
                 </AnimatePresence>
               </ul>

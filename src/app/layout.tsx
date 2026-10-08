@@ -6,6 +6,7 @@ import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
 import { FloatingActions } from "@/components/layout/floating-actions";
 import { CartSheet } from "@/components/cart/cart-sheet";
+import { MotionProvider } from "@/components/shared/motion-provider";
 import { CartHydrator } from "@/components/cart/cart-hydrator";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE } from "@/lib/constants";
@@ -76,15 +77,17 @@ export default function RootLayout({
           Skip to content
         </a>
 
-        <AnnouncementBar />
-        <Navbar />
-        <main id="main">{children}</main>
-        <Footer />
+        <MotionProvider>
+          <AnnouncementBar />
+          <Navbar />
+          <main id="main">{children}</main>
+          <Footer />
 
-        <CartHydrator />
-        <CartSheet />
-        <FloatingActions />
-        <Toaster position="top-center" richColors />
+          <CartHydrator />
+          <CartSheet />
+          <FloatingActions />
+          <Toaster position="top-center" richColors />
+        </MotionProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { Minus, Plus, ShoppingCart, Star, Check, ShieldCheck, Truck, BadgeCheck } from "lucide-react";
 import { toast } from "sonner";
 
@@ -62,7 +62,7 @@ export function ProductDetail({ product }: { product: Product }) {
           ) : null}
 
           <AnimatePresence mode="wait">
-            <motion.div
+            <m.div
               key={images.length ? `img-${imageIndex}` : `color-${color.name}`}
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -80,7 +80,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 priority
                 spin
               />
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </div>
 

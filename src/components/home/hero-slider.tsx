@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   AnimatePresence,
-  motion,
+  m,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
@@ -74,7 +74,7 @@ export function HeroSlider({ products }: { products: Product[] }) {
         <div className="grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-2 lg:gap-4 lg:p-14">
           {/* Copy */}
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
+            <m.div
               key={`copy-${product.id}`}
               custom={direction}
               variants={slide}
@@ -118,13 +118,13 @@ export function HeroSlider({ products }: { products: Product[] }) {
                   {formatPkr(product.price)}
                 </span>
               </div>
-            </motion.div>
+            </m.div>
           </AnimatePresence>
 
           {/* Artwork */}
           <div className="order-1 lg:order-2">
             <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
+              <m.div
                 key={`art-${product.id}`}
                 custom={direction}
                 initial={{ opacity: 0, scale: 0.88, rotate: reduce ? 0 : -8 }}
@@ -145,7 +145,7 @@ export function HeroSlider({ products }: { products: Product[] }) {
                   priority={index === PROMO_SLIDES}
                   spin
                 />
-              </motion.div>
+              </m.div>
             </AnimatePresence>
           </div>
         </div>
@@ -208,7 +208,7 @@ function LegendsSlide({
 }) {
   return (
     <AnimatePresence mode="wait" custom={direction}>
-      <motion.div
+      <m.div
         key="legends"
         custom={direction}
         variants={variants}
@@ -277,7 +277,7 @@ function LegendsSlide({
             />
           )}
         </div>
-      </motion.div>
+      </m.div>
     </AnimatePresence>
   );
 }

@@ -417,3 +417,34 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Cart badge pop.
+ *
+ * Replaces a Framer Motion spring. Re-keying the element on the item count
+ * remounts it, which restarts the animation — the same effect the library's
+ * `key` + `initial/animate` gave, without shipping the library to do it.
+ */
+@keyframes cart-badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    transform: scale(1.12);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.cart-badge-pop {
+  animation: cart-badge-pop 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cart-badge-pop {
+    animation: none;
+  }
+}

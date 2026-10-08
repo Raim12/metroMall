@@ -3,7 +3,6 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Menu, ShoppingCart, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -136,20 +135,15 @@ export function Navbar() {
               className="relative size-10 rounded-xl hover:bg-brand-50"
             >
               <ShoppingCart className="size-5 text-brand-700" aria-hidden />
-              <AnimatePresence>
-                {hasHydrated && itemCount > 0 ? (
-                  <motion.span
-                    key={itemCount}
-                    initial={{ scale: 0.4, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.4, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 520, damping: 22 }}
-                    className="absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-cta-400 px-1 text-[0.65rem] font-bold text-cta-foreground shadow"
-                  >
-                    {itemCount > 99 ? "99+" : itemCount}
-                  </motion.span>
-                ) : null}
-              </AnimatePresence>
+              {hasHydrated && itemCount > 0 ? (
+                // Re-keyed on the count so the pop replays whenever it changes.
+                <span
+                  key={itemCount}
+                  className="cart-badge-pop absolute -right-0.5 -top-0.5 grid min-w-5 place-items-center rounded-full bg-cta-400 px-1 text-[0.65rem] font-bold text-cta-foreground shadow"
+                >
+                  {itemCount > 99 ? "99+" : itemCount}
+                </span>
+              ) : null}
             </Button>
 
             <Button
@@ -169,17 +163,25 @@ export function Navbar() {
           </div>
         </nav>
 
-        {/* Mobile drawer */}
-        <AnimatePresence>
-          {mobileOpen ? (
-            <motion.div
-              initial={{ opacity: 0, y: -8, height: 0 }}
-              animate={{ opacity: 1, y: 0, height: "auto" }}
-              exit={{ opacity: 0, y: -8, height: 0 }}
-              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden lg:hidden"
-            >
-              <ul className="mt-2 space-y-0.5 rounded-2xl border bg-white p-2 shadow-xl">
+        {/*
+          Mobile drawer.
+
+          Stays mounted and animates open with the grid-template-rows 0fr->1fr
+          technique, which transitions to the content's natural height without
+          measuring it — what Framer's `height: "auto"` was doing. `inert`
+          keeps the collapsed links out of the tab order and the a11y tree.
+        */}
+        <div
+          inert={!mobileOpen}
+          className={cn(
+            "grid overflow-hidden transition-all duration-250 ease-[cubic-bezier(0.22,1,0.36,1)] lg:hidden motion-reduce:transition-none",
+            mobileOpen
+              ? "grid-rows-[1fr] opacity-100"
+              : "grid-rows-[0fr] opacity-0",
+          )}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <ul className="mt-2 space-y-0.5 rounded-2xl border bg-white p-2 shadow-xl">
                 {NAV_LINKS.map((link) => (
                   <li key={link.href}>
                     <Link
@@ -223,10 +225,9 @@ export function Navbar() {
                     ) : null}
                   </li>
                 ))}
-              </ul>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+            </ul>
+          </div>
+        </div>
       </div>
     </header>
   );

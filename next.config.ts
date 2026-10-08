@@ -20,6 +20,18 @@ const nextConfig: NextConfig = {
    * Capping the widths at the source resolution removes the upscale entirely
    * and keeps the responsive srcset, so images are still sized to the viewport.
    */
+  /**
+   * Tree-shake barrel packages.
+   *
+   * `radix-ui` and `lucide-react` are meta-packages: importing two components
+   * pulls the whole index into the bundle. Lighthouse reports one homepage
+   * chunk as 34 KB unused out of 41 KB, which is this. Next rewrites these to
+   * per-module imports instead.
+   */
+  experimental: {
+    optimizePackageImports: ["radix-ui", "lucide-react", "framer-motion"],
+  },
+
   images: {
     deviceSizes: [640, 750, 828, 1080, 1200],
     imageSizes: [96, 128, 256, 384],
