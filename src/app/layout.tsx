@@ -4,11 +4,9 @@ import { Archivo, Inter } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
-import { FloatingActions } from "@/components/layout/floating-actions";
-import { CartSheet } from "@/components/cart/cart-sheet";
 import { MotionProvider } from "@/components/shared/motion-provider";
+import { DeferredChrome } from "@/components/shared/deferred-chrome";
 import { CartHydrator } from "@/components/cart/cart-hydrator";
-import { Toaster } from "@/components/ui/sonner";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
@@ -84,9 +82,7 @@ export default function RootLayout({
           <Footer />
 
           <CartHydrator />
-          <CartSheet />
-          <FloatingActions />
-          <Toaster position="top-center" richColors />
+          <DeferredChrome />
         </MotionProvider>
       </body>
     </html>
