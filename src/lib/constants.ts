@@ -8,7 +8,14 @@ export const SITE = {
   slogan: "Now we are online!",
   description:
     "Metro Electric Co. builds AC/DC inverter ceiling, pedestal and exhaust fans that cut power consumption by up to 64% without compromising airflow.",
-  url: "https://metroelectricco.com.pk",
+  /**
+   * Canonical production origin. Drives `metadataBase`, so it is what every
+   * canonical link, Open Graph URL and sitemap entry is built from.
+   *
+   * Must be a domain that actually resolves: metroelectricco.com.pk does not,
+   * which pointed every canonical URL at a dead host.
+   */
+  url: "https://metroelectromall.com",
   email: "info@metroelectricco.com.pk",
   /** Primary mobile — same number as WhatsApp. */
   phone: "+92 333 2299144",

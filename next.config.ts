@@ -7,6 +7,29 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
 
   /**
+   * Image optimisation, sized for this catalogue and this host.
+   *
+   * The catalogue photos in uploads/products/ are already WebP, already cropped
+   * and at most ~1235px wide (16-400 KB each). Next's defaults still offer
+   * srcset widths up to 3840px, so a full-bleed <Image> asks the server to
+   * UPSCALE and re-encode every photo — roughly 2-3s each on Render's starter
+   * instance. With an empty cache after a deploy the homepage's requests queue
+   * behind each other and the browser gives up, leaving broken images until the
+   * cache fills.
+   *
+   * Capping the widths at the source resolution removes the upscale entirely
+   * and keeps the responsive srcset, so images are still sized to the viewport.
+   */
+  images: {
+    deviceSizes: [640, 750, 828, 1080, 1200],
+    imageSizes: [96, 128, 256, 384],
+    formats: ["image/webp"],
+    // Sources are immutable (filenames carry a random suffix), so a transformed
+    // variant never needs re-checking. Default is 60s.
+    minimumCacheTTL: 31536000,
+  },
+
+  /**
    * `next dev` gets its own output folder. Sharing `.next` with `next build`
    * means starting the dev server overwrites the production manifests, and the
    * next `next start` crashes with "routesManifest.dataRoutes is not iterable".

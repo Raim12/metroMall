@@ -43,15 +43,26 @@ services:
           name: metro-db
           property: connectionString
 
-      # Render injects the public URL; Safepay redirects and robots.ts use it.
+      # Where Safepay sends the customer back to after paying.
+      #
+      # Must be the domain people actually shop on, NOT Render's own
+      # *.onrender.com address. The cart lives in localStorage, which is scoped
+      # per origin: bouncing a customer from metroelectromall.com to
+      # onrender.com mid-checkout lands them on a different origin, where the
+      # confirmation page cannot see — or clear — the cart they just paid for.
+      #
+      # Canonical links, the sitemap and robots.txt do NOT read this; they use
+      # SITE.url in src/lib/constants.ts.
       - key: NEXT_PUBLIC_SITE_URL
-        fromService:
-          type: web
-          name: metro-electric
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://metroelectromall.com
 
-      # Keep the review site out of search results. Only set "true" on the
-      # real production domain.
+      # Keep the site out of search results until the copy is signed off.
+      #
+      # robots.ts requires this AND the canonical host, so flipping it to "true"
+      # still leaves the *.onrender.com address disallowed — the two addresses
+      # cannot compete as duplicate content.
+      #
+      # Set "true" once the client has signed off the copy.
       - key: NEXT_PUBLIC_ALLOW_INDEXING
         value: "false"
 

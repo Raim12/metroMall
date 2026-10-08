@@ -58,3 +58,6 @@ next-env.d.ts
 
 # one-off backup from scripts/split-ceiling-categories.mjs
 *.before-ceiling-split
+
+# local dev server logs
+dev*.log
