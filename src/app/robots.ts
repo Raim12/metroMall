@@ -24,26 +24,45 @@ export const dynamic = "force-dynamic";
 
 const BLOCKED_FROM_INDEX = ["/admin", "/admin/", "/checkout", "/api/"];
 
-function canonicalHost(): string {
-  return new URL(SITE.url).host;
+/** Hosts that must never be indexed, whatever the flag says. */
+function isPreviewHost(host: string): boolean {
+  // Render's own subdomain for this service, and anything that isn't a real
+  // domain. Everything else is treated as a production domain the owner has
+  // deliberately pointed here.
+  return host === "" || host.endsWith(".onrender.com") || host === "localhost";
 }
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const allowIndexing = process.env.NEXT_PUBLIC_ALLOW_INDEXING === "true";
 
   // `host` is what the browser asked for; Render sets `x-forwarded-host` when
-  // proxying, so prefer it and fall back for local use.
+  // proxying. Through more than one proxy it can be a comma-separated list, so
+  // take the first entry, and drop any port.
   const headerList = await headers();
-  const host = (
-    headerList.get("x-forwarded-host") ??
-    headerList.get("host") ??
-    ""
-  ).toLowerCase();
+  const host = (headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "")
+    .split(",")[0]
+    .trim()
+    .toLowerCase()
+    .replace(/:\d+$/, "");
 
-  const expected = canonicalHost().toLowerCase();
-  const onCanonicalHost = host === expected || host === `www.${expected}`;
+  /*
+   * Deliberately a deny-list, not an allow-list.
+   *
+   * Matching the canonical host exactly meant any mismatch — a www variant, a
+   * second domain, a proxy spelling the header differently — silently served
+   * "Disallow: /" with nothing to show why. Blocking only the hosts that must
+   * never be indexed keeps the duplicate-content protection without making
+   * every other host fail closed and invisible.
+   */
+  const blocked = !allowIndexing || isPreviewHost(host);
 
-  if (!allowIndexing || !onCanonicalHost) {
+  // One line in the server log, so "why is the site still disallowed?" is
+  // answerable from Render's logs rather than by guesswork.
+  console.info(
+    `[robots] host=${host || "(none)"} allowIndexing=${allowIndexing} -> ${blocked ? "disallow" : "allow"}`,
+  );
+
+  if (blocked) {
     return { rules: [{ userAgent: "*", disallow: "/" }] };
   }
 
