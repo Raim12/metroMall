@@ -7,20 +7,6 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
 
   /**
-   * Image optimisation, sized for this catalogue and this host.
-   *
-   * The catalogue photos in uploads/products/ are already WebP, already cropped
-   * and at most ~1235px wide (16-400 KB each). Next's defaults still offer
-   * srcset widths up to 3840px, so a full-bleed <Image> asks the server to
-   * UPSCALE and re-encode every photo — roughly 2-3s each on Render's starter
-   * instance. With an empty cache after a deploy the homepage's requests queue
-   * behind each other and the browser gives up, leaving broken images until the
-   * cache fills.
-   *
-   * Capping the widths at the source resolution removes the upscale entirely
-   * and keeps the responsive srcset, so images are still sized to the viewport.
-   */
-  /**
    * Tree-shake barrel packages.
    *
    * `radix-ui` and `lucide-react` are meta-packages: importing two components
@@ -32,13 +18,21 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["radix-ui", "lucide-react", "framer-motion"],
   },
 
+  /**
+   * Serve images as they are — no on-the-fly resizing.
+   *
+   * Every catalogue photo in uploads/products/ is already a cropped WebP of at
+   * most ~1200px (median 29 KB, average 36 KB), so re-encoding them gained
+   * little. It cost a lot: each resize runs sharp on the server, and a
+   * catalogue page triggers 24 at once. On Render's small instance (512 MB,
+   * a fraction of a CPU) those bursts pushed memory past the limit, the
+   * instance was killed and restarted, and visitors got 502s until it came back.
+   *
+   * Files are served straight from /api/uploads with year-long immutable
+   * caching, so browsers download each photo once.
+   */
   images: {
-    deviceSizes: [640, 750, 828, 1080, 1200],
-    imageSizes: [96, 128, 256, 384],
-    formats: ["image/webp"],
-    // Sources are immutable (filenames carry a random suffix), so a transformed
-    // variant never needs re-checking. Default is 60s.
-    minimumCacheTTL: 31536000,
+    unoptimized: true,
   },
 
   /**
