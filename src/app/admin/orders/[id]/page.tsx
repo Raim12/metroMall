@@ -12,6 +12,7 @@ import { ProductImage } from "@/components/product/product-image";
 import { getOrder } from "@/lib/admin/queries";
 import { formatPkr, variantLabel } from "@/lib/utils";
 import { WALK_IN_ADDRESS } from "@/lib/validation";
+import { advanceAmount } from "@/lib/delivery";
 import type { FanVariant } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -85,6 +86,14 @@ export default async function AdminOrderPage({
         <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted-foreground">
           Change status
         </p>
+        {order.status === "PENDING" && (order.paymentMethod === "COD" || order.paymentMethod === "BANK_TRANSFER") ? (
+          <p className="mb-3 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-900">
+            Awaiting the payment receipt on WhatsApp:{" "}
+            <strong>{formatPkr(advanceAmount(order.paymentMethod, order.total))}</strong>{" "}
+            {order.paymentMethod === "COD" ? "(delivery charge; rest is cash on delivery)" : "(full amount)"}.
+            Mark <strong>Paid</strong> once the receipt is received, then <strong>Fulfilled</strong> after dispatch.
+          </p>
+        ) : null}
         <OrderStatusControl orderId={order.id} current={order.status} />
       </div>
 
@@ -105,7 +114,7 @@ export default async function AdminOrderPage({
                   <Link
                     href={`/product/${item.slug}`}
                     target="_blank"
-                    className="truncate text-sm font-semibold hover:text-brand-700"
+                    className="block truncate text-sm font-semibold hover:text-brand-700"
                   >
                     {item.name}
                   </Link>

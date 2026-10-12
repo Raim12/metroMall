@@ -18,7 +18,6 @@ import {
 } from "@/lib/admin/order-actions";
 import { PAYMENT_METHODS, PROVINCES } from "@/lib/validation";
 import { brandName } from "@/lib/constants";
-import { FLAT_SHIPPING_FEE, FREE_SHIPPING_THRESHOLD } from "@/lib/order-pricing";
 import { cn, formatPkr, hasChoice, STANDARD_VARIANT } from "@/lib/utils";
 
 const PAYMENT_LABELS: Record<(typeof PAYMENT_METHODS)[number], string> = {
@@ -26,6 +25,7 @@ const PAYMENT_LABELS: Record<(typeof PAYMENT_METHODS)[number], string> = {
   CARD: "Card",
   EASYPAISA: "EasyPaisa",
   JAZZCASH: "JazzCash",
+  BANK_TRANSFER: "Bank Transfer",
 };
 
 const STATUSES = [
@@ -336,7 +336,7 @@ export function OrderForm(
               ))}
             </select>
           </Field>
-          <Field label="Delivery charge (Rs.)" hint={`Website default: Rs. ${FLAT_SHIPPING_FEE}, free from ${formatPkr(FREE_SHIPPING_THRESHOLD)}`}>
+          <Field label="Delivery charge (Rs.)" hint="Website orders use Rs. 300. Change it if you agreed a different charge.">
             <Input
               type="number"
               min={0}

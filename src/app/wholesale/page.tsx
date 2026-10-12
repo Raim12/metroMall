@@ -8,31 +8,32 @@ import { Reveal } from "@/components/shared/reveal";
 import { SITE, WHATSAPP_LINK } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Export Queries",
+  title: "Wholesale & Bulk Orders",
   description:
-    "Bulk orders, international shipping and custom specifications — reach the Metro Electric Co. export team.",
+    "Wholesale and bulk prices on fans and home appliances from Pakistan's top brands — for dealers, builders, offices and projects.",
 };
 
-export default function ExportPage() {
+export default function WholesalePage() {
   return (
     <div className="metro-wash min-h-[70vh]">
       <div className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <Reveal className="text-center">
           <h1 className="font-heading text-4xl font-extrabold sm:text-5xl">
-            Export Queries
+            Wholesale &amp; Bulk Orders
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Have questions about bulk orders, international shipping or custom
-            specifications? Reach out to our export team.
+            Buying for a shop, a building project or an office? As an authorized
+            wholesaler since {SITE.since}, we offer bulk prices across every brand we
+            stock. Tell us what you need and we&apos;ll send you a quote.
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="mt-12 grid gap-6 lg:grid-cols-2 [&>*]:min-w-0">
           {/* Contact card */}
           <Reveal direction="right">
             <Card className="h-full gap-0 p-6 sm:p-8">
               <h2 className="font-heading text-xl font-extrabold">
-                Contact Our Export Team
+                Contact Our Wholesale Team
               </h2>
 
               <ul className="mt-6 space-y-5">

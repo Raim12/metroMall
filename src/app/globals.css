@@ -201,9 +201,19 @@
   body {
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
+    /*
+     * Slide-in reveals start offset sideways (see [data-reveal] below) and the
+     * WhatsApp button's ping ring scales past the edge; without this, phones
+     * widened the page to fit them and zoomed out. `clip` (not `hidden`) adds
+     * no scroll container, so the sticky header keeps working.
+     */
+    overflow-x: clip;
   }
   html {
     @apply font-sans scroll-smooth;
+    /* Same reason as on body: mobile browsers size the viewport to the widest
+       content, so off-screen reveal offsets must not count. */
+    overflow-x: clip;
   }
   h1,
   h2,

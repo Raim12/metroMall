@@ -1,6 +1,7 @@
 import "server-only";
 
 import { codProvider } from "./cod";
+import { bankTransferProvider } from "./bank-transfer";
 import { safepayProvider } from "./safepay";
 import { PaymentConfigError, type PaymentProvider } from "./provider";
 
@@ -24,6 +25,7 @@ export function activeGateway(): PaymentProvider | null {
 /** Resolves the provider that should settle a given payment method. */
 export function providerForMethod(method: string): PaymentProvider {
   if (method === "COD") return codProvider;
+  if (method === "BANK_TRANSFER") return bankTransferProvider;
 
   const gateway = activeGateway();
   if (!gateway || !gateway.methods.includes(method)) {
@@ -39,10 +41,17 @@ export function providerForMethod(method: string): PaymentProvider {
   return gateway;
 }
 
+/**
+ * Online card/wallet payments are paused for now: customers pay by Cash on
+ * Delivery or bank transfer and WhatsApp the receipt (lib/delivery.ts). Set to
+ * true to offer the configured gateway's methods again — no other change needed.
+ */
+const ONLINE_PAYMENTS_ENABLED = false;
+
 /** Methods the storefront should actually offer, given current config. */
 export function availablePaymentMethods(): string[] {
-  const methods = ["COD"];
+  const methods = ["COD", "BANK_TRANSFER"];
   const gateway = activeGateway();
-  if (gateway?.isConfigured()) methods.push(...gateway.methods);
+  if (ONLINE_PAYMENTS_ENABLED && gateway?.isConfigured()) methods.push(...gateway.methods);
   return methods;
 }

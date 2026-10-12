@@ -40,7 +40,7 @@ const CHANNELS: Channel[] = [
   {
     Icon: MapPin,
     title: "Office",
-    blurb: "Visit us at our factory office.",
+    blurb: "Visit us at our office.",
     value: SITE.address.full,
     href: SITE.mapLink,
   },

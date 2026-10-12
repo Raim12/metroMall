@@ -121,8 +121,12 @@ export async function getCatalogue(query: CatalogueQuery) {
   const page = Math.max(1, query.page ?? 1);
   const terms = (query.q ?? "").trim().split(/\s+/).filter(Boolean).slice(0, 6);
 
+  const sortsByPrice = query.sort === "price-asc" || query.sort === "price-desc";
   const where: Prisma.ProductWhereInput = {
     ...SELLABLE,
+    // "Price coming soon" products (price 0) would all sort first; leave them
+    // out of price-sorted views.
+    ...(sortsByPrice ? { price: { gt: 0 } } : {}),
     ...(query.category ? { category: SLUG_TO_CATEGORY[query.category] } : {}),
     ...(query.brand ? { brand: query.brand } : {}),
     // Every word must appear somewhere in the name, tagline or brand.

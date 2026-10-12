@@ -76,6 +76,11 @@ const nextConfig: NextConfig = {
     maxInactiveAge: 60 * 60 * 1000, // 1 hour
     pagesBufferLength: 25,
   },
+
+  /** Old addresses that may already be shared or indexed. */
+  async redirects() {
+    return [{ source: "/export", destination: "/wholesale", permanent: true }];
+  },
 };
 
 export default nextConfig;

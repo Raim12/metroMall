@@ -7,7 +7,7 @@ import { Reveal } from "@/components/shared/reveal";
 export const metadata: Metadata = {
   title: "Join Us",
   description:
-    "Apply to join Metro Electric Co. — engineering, production, quality and sales roles in Karachi, Pakistan.",
+    "Apply to join Metro Electric Co. — sales, customer support, technical and delivery roles in Karachi, Pakistan.",
 };
 
 export default function JoinUsPage() {

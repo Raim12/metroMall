@@ -28,16 +28,19 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} | AC DC Inverter Ceiling Fans in Pakistan`,
+    default: `${SITE.name} | Authorized Dealer of Fans & Home Appliances in Pakistan`,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
   keywords: [
+    "fans Karachi",
+    "home appliances Karachi",
+    "authorized dealer",
+    "wholesale fans Pakistan",
     "inverter fan",
-    "BLDC fan Pakistan",
-    "ceiling fan",
     "AC DC fan",
-    "energy saving fan",
+    "geysers",
+    "gas appliances",
     "Metro Electric",
   ],
   openGraph: {

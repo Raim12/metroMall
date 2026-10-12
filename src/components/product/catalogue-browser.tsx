@@ -91,11 +91,37 @@ export function CatalogueBrowser({
 
   const sidebar = (
     <nav aria-label="Product filters" className="space-y-7">
+      {/* Brands first: shoppers here mostly know which brand they want. */}
+      <div>
+        <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Brands
+        </h2>
+        <div className="flex flex-wrap gap-1.5">
+          {BRANDS.filter((b) => facets.brands[b.slug]).map((b) => (
+            <Link
+              key={b.slug}
+              href={hrefFor(filters, { brand: filters.brand === b.slug ? undefined : b.slug })}
+              scroll={false}
+              onClick={() => setFiltersOpen(false)}
+              className={cn(
+                "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                filters.brand === b.slug
+                  ? "border-brand-600 bg-brand-600 text-white"
+                  : "bg-white hover:border-brand-300 hover:text-brand-700",
+              )}
+            >
+              {b.name}
+            </Link>
+          ))}
+        </div>
+      </div>
       {CATEGORY_GROUPS.map(({ group, title }) => {
         const stocked = CATEGORIES.filter((c) => c.group === group && facets.categories[c.slug]);
         // Lights are announced before they are stocked; other empty categories stay hidden.
         const upcoming =
-          group === "lights" ? CATEGORIES.filter((c) => c.group === group && !facets.categories[c.slug]) : [];
+          group === "lights" || group === "electrical"
+            ? CATEGORIES.filter((c) => c.group === group && !facets.categories[c.slug])
+            : [];
         if (!stocked.length && !upcoming.length) return null;
         return (
         <div key={group}>
@@ -146,19 +172,34 @@ export function CatalogueBrowser({
         );
       })}
 
-      <div>
-        <h2 className="mb-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-          Brands
-        </h2>
-        <div className="flex flex-wrap gap-1.5">
+    </nav>
+  );
+
+  return (
+    <div className="grid gap-8 lg:grid-cols-[15rem_1fr]">
+      <aside className="hidden lg:block">{sidebar}</aside>
+
+      <div className="min-w-0">
+        {/* One-tap brand filter. Only brands with products in the current view. */}
+        <div className="no-scrollbar -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+          <Link
+            href={hrefFor(filters, { brand: undefined })}
+            scroll={false}
+            className={cn(
+              "shrink-0 rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors",
+              !filters.brand ? "border-brand-600 bg-brand-600 text-white" : "bg-white hover:border-brand-300",
+            )}
+          >
+            All brands
+          </Link>
           {BRANDS.filter((b) => facets.brands[b.slug]).map((b) => (
             <Link
               key={b.slug}
               href={hrefFor(filters, { brand: filters.brand === b.slug ? undefined : b.slug })}
               scroll={false}
-              onClick={() => setFiltersOpen(false)}
+              aria-current={filters.brand === b.slug ? "true" : undefined}
               className={cn(
-                "rounded-full border px-3 py-1 text-xs font-medium transition-colors",
+                "shrink-0 rounded-full border px-4 py-1.5 text-sm font-semibold transition-colors",
                 filters.brand === b.slug
                   ? "border-brand-600 bg-brand-600 text-white"
                   : "bg-white hover:border-brand-300 hover:text-brand-700",
@@ -168,28 +209,35 @@ export function CatalogueBrowser({
             </Link>
           ))}
         </div>
-      </div>
-    </nav>
-  );
 
-  return (
-    <div className="grid gap-8 lg:grid-cols-[15rem_1fr]">
-      <aside className="hidden lg:block">{sidebar}</aside>
-
-      <div className="min-w-0">
         {/* Toolbar */}
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="relative min-w-0 flex-1 sm:max-w-xs">
+        {/*
+          Phones: search on its own full-width row, then Filters and Sort sharing
+          the next row at equal width. All three are 44px tall with matching
+          corners. From sm up everything sits on one compact row.
+        */}
+        <div className="flex flex-wrap items-center gap-3 sm:gap-2">
+          {/* Own full-width row on phones; it was squeezed to just its icon there. */}
+          <form
+            role="search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              go({ q: query.trim() || undefined });
+            }}
+            className="relative w-full sm:w-auto sm:min-w-0 sm:max-w-xs sm:flex-1"
+          >
             <Search
               className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden
             />
             <Input
+              type="search"
+              enterKeyHint="search"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products…"
+              placeholder="Search products or brands…"
               aria-label="Search products"
-              className="pl-9"
+              className="h-11 rounded-lg pl-9 pr-8 sm:h-9 sm:rounded-md [&::-webkit-search-cancel-button]:hidden"
             />
             {query ? (
               <button
@@ -201,33 +249,35 @@ export function CatalogueBrowser({
                 <X className="size-3.5" aria-hidden />
               </button>
             ) : null}
+          </form>
+
+          <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setFiltersOpen((v) => !v)}
+              aria-expanded={filtersOpen}
+              className="h-11 flex-1 gap-2 rounded-lg sm:h-9 sm:flex-none sm:rounded-md lg:hidden"
+            >
+              <SlidersHorizontal className="size-4" aria-hidden />
+              Filters
+            </Button>
+
+            <label className="sr-only" htmlFor="sort">
+              Sort products
+            </label>
+            <select
+              id="sort"
+              value={filters.sort}
+              onChange={(e) => go({ sort: e.target.value as CatalogueSort })}
+              className="h-11 min-w-0 flex-1 rounded-lg border border-input bg-background px-3 text-sm font-medium shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:h-9 sm:flex-none sm:rounded-md"
+            >
+              {SORTS.map((s) => (
+                <option key={s.key} value={s.key}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
           </div>
-
-          <Button
-            variant="outline"
-            onClick={() => setFiltersOpen((v) => !v)}
-            aria-expanded={filtersOpen}
-            className="gap-2 lg:hidden"
-          >
-            <SlidersHorizontal className="size-4" aria-hidden />
-            Filters
-          </Button>
-
-          <label className="sr-only" htmlFor="sort">
-            Sort products
-          </label>
-          <select
-            id="sort"
-            value={filters.sort}
-            onChange={(e) => go({ sort: e.target.value as CatalogueSort })}
-            className="h-9 rounded-md border border-input bg-background px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-          >
-            {SORTS.map((s) => (
-              <option key={s.key} value={s.key}>
-                {s.label}
-              </option>
-            ))}
-          </select>
 
           <span className="ml-auto hidden items-center gap-1.5 text-sm text-muted-foreground sm:flex">
             <LayoutGrid className="size-4" aria-hidden />

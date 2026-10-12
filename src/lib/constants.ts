@@ -3,11 +3,13 @@ import type { CategorySlug } from "@/types";
 export const SITE = {
   name: "Metro Electric Co.",
   shortName: "Metro Electric",
-  tagline: "High-Efficiency BLDC Fans, Engineered in Pakistan",
+  tagline: "Authorized Dealer & Wholesaler of Home Appliances since 1965",
   /** Shown beside the logo in the header. */
   slogan: "Now we are online!",
+  /** Founding year — the heritage line used across the site. */
+  since: 1965,
   description:
-    "Metro Electric Co. builds AC/DC inverter ceiling, pedestal and exhaust fans that cut power consumption by up to 64% without compromising airflow.",
+    "Since 1965, Metro Electric Co. has been a leading Authorized Dealer and Wholesaler of top-tier electric and gas home appliances in Pakistan — genuine products from the country's top brands at unbeatable prices.",
   /**
    * Canonical production origin. Drives `metadataBase`, so it is what every
    * canonical link, Open Graph URL and sitemap entry is built from.
@@ -25,7 +27,9 @@ export const SITE = {
   whatsapp: "+92 333 2299144",
   /** Digits only — used to build the wa.me link. */
   whatsappDigits: "923332299144",
-  hours: "Sat – Thurs, 9:00 AM – 5:00 PM PKT",
+  hours: "Sat – Thurs, 10:30 AM – 8:00 PM PKT",
+  /** Short form for running text, e.g. FAQs. */
+  hoursShort: "10:30 AM to 8:00 PM",
   address: {
     line1: "Opp. Session Court, Gate # 1",
     line2: "M.A. Jinnah Road, Karachi, Pakistan",
@@ -44,8 +48,14 @@ export const SITE = {
 } as const;
 
 export const WHATSAPP_LINK = `https://wa.me/${SITE.whatsappDigits}?text=${encodeURIComponent(
-  "Hi Metro Electric Co. — I'd like to know more about your inverter fans.",
+  "Hi Metro Electric Co. — I'd like to know more about your products.",
 )}`;
+
+/** WhatsApp chat pre-filled with a question about one product (used while its price is coming soon). */
+export const productEnquiryLink = (productName: string) =>
+  `https://wa.me/${SITE.whatsappDigits}?text=${encodeURIComponent(
+    `Hi Metro Electric Co. — I'm interested in the ${productName}. Could you share the price?`,
+  )}`;
 
 export interface NavLink {
   label: string;
@@ -60,7 +70,7 @@ export const NAV_LINKS: NavLink[] = [
   { label: "Products", href: "/catalogue" },
   { label: "LEGENDS", href: "/legends", badge: "Soon" },
   { label: "About Us", href: "/about" },
-  { label: "Export Queries", href: "/export" },
+  { label: "Wholesale", href: "/wholesale" },
   { label: "Join Us", href: "/join-us" },
   {
     label: "Support",
@@ -100,21 +110,22 @@ export const FOOTER_COLUMNS: { heading: string; links: NavLink[] }[] = [
   {
     heading: "More",
     links: [
-      { label: "Export Queries", href: "/export" },
+      { label: "Wholesale & Bulk Orders", href: "/wholesale" },
       { label: "Terms And Conditions", href: "/policies/terms" },
       { label: "Contact Us", href: "/support/contact" },
     ],
   },
 ];
 
-export type CategoryGroup = "fans" | "appliances" | "gas" | "lights";
+export type CategoryGroup = "fans" | "appliances" | "gas" | "lights" | "electrical";
 
 /** Section headings, in display order (catalogue sidebar + homepage). */
 export const CATEGORY_GROUPS: { group: CategoryGroup; title: string }[] = [
   { group: "fans", title: "Fans" },
   { group: "appliances", title: "Home Appliances" },
   { group: "gas", title: "Gas Appliances" },
-  { group: "lights", title: "Fancy Lights" },
+  { group: "lights", title: "Lighting" },
+  { group: "electrical", title: "Electrical" },
 ];
 
 export const CATEGORIES: {
@@ -138,20 +149,20 @@ export const CATEGORIES: {
   },
   {
     slug: "ceiling-fans-acdc",
-    name: "AC/DC 45W Ceiling Fans",
+    name: "AC/DC Ceiling Fans",
     singular: "AC/DC Ceiling Fan",
     group: "fans",
     blurb:
-      "Run on 220V mains or 12V DC from a solar panel or battery — around 45 watts, so they keep going through load-shedding.",
+      "Run on 220V mains or 12V DC from a solar panel or battery, so they keep going through load-shedding.",
     illustration: "ceiling-3",
   },
   {
     slug: "ceiling-fans-inverter",
-    name: "30W Inverter Ceiling Fans",
+    name: "30W+ Inverter Ceiling Fans",
     singular: "Inverter Ceiling Fan",
     group: "fans",
     blurb:
-      "BLDC inverter fans drawing as little as 30 watts, with remote control and multiple speeds.",
+      "30W+ inverter fans with remote control — up to 60% energy saving over a regular fan.",
     illustration: "ceiling-3",
   },
   {
@@ -302,6 +313,27 @@ export const CATEGORIES: {
     group: "lights",
     blurb: "Gate, garden and facade lights built for the weather.",
   },
+  {
+    slug: "table-lamps",
+    name: "Table Lamps",
+    singular: "Table Lamp",
+    group: "lights",
+    blurb: "Desk and bedside table lamps.",
+  },
+  {
+    slug: "stand-lamps",
+    name: "Stand Lamps",
+    singular: "Stand Lamp",
+    group: "lights",
+    blurb: "Floor-standing lamps for living rooms and corners.",
+  },
+  {
+    slug: "electric-switches",
+    name: "Electric Switches",
+    singular: "Electric Switch",
+    group: "electrical",
+    blurb: "Switches, sockets and switch plates.",
+  },
 ];
 
 export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug === slug);
@@ -309,6 +341,8 @@ export const categoryBySlug = (slug: string) => CATEGORIES.find((c) => c.slug ==
 /** The brands we stock. `slug` is what Product.brand stores. */
 export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "pak-fans", name: "Pak Fans", website: "https://www.pakfansofficial.com" },
+  // Pak Fan's premium range, catalogued separately (Luxus Product Catalogue 2026).
+  { slug: "luxus", name: "Luxus by Pak Fan", website: "https://www.pakfansofficial.com" },
   { slug: "royal", name: "Royal", website: "https://royalfans.com" },
   { slug: "super-asia", name: "Super Asia", website: "https://superasiastore.com" },
   { slug: "sk", name: "SK Fans", website: "https://www.skfans.com.pk" },
@@ -321,6 +355,9 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "jackpot", name: "Jackpot", website: "https://www.jackpotappliances.pk" },
   { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
   { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
+  { slug: "lahore", name: "Lahore Fan", website: "" },
+  { slug: "wahid", name: "Wahid Fan", website: "" },
+  { slug: "ricon", name: "Ricon Fan", website: "" },
 ];
 
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
@@ -341,39 +378,54 @@ export const HOUSE_BRANDS: { slug: string; name: string; tagline: string; lead?:
  * are stocked for their home appliances only, so their fans are hidden from
  * every fan category. Add a slug here to start selling that brand's fans.
  */
-export const FAN_BRANDS = ["pak-fans", "royal", "sk", "tamoor", "gfc", "orient", "sonex"];
+export const FAN_BRANDS = [
+  "pak-fans",
+  "luxus",
+  "royal",
+  "sk",
+  "tamoor",
+  "gfc",
+  "orient",
+  "sonex",
+  "voldam",
+  "wester",
+  "lahore",
+  "wahid",
+  "ricon",
+];
 
+/** Inverter-fan efficiency figures used in marketing copy. */
 export const SAVINGS = {
-  regularWatts: 119,
-  inverterWatts: 45,
-  savingsPercent: 64,
-  monthlySavingPkr: 1850,
+  regularWatts: 110,
+  /** Inverter fans start from this wattage ("30W+"). */
+  inverterWatts: 30,
+  savingsPercent: 60,
 } as const;
 
 export const HOME_FAQS = [
   {
     q: "What is your return policy?",
-    a: "Unused fans in original packaging can be returned within 7 days of delivery. Installed units are covered by the warranty rather than the return policy — our service team will repair or replace any manufacturing defect free of charge.",
+    a: "Unused products in their original, sealed packaging can be returned within 7 days of delivery. Once installed, a product is covered by its official brand warranty rather than the return policy — we help you register any claim with the brand's service centre.",
   },
   {
     q: "What payment methods do you accept?",
-    a: "Cash on Delivery across Pakistan, plus EasyPaisa, JazzCash and Visa/Mastercard through our secure checkout. Bank transfer is available for bulk and dealer orders.",
+    a: "Cash on Delivery (Karachi only): transfer the Rs. 300 delivery charge in advance and pay for the order on delivery. Full payment in advance (all cities): transfer the order amount plus Rs. 300 delivery. Bank: MCB Bank Limited, IBAN PK10MUCB0003301010064245, title Metro Electric Co. Then WhatsApp us the receipt and we'll confirm and dispatch your order.",
+  },
+  {
+    q: "Do you deliver outside Karachi?",
+    a: "Yes, across Pakistan, for a delivery charge of Rs. 300 per order. Outside Karachi, orders are paid in full in advance by bank transfer and sent by courier or cargo service.",
   },
   {
     q: "How do I track my order?",
-    a: "You receive an SMS and email with a tracking number once your order is dispatched — typically within 48 hours. You can also WhatsApp our support line with your order number for a live update.",
+    a: "Once your order is dispatched, we share the courier or cargo details with you on WhatsApp. You can also WhatsApp us your order number at any time for an update.",
   },
   {
     q: "What if I receive a damaged item?",
-    a: "Report it within 48 hours with photos of the packaging and unit. We arrange a free pickup and send a replacement — no repair charges, no shipping cost to you.",
-  },
-  {
-    q: "Do you ship internationally?",
-    a: "Yes. We export to the Middle East, Africa and Central Asia. Send volumes and destination through our Export Queries page and our team will quote FOB and CIF pricing.",
+    a: "Report it to us within 48 hours of delivery, with photos of the box and the product, and we will arrange a replacement or repair with you.",
   },
   {
     q: "How can I contact customer support?",
-    a: `Call ${SITE.phone} or our landlines ${SITE.landlines.join(" / ")} Saturday to Thursday, 9 AM to 5 PM, message us on WhatsApp any time, or email ${SITE.email}. We respond to most queries within one business day.`,
+    a: `Call ${SITE.phone} or our landlines ${SITE.landlines.join(" / ")}, Saturday to Thursday, ${SITE.hoursShort}, message us on WhatsApp any time, or email ${SITE.email}. We respond to most queries within one business day.`,
   },
 ];
 
@@ -384,70 +436,71 @@ export const SUPPORT_FAQS: Record<
   difference: [
     {
       q: "What is the difference between AC/DC and Inverter fans?",
-      a: "An AC/DC fan can run on both 220V mains and 12V DC from a solar panel or battery, which makes it useful during load-shedding. An Inverter fan uses a BLDC motor driven by an electronic controller — it always runs on mains but consumes 45–55W instead of 110–120W and offers six precise speeds. Our E-Force range combines both: BLDC efficiency with an AC/DC input stage.",
+      a: "An AC/DC fan runs on 220V mains or on 12V DC from a solar panel or battery, which keeps it going during load-shedding. An inverter fan uses a brushless (BLDC) motor driven by an electronic controller: it runs from about 30W instead of 100W or more — up to 60% energy saving. Many models combine both.",
     },
     {
-      q: "How is your fan better than others?",
-      a: "We wind our motors with 99.99% pure copper, machine the rotors on CNC equipment in-house, and test every unit for airflow, noise and power draw before it is boxed. The result is a fan that holds its rated RPM for years rather than slowing down after a season.",
+      q: "Why buy from Metro Electric Co.?",
+      a: "We have been an authorized dealer and wholesaler of Pakistan's top brands since 1965, so every product is genuine and carries its official brand warranty. You get a wide choice of brands, designs, colours and budgets in one place, at competitive prices, with trained staff to guide you before and after you buy.",
     },
     {
-      q: "Do I need a stabiliser or special wiring?",
-      a: "No. Our inverter fans regulate voltage internally and work on standard household wiring between 140V and 260V. You can keep your existing regulator, though the supplied remote gives finer control.",
+      q: "Do AC/DC and inverter fans need a dimmer or regulator?",
+      a: "No. AC/DC and inverter fans are controlled electronically — you set the speed with the remote or the fan's own controls — so they do not need a traditional wall dimmer or regulator. We recommend connecting them to a normal on/off switch.",
     },
   ],
   warranty: [
     {
       q: "What does the warranty cover?",
-      a: "Every Metro fan carries a 1-year repair warranty on the motor and electronics against manufacturing defects. The warranty covers parts and labour at any authorised service centre.",
+      a: "Every product carries its brand's official warranty. The period depends on the brand and the product — from 1 year, up to 5–10 years for some brands such as Lahore Fan. Coverage and terms are set by each brand.",
     },
     {
       q: "How do I claim warranty service?",
-      a: "Keep your invoice or order number. Call or WhatsApp support, describe the fault, and we will either guide you to the nearest service centre or arrange a pickup in major cities.",
+      a: "Contact us with your invoice or order number and a short description of the fault. We register the complaint with the brand's official service centre on your behalf, or guide you to the brand's direct support. Repairs are carried out by the brand's authorised technicians.",
     },
     {
       q: "What voids the warranty?",
-      a: "Physical damage, water ingress, unauthorised repairs, and running the fan on voltages outside the rated range. Normal wear on the down-rod finish is also excluded.",
+      a: "This is set by each brand, but it typically excludes physical damage, water damage, repairs by unauthorised technicians, and use outside the rated voltage. Ask us and we will check the terms for your product.",
     },
   ],
   service: [
     {
       q: "Do you provide installation?",
-      a: "Ceiling fans ship with a full mounting kit and instructions any electrician can follow. In Karachi, Lahore and Islamabad we can arrange paid installation on request.",
+      a: "Products come with the brand's installation kit and instructions, which any qualified electrician can follow. Our team is happy to advise on the right setup for your space.",
     },
     {
-      q: "Where are your service centres?",
-      a: "We operate service points in Karachi, Lahore, Islamabad, Faisalabad and Multan, plus authorised dealers in most district headquarters. Contact support for the address nearest you.",
+      q: "Where are the service centres?",
+      a: "After-sales service is provided by each brand's official service centres across Pakistan. Tell us your product and city and we will point you to the nearest one — or register the complaint for you.",
     },
     {
       q: "Can I buy spare parts separately?",
-      a: "Yes — blades, remotes, capacitors, down-rods and canopies are all available. Share your model name and we will quote and dispatch the part.",
+      a: "Spare parts are supplied by the brands. Share your product model and we will help you get the part through the brand's official channel.",
     },
   ],
 };
 
+/** "Why choose us" — used on the About page and the homepage. */
 export const CORE_ETHOS = [
   {
-    title: "Quality without Compromise",
-    body: "At Metro Electric Co., quality is not a benchmark, it is a responsibility. From materials selection to final assembly, every decision is guided by durability, reliability and performance. We do not optimise for the lowest acceptable standard; we engineer for the highest possible one.",
+    title: "Brand Variety",
+    body: "An authorized collection of Pakistan's top national brands, covering every design, colour and budget — so you can compare and choose in one place.",
   },
   {
-    title: "Responsibility to the Customer",
-    body: "Trust is earned through consistency. We view every customer relationship as a long-term commitment, not a transaction. Transparency in production, honest communication and dependable after-sales support are integral to how we operate.",
+    title: "Affordability",
+    body: "Premium-quality products at prices that work for every customer. As a wholesaler, we pass the savings on to you.",
   },
   {
-    title: "Building the Industry, Not Just a Brand",
-    body: "Our vision extends beyond individual success. By modernising manufacturing through CNC machining, conveyor-based production and process standardisation, we aim to elevate industry benchmarks across the country.",
+    title: "Expert Guidance",
+    body: "Well-trained sales staff and technicians help you from choosing the right product to support after you buy.",
   },
   {
-    title: "Engineering-Led Innovation",
-    body: "Innovation at Metro is driven by engineering, not trends. Long before energy efficiency became an industry talking point, we invested in research, process optimisation and indigenous development of BLDC motor technology.",
+    title: "Seamless Warranty Bridge",
+    body: "We are your reliable point of contact with the brands' service centres — during the warranty period and after it.",
   },
   {
-    title: "Developing People and Potential",
-    body: "A strong industry is built on skilled people. We bridge the gap between academia and industry by providing opportunities for learning, exposure and practical growth — creating clear pathways for talent within this country.",
+    title: "Genuine Products Only",
+    body: "As an authorized dealer, everything we sell comes through official brand channels, with the brand's own warranty.",
   },
   {
-    title: "Integrity in Every Decision",
-    body: "Integrity governs how we manufacture, how we price and how we engage with stakeholders. We choose clarity over shortcuts and responsibility over convenience — which is how enduring relationships get built.",
+    title: "Trusted since 1965",
+    body: "Generations of Pakistani families have bought their fans and home appliances from Metro Electric Co.",
   },
 ];

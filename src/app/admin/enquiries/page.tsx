@@ -70,7 +70,7 @@ export default async function AdminEnquiriesPage({
                             : "bg-muted text-muted-foreground hover:bg-muted",
                         )}
                       >
-                        {q.type === "EXPORT" ? "Export" : "Support"}
+                        {q.type === "EXPORT" ? "Wholesale" : "Support"}
                       </Badge>
                       <span className="font-semibold">
                         {q.firstName} {q.lastName ?? ""}

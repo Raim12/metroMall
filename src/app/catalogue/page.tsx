@@ -83,7 +83,7 @@ export default async function CataloguePage({ searchParams }: { searchParams: Se
         title="Bulk or dealer pricing?"
         body="Tell us the products and quantities — our team will send you a quote within one business day."
         cta="Send a bulk query"
-        href="/export"
+        href="/wholesale"
       />
     </>
   );

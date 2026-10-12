@@ -2,8 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { checkoutSchema } from "@/lib/validation";
 import { CheckoutError, createOrder, priceCart } from "@/lib/orders";
-import { PaymentConfigError, providerForMethod } from "@/lib/payments";
+import { PaymentConfigError, availablePaymentMethods, providerForMethod } from "@/lib/payments";
 import { sendInternalOrderAlert, sendOrderConfirmation } from "@/lib/email";
+import { COD_CITY, isKarachi } from "@/lib/delivery";
 
 /**
  * POST /api/checkout
@@ -32,6 +33,26 @@ export async function POST(request: Request) {
   }
 
   const input = parsed.data;
+
+  // Only the methods the storefront currently offers (online payments are paused).
+  if (!availablePaymentMethods().includes(input.paymentMethod)) {
+    return NextResponse.json(
+      { error: "Please choose Cash on Delivery or Bank Transfer." },
+      { status: 422 },
+    );
+  }
+
+  // Outside Karachi only bank transfer is accepted (lib/delivery.ts). The form
+  // already hides the other options; this stops a crafted request.
+  if (!isKarachi(input.city) && input.paymentMethod !== "BANK_TRANSFER") {
+    return NextResponse.json(
+      {
+        error: `Outside ${COD_CITY} we accept bank transfer only. Please choose Bank Transfer.`,
+        issues: { paymentMethod: ["Bank transfer only outside Karachi"] },
+      },
+      { status: 422 },
+    );
+  }
 
   try {
     // Resolve the provider before writing anything, so an unconfigured gateway

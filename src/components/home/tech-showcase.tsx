@@ -21,7 +21,7 @@ export function TechShowcase({ product }: { product: Product }) {
 
   return (
     <Section eager className="bg-white">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
+      <div className="grid items-center gap-12 lg:grid-cols-2 [&>*]:min-w-0">
         <Reveal direction="right">
           <Eyebrow>Energy, rethought</Eyebrow>
 

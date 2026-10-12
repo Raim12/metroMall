@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { ShoppingCart, Star } from "lucide-react";
+import { MessageCircle, ShoppingCart, Star } from "lucide-react";
 import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProductImage } from "@/components/product/product-image";
 import { useCartStore } from "@/store/cart-store";
-import { brandName } from "@/lib/constants";
-import { formatPkr, cn, hasChoice } from "@/lib/utils";
+import { brandName, productEnquiryLink } from "@/lib/constants";
+import { formatPkr, cn, hasChoice, isPriceComingSoon } from "@/lib/utils";
 import type { Product } from "@/types";
 
 /**
@@ -131,27 +131,41 @@ export const ProductCard = React.memo(function ProductCard({
           </div>
         ) : null}
 
-        <div className="mt-auto flex items-end justify-between gap-2 pt-4">
-          <div>
-            {product.compareAtPrice ? (
-              <p className="text-xs text-muted-foreground line-through">
-                {formatPkr(product.compareAtPrice)}
-              </p>
-            ) : null}
-            <p className="font-heading text-lg font-extrabold text-brand-700">
-              {formatPkr(product.price)}
+        {isPriceComingSoon(product) ? (
+          <div className="mt-auto flex items-end justify-between gap-2 pt-4">
+            <p className="font-heading text-sm font-extrabold uppercase tracking-wide text-[#a07d12]">
+              Price coming soon
             </p>
+            <Button asChild size="sm" variant="outline" className="font-semibold">
+              <a href={productEnquiryLink(product.name)} target="_blank" rel="noreferrer noopener">
+                <MessageCircle className="size-4" aria-hidden />
+                Ask
+              </a>
+            </Button>
           </div>
+        ) : (
+          <div className="mt-auto flex items-end justify-between gap-2 pt-4">
+            <div>
+              {product.compareAtPrice ? (
+                <p className="text-xs text-muted-foreground line-through">
+                  {formatPkr(product.compareAtPrice)}
+                </p>
+              ) : null}
+              <p className="font-heading text-lg font-extrabold text-brand-700">
+                {formatPkr(product.price)}
+              </p>
+            </div>
 
-          <Button
-            size="sm"
-            onClick={handleAdd}
-            className="bg-cta-400 font-semibold text-cta-foreground hover:bg-cta-500"
-          >
-            <ShoppingCart className="size-4" aria-hidden />
-            Add
-          </Button>
-        </div>
+            <Button
+              size="sm"
+              onClick={handleAdd}
+              className="bg-cta-400 font-semibold text-cta-foreground hover:bg-cta-500"
+            >
+              <ShoppingCart className="size-4" aria-hidden />
+              Add
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );

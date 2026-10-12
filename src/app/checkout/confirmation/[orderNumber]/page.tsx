@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProductImage } from "@/components/product/product-image";
 import { ClearCartOnOrder } from "@/components/cart/clear-cart-on-order";
+import { BankDetails } from "@/components/cart/bank-details";
+import { advanceAmount } from "@/lib/delivery";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatPkr, variantLabel } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
@@ -25,6 +27,7 @@ const METHOD_LABEL: Record<string, string> = {
   CARD: "Card",
   EASYPAISA: "EasyPaisa",
   JAZZCASH: "JazzCash",
+  BANK_TRANSFER: "Bank Transfer",
 };
 
 export default async function ConfirmationPage({
@@ -38,9 +41,14 @@ export default async function ConfirmationPage({
   if (!order) notFound();
 
   const isCod = order.paymentMethod === "COD";
+  const isBankTransfer = order.paymentMethod === "BANK_TRANSFER";
   // A gateway order stays PENDING until the webhook confirms settlement, so
   // don't tell the customer their payment succeeded before it actually has.
-  const awaitingPayment = !isCod && order.status === "PENDING";
+  // Bank transfers are also PENDING, but by design — they get their own message.
+  const awaitingPayment = !isCod && !isBankTransfer && order.status === "PENDING";
+  // COD (delivery charge) and bank transfer (full amount) both need an advance
+  // payment and a WhatsApp receipt before the order is confirmed.
+  const needsAdvance = (isCod || isBankTransfer) && order.status === "PENDING";
   const paymentFailed = order.status === "FAILED";
 
   return (
@@ -66,6 +74,12 @@ export default async function ConfirmationPage({
                 Your payment did not go through, so this order is on hold.
                 Nothing has been charged.
               </>
+            ) : needsAdvance ? (
+              <>
+                Your order is placed. To confirm it, transfer the amount below and
+                send us the receipt on WhatsApp — we&apos;ll then confirm your order
+                and dispatch it.
+              </>
             ) : awaitingPayment ? (
               <>
                 Your order is placed and we&apos;re confirming the payment with
@@ -86,6 +100,16 @@ export default async function ConfirmationPage({
           </p>
         </div>
 
+        {needsAdvance ? (
+          <div className="mx-auto mt-8 max-w-md text-left">
+            <BankDetails
+              method={order.paymentMethod}
+              amount={advanceAmount(order.paymentMethod, order.total)}
+              orderNumber={order.orderNumber}
+            />
+          </div>
+        ) : null}
+
         <Card className="mt-10 gap-0 p-6 sm:p-8">
           <h2 className="font-heading text-lg font-bold">What you ordered</h2>
 
@@ -98,7 +122,7 @@ export default async function ConfirmationPage({
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/product/${item.slug}`}
-                    className="truncate text-sm font-semibold hover:text-brand-700"
+                    className="block truncate text-sm font-semibold hover:text-brand-700"
                   >
                     {item.name}
                   </Link>
@@ -106,7 +130,7 @@ export default async function ConfirmationPage({
                     {[variantLabel(item.size, item.colorName), `Qty ${item.quantity}`].filter(Boolean).join(" · ")}
                   </p>
                 </div>
-                <span className="text-sm font-bold tabular-nums">
+                <span className="shrink-0 text-sm font-bold tabular-nums">
                   {formatPkr(item.unitPrice * item.quantity)}
                 </span>
               </li>
@@ -168,9 +192,10 @@ export default async function ConfirmationPage({
                 <p className="mt-1.5 text-xs text-muted-foreground">
                   Please keep{" "}
                   <span className="font-semibold text-foreground">
-                    {formatPkr(order.total)}
+                    {formatPkr(order.total - advanceAmount("COD", order.total))}
                   </span>{" "}
-                  ready for the courier.
+                  ready for the courier — the rest after your{" "}
+                  {formatPkr(advanceAmount("COD", order.total))} advance for delivery.
                 </p>
               ) : null}
             </div>

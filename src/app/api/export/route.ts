@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { exportQuerySchema } from "@/lib/validation";
 import { sendEnquiryAck, sendEnquiryAlert } from "@/lib/email";
 
-/** POST /api/export — export enquiry from the Export Queries page. */
+/** POST /api/export — wholesale/bulk enquiry from the /wholesale page (stored as type EXPORT). */
 export async function POST(request: Request) {
   let payload: unknown;
   try {

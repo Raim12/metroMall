@@ -84,7 +84,7 @@ export function CartSheet() {
                           <Link
                             href={`/product/${item.slug}`}
                             onClick={() => setOpen(false)}
-                            className="truncate text-sm font-semibold hover:text-brand-700"
+                            className="block truncate text-sm font-semibold hover:text-brand-700"
                           >
                             {item.name}
                           </Link>
@@ -143,8 +143,8 @@ export function CartSheet() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Delivery calculated at checkout. Cash on Delivery available
-                nationwide.
+                Rs. 300 delivery added at checkout. Cash on Delivery in Karachi,
+                bank transfer nationwide.
               </p>
               <Separator className="my-3" />
               <Button

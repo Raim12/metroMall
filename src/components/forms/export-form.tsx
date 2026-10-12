@@ -52,7 +52,7 @@ export function ExportForm() {
       }
 
       toast.success("Query sent", {
-        description: `Thanks ${values.firstName}, our export desk will reply within one business day.`,
+        description: `Thanks ${values.firstName}, our wholesale team will reply within one business day.`,
       });
       form.reset();
     } catch {
@@ -144,7 +144,7 @@ export function ExportForm() {
               <FormControl>
                 <Textarea
                   rows={5}
-                  placeholder="Please include details about your export requirements, order volume, destination country, etc."
+                  placeholder="Tell us the products, brands and quantities you need, and your city."
                   {...field}
                 />
               </FormControl>

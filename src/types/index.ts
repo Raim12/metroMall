@@ -45,7 +45,10 @@ export type CategorySlug =
   | "wall-lights"
   | "chandeliers"
   | "down-lights"
-  | "outdoor-lights";
+  | "outdoor-lights"
+  | "table-lamps"
+  | "stand-lamps"
+  | "electric-switches";
 
 export interface ProductColor {
   /** Human readable name shown in the Select + tooltip. */

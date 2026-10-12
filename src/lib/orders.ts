@@ -8,8 +8,7 @@ import type { CheckoutValues } from "@/lib/validation";
 
 import { calculateShipping } from "@/lib/order-pricing";
 
-// Re-exported for existing imports (checkout page).
-export { FLAT_SHIPPING_FEE, FREE_SHIPPING_THRESHOLD, calculateShipping } from "@/lib/order-pricing";
+
 
 /**
  * Human-facing reference, e.g. `MEC-7QK2XB`.
@@ -89,6 +88,14 @@ export async function priceCart(
       );
     }
 
+    // "Price coming soon" products are listed but not yet for sale.
+    if (product.price <= 0) {
+      throw new CheckoutError(
+        `${product.name} is not available to order yet — its price is coming soon.`,
+        409,
+      );
+    }
+
     if (!product.sizes.includes(item.size)) {
       throw new CheckoutError(
         `${product.name} is not available in size ${item.size}.`,
@@ -130,7 +137,7 @@ export async function priceCart(
   });
 
   const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
-  const shipping = calculateShipping(subtotal);
+  const shipping = calculateShipping();
 
   return { lines, subtotal, shipping, total: subtotal + shipping };
 }

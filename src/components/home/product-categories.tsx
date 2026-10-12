@@ -1,21 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, Lamp, LampCeiling, LampWallUp, Lightbulb } from "lucide-react";
+import { ArrowRight, Lightbulb } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
 import { RevealGroup, RevealItem } from "@/components/shared/reveal";
 import { ProductImage } from "@/components/product/product-image";
+import { CATEGORY_ICONS } from "@/components/shared/lighting-icons";
 import { CATEGORIES, CATEGORY_GROUPS } from "@/lib/constants";
 import type { CategorySlug } from "@/types";
 
-/** Icons for the not-yet-stocked Fancy Lights tiles. */
-const LIGHT_ICONS: Partial<Record<CategorySlug, typeof Lamp>> = {
-  "wall-lights": LampWallUp,
-  chandeliers: LampCeiling,
-  "down-lights": Lightbulb,
-  "outdoor-lights": Lamp,
-};
+/** Groups announced before they are stocked: their empty categories show as "Coming soon". */
+const ANNOUNCED_GROUPS = new Set(["lights", "electrical"]);
 
 /** Category tiles, each fronted by a real product photo from that category. */
 export function ProductCategories({
@@ -37,7 +33,7 @@ export function ProductCategories({
       {CATEGORY_GROUPS.map(({ group, title }) => {
         const categories = CATEGORIES.filter((c) => c.group === group && counts[c.slug]);
         const upcoming =
-          group === "lights" ? CATEGORIES.filter((c) => c.group === group && !counts[c.slug]) : [];
+          ANNOUNCED_GROUPS.has(group) ? CATEGORIES.filter((c) => c.group === group && !counts[c.slug]) : [];
         if (!categories.length && !upcoming.length) return null;
         return (
           <div key={group} className="mt-12">
@@ -70,7 +66,7 @@ export function ProductCategories({
                 </RevealItem>
               ))}
               {upcoming.map((category) => {
-                const Icon = LIGHT_ICONS[category.slug] ?? Lightbulb;
+                const Icon = CATEGORY_ICONS[category.slug] ?? Lightbulb;
                 return (
                   <RevealItem key={category.slug}>
                     <Card className="h-full gap-0 overflow-hidden border-dashed p-0">

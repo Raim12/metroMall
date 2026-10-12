@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { AnimatePresence, m } from "framer-motion";
-import { Minus, Plus, ShoppingCart, Star, Check, ShieldCheck, Truck, BadgeCheck } from "lucide-react";
+import { Minus, Plus, ShoppingCart, Star, Check, ShieldCheck, Truck, BadgeCheck, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/select";
 import { ProductImage } from "@/components/product/product-image";
 import { useCartStore } from "@/store/cart-store";
-import { brandName } from "@/lib/constants";
-import { formatPkr, cn, hasChoice } from "@/lib/utils";
+import { brandName, productEnquiryLink } from "@/lib/constants";
+import { formatPkr, cn, hasChoice, isPriceComingSoon } from "@/lib/utils";
 import type { Product } from "@/types";
 
 const TRUST = [
@@ -29,7 +29,7 @@ const TRUST = [
 ];
 
 export function ProductDetail({ product }: { product: Product }) {
-  const [colorIndex, setColorIndex] = React.useState(0);
+  const [colorIndex, setColorIndexState] = React.useState(0);
   const [imageIndex, setImageIndex] = React.useState(0);
   const [size, setSize] = React.useState<string>(product.sizes[0]);
   const [quantity, setQuantity] = React.useState(1);
@@ -40,6 +40,15 @@ export function ProductDetail({ product }: { product: Product }) {
   const showColors = hasChoice(product.colors.map((c) => c.name));
   const showSizes = hasChoice(product.sizes);
   const brand = brandName(product.brand);
+  const comingSoon = isPriceComingSoon(product);
+
+  // When there is one photo per colour (in the same order), choosing a colour
+  // shows that colour's photo.
+  const photoPerColour = showColors && images.length === product.colors.length;
+  const setColorIndex = (i: number) => {
+    setColorIndexState(i);
+    if (photoPerColour && i >= 0) setImageIndex(i);
+  };
 
   const handleAdd = () => {
     addItem(product, { size, color, quantity });
@@ -51,7 +60,7 @@ export function ProductDetail({ product }: { product: Product }) {
   };
 
   return (
-    <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+    <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 [&>*]:min-w-0">
       {/* ---------------------------- Gallery ---------------------------- */}
       <div>
         <div className="metro-tile relative aspect-square overflow-hidden rounded-2xl border p-6 shadow-sm sm:p-10">
@@ -181,6 +190,16 @@ export function ProductDetail({ product }: { product: Product }) {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">{product.tagline}</p>
 
+        {comingSoon ? (
+          <div className="mt-5">
+            <span className="inline-flex rounded-full bg-[#c9a227]/15 px-4 py-1.5 font-heading text-lg font-extrabold uppercase tracking-wide text-[#8a6d12]">
+              Price coming soon
+            </span>
+            <p className="mt-2 text-sm text-muted-foreground">
+              This product is newly launched. Message us for the price and availability.
+            </p>
+          </div>
+        ) : (
         <div className="mt-5 flex flex-wrap items-baseline gap-3">
           <span className="font-heading text-3xl font-extrabold text-brand-700">
             {formatPkr(product.price)}
@@ -196,10 +215,11 @@ export function ProductDetail({ product }: { product: Product }) {
             </>
           ) : null}
         </div>
+        )}
 
         <div className="mt-6 space-y-4">
-          {/* Quantity */}
-          <div className="space-y-1.5">
+          {/* Quantity — not needed until the product can be ordered */}
+          <div className={cn("space-y-1.5", comingSoon && "hidden")}>
             <Label>Quantity</Label>
             <div className="flex w-fit items-center rounded-lg border">
               <button
@@ -273,19 +293,34 @@ export function ProductDetail({ product }: { product: Product }) {
             </div>
           ) : null}
 
-          <Button
-            size="lg"
-            onClick={handleAdd}
-            className="w-full bg-cta-400 text-base font-bold text-cta-foreground shadow-lg shadow-cta-600/20 hover:bg-cta-500"
-          >
-            <ShoppingCart className="size-5" aria-hidden />
-            Add to Cart — {formatPkr(product.price * quantity)}
-          </Button>
+          {comingSoon ? (
+            <Button
+              asChild
+              size="lg"
+              className="w-full bg-[#25D366] text-base font-bold text-white shadow-lg shadow-[#25D366]/25 hover:bg-[#1fb757]"
+            >
+              <a href={productEnquiryLink(product.name)} target="_blank" rel="noreferrer noopener">
+                <MessageCircle className="size-5" aria-hidden />
+                Ask for the price on WhatsApp
+              </a>
+            </Button>
+          ) : (
+            <Button
+              size="lg"
+              onClick={handleAdd}
+              className="w-full bg-cta-400 text-base font-bold text-cta-foreground shadow-lg shadow-cta-600/20 hover:bg-cta-500"
+            >
+              <ShoppingCart className="size-5" aria-hidden />
+              Add to Cart — {formatPkr(product.price * quantity)}
+            </Button>
+          )}
 
-          <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-            <Check className="size-3.5 text-leaf-600" aria-hidden />
-            Cash on Delivery available nationwide
-          </p>
+          {comingSoon ? null : (
+            <p className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+              <Check className="size-3.5 text-leaf-600" aria-hidden />
+              Cash on Delivery in Karachi · Bank transfer nationwide
+            </p>
+          )}
         </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 border-t pt-5">

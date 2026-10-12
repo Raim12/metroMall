@@ -47,6 +47,10 @@ enum Category {
   CHANDELIERS        @map("chandeliers")
   DOWN_LIGHTS        @map("down-lights")
   OUTDOOR_LIGHTS     @map("outdoor-lights")
+  TABLE_LAMPS        @map("table-lamps")
+  STAND_LAMPS        @map("stand-lamps")
+  // Electrical accessories.
+  ELECTRIC_SWITCHES  @map("electric-switches")
 }
 
 model Product {
@@ -161,6 +165,8 @@ enum PaymentMethod {
   CARD
   EASYPAISA
   JAZZCASH
+  /// The only method outside Karachi; details are sent to the customer on WhatsApp.
+  BANK_TRANSFER
 }
 
 model Order {

@@ -71,7 +71,7 @@ export function HeroSlider({ products }: { products: Product[] }) {
         {isPromo ? (
           <LegendsSlide direction={direction} variants={slide} reduce={Boolean(reduce)} />
         ) : (
-        <div className="grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-2 lg:gap-4 lg:p-14">
+        <div className="grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-2 lg:gap-4 lg:p-14 [&>*]:min-w-0">
           {/* Copy */}
           <AnimatePresence mode="wait" custom={direction}>
             <m.div
@@ -156,7 +156,9 @@ export function HeroSlider({ products }: { products: Product[] }) {
           type="button"
           onClick={() => paginate(-1)}
           aria-label="Previous slide"
-          className="absolute left-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/85 text-brand-700 shadow-md transition-colors hover:bg-white sm:left-4"
+          // Hidden on phones, where they sat on top of the slide title; the slider
+          // autoplays and the dots still navigate.
+          className="absolute left-2 top-1/2 hidden size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/85 text-brand-700 shadow-md transition-colors hover:bg-white sm:left-4 sm:grid"
         >
           <ChevronLeft className="size-5" aria-hidden />
         </button>
@@ -164,7 +166,7 @@ export function HeroSlider({ products }: { products: Product[] }) {
           type="button"
           onClick={() => paginate(1)}
           aria-label="Next slide"
-          className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/85 text-brand-700 shadow-md transition-colors hover:bg-white sm:right-4"
+          className="absolute right-2 top-1/2 hidden size-10 -translate-y-1/2 place-items-center rounded-full border bg-white/85 text-brand-700 shadow-md transition-colors hover:bg-white sm:right-4 sm:grid"
         >
           <ChevronRight className="size-5" aria-hidden />
         </button>
@@ -216,7 +218,7 @@ function LegendsSlide({
         animate="center"
         exit="exit"
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-        className="relative grid items-center gap-8 p-6 pb-14 sm:p-10 sm:pb-14 lg:grid-cols-2 lg:gap-4 lg:p-14"
+        className="relative grid items-center gap-8 p-6 pb-14 sm:p-10 sm:pb-14 lg:grid-cols-2 lg:gap-4 lg:p-14 [&>*]:min-w-0"
       >
         <div
           aria-hidden

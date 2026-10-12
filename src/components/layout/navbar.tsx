@@ -3,10 +3,11 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, ShoppingCart, X } from "lucide-react";
+import { ChevronDown, Menu, Search, ShoppingCart, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/shared/logo";
+import { SiteSearch } from "@/components/layout/site-search";
 import { NAV_LINKS, SITE } from "@/lib/constants";
 import { useCartStore, selectItemCount } from "@/store/cart-store";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ export function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   const openCart = useCartStore((s) => s.openCart);
   const itemCount = useCartStore(selectItemCount);
@@ -39,8 +41,11 @@ export function Navbar() {
     };
   }, []);
 
-  // Close the mobile drawer whenever the route changes.
-  React.useEffect(() => setMobileOpen(false), [pathname]);
+  // Close the mobile drawer and search panel whenever the route changes.
+  React.useEffect(() => {
+    setMobileOpen(false);
+    setSearchOpen(false);
+  }, [pathname]);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -130,6 +135,24 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
+              onClick={() => {
+                setSearchOpen((v) => !v);
+                setMobileOpen(false);
+              }}
+              aria-label={searchOpen ? "Close search" : "Search products"}
+              aria-expanded={searchOpen}
+              className="size-10 rounded-xl hover:bg-brand-50"
+            >
+              {searchOpen ? (
+                <X className="size-5 text-brand-700" aria-hidden />
+              ) : (
+                <Search className="size-5 text-brand-700" aria-hidden />
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={openCart}
               aria-label={`Open cart${hasHydrated && itemCount > 0 ? `, ${itemCount} items` : ""}`}
               className="relative size-10 rounded-xl hover:bg-brand-50"
@@ -150,7 +173,10 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               className="size-10 rounded-xl lg:hidden"
-              onClick={() => setMobileOpen((v) => !v)}
+              onClick={() => {
+                setMobileOpen((v) => !v);
+                setSearchOpen(false);
+              }}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileOpen}
             >
@@ -162,6 +188,12 @@ export function Navbar() {
             </Button>
           </div>
         </nav>
+
+        {searchOpen ? (
+          <div className="mt-2 rounded-2xl border bg-white p-2 shadow-xl">
+            <SiteSearch autoFocus onSearched={() => setSearchOpen(false)} />
+          </div>
+        ) : null}
 
         {/*
           Mobile drawer.

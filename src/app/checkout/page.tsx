@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 
 import { CheckoutForm } from "@/components/cart/checkout-form";
 import { availablePaymentMethods } from "@/lib/payments";
-import { FLAT_SHIPPING_FEE, FREE_SHIPPING_THRESHOLD } from "@/lib/orders";
 
 export const metadata: Metadata = {
   title: "Checkout",
@@ -21,16 +20,12 @@ export default function CheckoutPage() {
         Checkout
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Delivery across Pakistan. Your details are only used to fulfil this
-        order.
+        Cash on Delivery in Karachi, bank transfer across Pakistan. Your details
+        are only used to fulfil this order.
       </p>
 
       <div className="mt-10">
-        <CheckoutForm
-          availableMethods={methods}
-          freeShippingThreshold={FREE_SHIPPING_THRESHOLD}
-          flatShippingFee={FLAT_SHIPPING_FEE}
-        />
+        <CheckoutForm availableMethods={methods} />
       </div>
     </div>
   );

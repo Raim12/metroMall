@@ -28,3 +28,13 @@ export function hasChoice(values: string[]): boolean {
 export function variantLabel(size: string, colorName: string): string {
   return [size, colorName].filter((v) => v && v !== STANDARD_VARIANT).join(" · ");
 }
+
+/**
+ * A live product without a price yet (e.g. a newly announced range). It is
+ * shown in the shop with "Price coming soon" but can't be added to the cart;
+ * the checkout refuses it too. Setting a price in the admin is all it takes
+ * to make it orderable.
+ */
+export function isPriceComingSoon(product: { price: number }): boolean {
+  return product.price <= 0;
+}

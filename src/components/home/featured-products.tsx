@@ -13,10 +13,10 @@ export function FeaturedProducts({ products }: { products: Product[] }) {
       <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
         <SectionHeading
           align="left"
-          eyebrow="E-Force Series"
-          title="Best Selling"
-          highlight="Fans"
-          description="The models our customers keep coming back for."
+          eyebrow="Top picks"
+          title="Featured"
+          highlight="Products"
+          description="Handpicked fans and appliances from our top brands."
         />
         <Button asChild variant="outline" className="shrink-0">
           <Link href="/catalogue">

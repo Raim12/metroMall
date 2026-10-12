@@ -39988,5 +39988,123 @@
   "featured": false,
   "active": false,
   "sourceUrl": "https://westerfanofficial.pk/product/jewel/"
+ },
+ {
+  "slug": "luxus-hvls-60-lx-800",
+  "brand": "luxus",
+  "name": "Luxus HVLS 60\" LX-800",
+  "tagline": "Luxus by Pak Fan · Ceiling Fan",
+  "description": "Luxus HVLS 60\" LX-800 by Pak Fan — a premium eight-blade ceiling fan.\nPremium wooden blades\nSilent performance\nEnergy efficient\nIntegrated LED light",
+  "price": 0,
+  "compareAtPrice": null,
+  "category": "ceiling-fans",
+  "sizes": [
+   "60\""
+  ],
+  "colors": [
+   {
+    "name": "Standard",
+    "hex": "#d6d3d1",
+    "trim": "#a8a29e"
+   }
+  ],
+  "illustration": "ceiling-5",
+  "images": [
+   "/api/uploads/products/luxus/luxus-hvls-60-lx-800-1.webp"
+  ],
+  "badge": "New",
+  "featured": false,
+  "active": true,
+  "sourceUrl": null
+ },
+ {
+  "slug": "luxus-hvls-60-lx-800l",
+  "brand": "luxus",
+  "name": "Luxus HVLS 60\" LX-800L",
+  "tagline": "Luxus by Pak Fan · Ceiling Fan",
+  "description": "Luxus HVLS 60\" LX-800L by Pak Fan — the eight-blade HVLS fan with an integrated LED light.\nPremium wooden blades\nSilent performance\nEnergy efficient\nIntegrated LED light",
+  "price": 0,
+  "compareAtPrice": null,
+  "category": "ceiling-fans",
+  "sizes": [
+   "60\""
+  ],
+  "colors": [
+   {
+    "name": "Standard",
+    "hex": "#d6d3d1",
+    "trim": "#a8a29e"
+   }
+  ],
+  "illustration": "ceiling-5",
+  "images": [
+   "/api/uploads/products/luxus/luxus-hvls-60-lx-800l-1.webp"
+  ],
+  "badge": "New",
+  "featured": false,
+  "active": true,
+  "sourceUrl": null
+ },
+ {
+  "slug": "luxus-lx-300l",
+  "brand": "luxus",
+  "name": "Luxus LX-300L",
+  "tagline": "Luxus by Pak Fan · Ceiling Fan",
+  "description": "Luxus LX-300L by Pak Fan — a three-blade designer ceiling fan with an integrated LED light.\nPremium wooden blades\nSilent performance\nEnergy efficient\nIntegrated LED light",
+  "price": 0,
+  "compareAtPrice": null,
+  "category": "ceiling-fans",
+  "sizes": [
+   "Standard"
+  ],
+  "colors": [
+   {
+    "name": "Standard",
+    "hex": "#d6d3d1",
+    "trim": "#a8a29e"
+   }
+  ],
+  "illustration": "ceiling-5",
+  "images": [
+   "/api/uploads/products/luxus/luxus-lx-300l-1.webp"
+  ],
+  "badge": "New",
+  "featured": false,
+  "active": true,
+  "sourceUrl": null
+ },
+ {
+  "slug": "luxus-lx-200-s",
+  "brand": "luxus",
+  "name": "Luxus LX-200 S",
+  "tagline": "Luxus by Pak Fan · Pedestal Fan",
+  "description": "Luxus LX-200 S by Pak Fan — a stand fan with an LED display and remote control.\nLED display\nRemote control\nAdjustable height & direction\n8 speed levels\nEnergy efficient",
+  "price": 0,
+  "compareAtPrice": null,
+  "category": "pedestal-fans",
+  "sizes": [
+   "Standard"
+  ],
+  "colors": [
+   {
+    "name": "White",
+    "hex": "#f4f1ea",
+    "trim": "#c9c2b4"
+   },
+   {
+    "name": "Black",
+    "hex": "#1f1f1f",
+    "trim": "#4b4b4b"
+   }
+  ],
+  "illustration": "pedestal",
+  "images": [
+   "/api/uploads/products/luxus/luxus-lx-200-s-1.webp",
+   "/api/uploads/products/luxus/luxus-lx-200-s-2.webp"
+  ],
+  "badge": "New",
+  "featured": false,
+  "active": true,
+  "sourceUrl": null
  }
 ]

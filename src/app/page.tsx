@@ -1,4 +1,5 @@
 import { HeroSlider } from "@/components/home/hero-slider";
+import { HomeSearch } from "@/components/home/home-search";
 import { ValueProposition } from "@/components/home/value-proposition";
 import { TechShowcase } from "@/components/home/tech-showcase";
 import { ProductCategories } from "@/components/home/product-categories";
@@ -31,6 +32,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <HomeSearch />
       {featured.length ? <HeroSlider products={featured} /> : null}
       <HouseBrands />
       {showcase ? <TechShowcase product={showcase} /> : null}

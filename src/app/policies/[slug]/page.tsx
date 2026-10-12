@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
 import { SITE } from "@/lib/constants";
+import { BANK_ACCOUNT, COD_CITY, DELIVERY_CHARGE, RECEIPT_NOTE } from "@/lib/delivery";
 
 type PolicySlug = "privacy" | "returns" | "delivery" | "terms";
 
@@ -24,7 +25,7 @@ const POLICIES: Record<
       },
       {
         heading: "Who we share it with",
-        body: "Courier partners (to deliver your order) and our payment gateway (to process payment). We do not sell or rent your information to third parties.",
+        body: "Courier and cargo partners (to deliver your order), payment providers (to process payment), and the brand's service centre when we register a warranty complaint for you. We do not sell or rent your information to third parties.",
       },
       {
         heading: "Your choices",
@@ -43,38 +44,45 @@ const POLICIES: Record<
       },
       {
         heading: "Exchanges",
-        body: "If you ordered the wrong size or colour, we will exchange it within the same 7-day window, subject to stock. You cover return shipping unless the error was ours.",
+        body: "If you ordered the wrong size or colour, we will exchange it within the same 7-day window, subject to stock. You cover return delivery unless the error was ours.",
       },
       {
-        heading: "Installed products",
-        body: "Once a fan has been installed it is covered by the warranty rather than the return policy. Any manufacturing defect is repaired or replaced free of charge for one year.",
+        heading: "Installed products and warranty",
+        body: "Once a product has been installed it is covered by its official brand warranty rather than the return policy. Warranty periods depend on the brand — from 1 year, up to 5–10 years for some brands such as Lahore Fan. We register warranty complaints with the brand's official service centre on your behalf, or guide you to the brand's direct support; repairs are carried out by the brand's authorised technicians.",
       },
       {
         heading: "Refunds",
-        body: "Approved refunds are issued to the original payment method within 7–10 working days. Cash on Delivery orders are refunded by bank transfer.",
+        body: "Approved refunds are made by bank transfer within 7–10 working days.",
       },
     ],
   },
   delivery: {
     title: "Delivery Policy",
-    intro:
-      "We deliver across Pakistan through vetted courier partners, and ship internationally for export orders.",
+    intro: `We deliver across Pakistan. A delivery charge of Rs. ${DELIVERY_CHARGE} applies to every order.`,
     sections: [
       {
+        heading: "Cash on Delivery (Karachi only)",
+        body: `Transfer the Rs. ${DELIVERY_CHARGE} delivery charge in advance, then pay for your order in cash when it arrives.`,
+      },
+      {
+        heading: "Full payment in advance (all cities)",
+        body: `Transfer the full order amount plus the Rs. ${DELIVERY_CHARGE} delivery charge. Outside ${COD_CITY}, this is the only payment option.`,
+      },
+      {
+        heading: "Bank details",
+        body: `${BANK_ACCOUNT.bank} · IBAN ${BANK_ACCOUNT.iban} · Account title: ${BANK_ACCOUNT.title}. ${RECEIPT_NOTE}`,
+      },
+      {
         heading: "Dispatch times",
-        body: "In-stock orders are dispatched within 48 hours of confirmation. You receive a tracking number by SMS and email once the parcel leaves our facility.",
+        body: "In-stock orders are dispatched once your payment receipt is confirmed. We share the courier or cargo details with you on WhatsApp.",
       },
       {
-        heading: "Delivery times",
-        body: "Major cities typically receive orders in 2–4 working days. Remote areas may take up to 7 working days. Delays during peak summer demand are possible and we will keep you informed.",
-      },
-      {
-        heading: "Delivery charges",
-        body: "Charges are calculated at checkout based on destination and order weight. Bulk and dealer orders are quoted separately.",
+        heading: "Bulk and dealer orders",
+        body: "Wholesale and bulk orders are quoted separately, including delivery. Send your requirements through our Wholesale page.",
       },
       {
         heading: "Inspection on arrival",
-        body: "Please inspect the packaging before accepting delivery. Report any transit damage within 48 hours with photos and we will arrange a free replacement.",
+        body: "Please inspect the packaging before accepting delivery. Report any transit damage within 48 hours, with photos, and we will arrange a replacement or repair with you.",
       },
     ],
   },
@@ -88,11 +96,11 @@ const POLICIES: Record<
       },
       {
         heading: "Product information",
-        body: "We work hard to describe our products accurately. Specifications such as wattage and RPM are measured under standard test conditions and may vary by approximately 10% in real-world use.",
+        body: "Product details and specifications are provided by the brands. We work hard to show them accurately; figures such as wattage are measured by the brand under standard test conditions and may vary in real-world use.",
       },
       {
         heading: "Warranty",
-        body: "Products carry a 1-year repair warranty against manufacturing defects. The warranty excludes physical damage, water ingress, unauthorised repairs and operation outside the rated voltage range.",
+        body: `Products carry their brand's official warranty; periods and terms are set by each brand. ${SITE.name} is an authorized dealer: we register warranty complaints with the brand's official service centre on your behalf, or guide you to the brand's direct support, but repairs are carried out by the brand's own authorised technicians.`,
       },
       {
         heading: "Limitation of liability",

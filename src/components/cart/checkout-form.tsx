@@ -11,6 +11,8 @@ import {
   Banknote,
   Check,
   CreditCard,
+  Info,
+  Landmark,
   Loader2,
   Lock,
   ShoppingBag,
@@ -42,6 +44,14 @@ import { ProductImage } from "@/components/product/product-image";
 import { useCartStore, selectSubtotal } from "@/store/cart-store";
 import { formatPkr, cn, variantLabel } from "@/lib/utils";
 import { PROVINCES, shippingSchema, type ShippingValues } from "@/lib/validation";
+import {
+  COD_CITY,
+  DELIVERY_CHARGE,
+  advanceAmount,
+  isKarachi,
+  paymentMethodsFor,
+} from "@/lib/delivery";
+import { BankDetails } from "@/components/cart/bank-details";
 
 const METHOD_META: Record<
   string,
@@ -50,7 +60,12 @@ const METHOD_META: Record<
   COD: {
     Icon: Banknote,
     label: "Cash on Delivery",
-    blurb: "Pay the courier when your fan arrives.",
+    blurb: `Pay the Rs. ${DELIVERY_CHARGE} delivery charge in advance, the rest in cash on delivery. Karachi only.`,
+  },
+  BANK_TRANSFER: {
+    Icon: Landmark,
+    label: "Bank Transfer",
+    blurb: "Pay the full amount, including delivery, in advance by bank transfer.",
   },
   CARD: {
     Icon: CreditCard,
@@ -71,15 +86,7 @@ const METHOD_META: Record<
 
 type Step = "shipping" | "payment";
 
-export function CheckoutForm({
-  availableMethods,
-  freeShippingThreshold,
-  flatShippingFee,
-}: {
-  availableMethods: string[];
-  freeShippingThreshold: number;
-  flatShippingFee: number;
-}) {
+export function CheckoutForm({ availableMethods }: { availableMethods: string[] }) {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
   const subtotal = useCartStore(selectSubtotal);
@@ -89,7 +96,8 @@ export function CheckoutForm({
   const [method, setMethod] = React.useState(availableMethods[0] ?? "COD");
   const [submitting, setSubmitting] = React.useState(false);
 
-  const shipping = subtotal >= freeShippingThreshold ? 0 : flatShippingFee;
+  // Flat delivery charge on every order (see lib/delivery.ts).
+  const shipping = DELIVERY_CHARGE;
   const total = subtotal + shipping;
 
   const form = useForm<ShippingValues>({
@@ -107,6 +115,14 @@ export function CheckoutForm({
       notes: "",
     },
   });
+
+  // Payment options depend on the city: COD in Karachi, bank transfer elsewhere.
+  const city = form.watch("city");
+  const inKarachi = isKarachi(city);
+  const methods = paymentMethodsFor(city, availableMethods);
+  React.useEffect(() => {
+    if (methods.length && !methods.includes(method)) setMethod(methods[0]);
+  }, [methods, method]);
 
   async function placeOrder(shippingValues: ShippingValues) {
     setSubmitting(true);
@@ -177,7 +193,9 @@ export function CheckoutForm({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start">
+    // [&>*]:min-w-0 lets both columns shrink to the screen on phones instead of
+    // overflowing sideways.
+    <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-start [&>*]:min-w-0">
       {/* ------------------------------ Steps ----------------------------- */}
       <div>
         <ol className="mb-6 flex items-center gap-3 text-sm">
@@ -424,7 +442,7 @@ export function CheckoutForm({
             <h2 className="font-heading text-lg font-bold">Payment method</h2>
 
             <div className="space-y-2.5">
-              {availableMethods.map((m) => {
+              {methods.map((m) => {
                 const meta = METHOD_META[m];
                 if (!meta) return null;
                 const selected = method === m;
@@ -471,12 +489,17 @@ export function CheckoutForm({
               })}
             </div>
 
-            {availableMethods.length === 1 ? (
-              <p className="text-xs text-muted-foreground">
-                Online payment is coming soon. Cash on Delivery is available
-                nationwide in the meantime.
+            {!inKarachi ? (
+              <p className="flex gap-2 rounded-xl bg-muted/60 p-3 text-xs leading-relaxed">
+                <Info className="mt-0.5 size-3.5 shrink-0 text-brand-700" aria-hidden />
+                <span>
+                  Cash on Delivery is available in {COD_CITY} only. Outside {COD_CITY}, please pay
+                  the full amount by bank transfer.
+                </span>
               </p>
             ) : null}
+
+            <BankDetails method={method} amount={advanceAmount(method, total)} />
 
             <Separator />
 
@@ -539,23 +562,11 @@ export function CheckoutForm({
             <dt className="text-muted-foreground">Subtotal</dt>
             <dd className="tabular-nums">{formatPkr(subtotal)}</dd>
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Delivery</dt>
-            <dd className="tabular-nums">
-              {shipping === 0 ? (
-                <span className="font-semibold text-leaf-600">Free</span>
-              ) : (
-                formatPkr(shipping)
-              )}
-            </dd>
+            <dd className="tabular-nums">{formatPkr(shipping)}</dd>
           </div>
         </dl>
-
-        {shipping > 0 ? (
-          <p className="mt-2 text-xs text-muted-foreground">
-            Free delivery on orders over {formatPkr(freeShippingThreshold)}.
-          </p>
-        ) : null}
 
         <Separator className="my-4" />
 

@@ -3,6 +3,7 @@ import "server-only";
 import { Resend } from "resend";
 import { SITE } from "@/lib/constants";
 import { formatPkr, variantLabel } from "@/lib/utils";
+import { BANK_ACCOUNT, RECEIPT_NOTE, advanceAmount, advanceInstruction } from "@/lib/delivery";
 import type { OrderWithItems } from "@/lib/orders";
 
 /**
@@ -117,12 +118,15 @@ const METHOD_LABEL: Record<string, string> = {
   CARD: "Card",
   EASYPAISA: "EasyPaisa",
   JAZZCASH: "JazzCash",
+  BANK_TRANSFER: "Bank Transfer",
 };
 
 /* -------------------------------- Senders ------------------------------ */
 
 export async function sendOrderConfirmation(order: OrderWithItems) {
   const isCod = order.paymentMethod === "COD";
+  const isBankTransfer = order.paymentMethod === "BANK_TRANSFER";
+  const advance = advanceAmount(order.paymentMethod, order.total);
 
   return send({
     to: order.email,
@@ -131,13 +135,23 @@ export async function sendOrderConfirmation(order: OrderWithItems) {
     html: shell(
       `Thanks, ${escapeHtml(order.firstName)} — we've got your order`,
       `<p style="font-size:14px;line-height:1.6">
-         Your order <strong>${order.orderNumber}</strong> is confirmed.
+         Your order <strong>${order.orderNumber}</strong> is placed.
          ${
-           isCod
-             ? `Please keep <strong>${formatPkr(order.total)}</strong> ready for the courier on delivery.`
+           isCod || isBankTransfer
+             ? `To confirm it, please transfer <strong>${formatPkr(advance)}</strong> — ${escapeHtml(advanceInstruction(order.paymentMethod))}`
              : `We'll confirm once your payment clears.`
          }
        </p>
+       ${
+         isCod || isBankTransfer
+           ? `<table role="presentation" style="margin-top:12px;font-size:14px;line-height:1.6;background:#fdf6ee;border:1px solid #f1dcc4;border-radius:8px;padding:12px 16px">
+                <tr><td><strong>${BANK_ACCOUNT.bank}</strong></td></tr>
+                <tr><td>IBAN: <strong style="font-family:monospace">${BANK_ACCOUNT.iban}</strong></td></tr>
+                <tr><td>Account title: <strong>${BANK_ACCOUNT.title}</strong></td></tr>
+              </table>
+              <p style="font-size:14px;line-height:1.6">${escapeHtml(RECEIPT_NOTE)} WhatsApp: <strong>${SITE.whatsapp}</strong> (quote order ${order.orderNumber}).</p>`
+           : ""
+       }
        <table role="presentation" width="100%" style="margin-top:16px;font-size:14px">${itemRows(order)}</table>
        ${totalsBlock(order)}
        <p style="font-size:14px;line-height:1.6;margin-top:20px">

@@ -32,7 +32,7 @@ const STATIC_PATHS: {
   { path: "/catalogue", changeFrequency: "daily", priority: 0.9 },
   { path: "/legends", changeFrequency: "weekly", priority: 0.7 },
   { path: "/about", changeFrequency: "monthly", priority: 0.6 },
-  { path: "/export", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/wholesale", changeFrequency: "monthly", priority: 0.5 },
   { path: "/join-us", changeFrequency: "monthly", priority: 0.4 },
   { path: "/support/contact", changeFrequency: "monthly", priority: 0.5 },
   { path: "/support/faq", changeFrequency: "monthly", priority: 0.5 },

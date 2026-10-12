@@ -38,7 +38,7 @@ export async function generateMetadata({
 
   return {
     title: `${product.name} — ${brandName(product.brand)}`,
-    description: `${product.tagline} — ${formatPkr(product.price)}. ${product.description.slice(0, 120)}…`,
+    description: `${product.tagline} — ${product.price > 0 ? formatPkr(product.price) : "Price coming soon"}. ${product.description.slice(0, 120)}…`,
   };
 }
 

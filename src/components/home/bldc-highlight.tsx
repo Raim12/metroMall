@@ -1,37 +1,40 @@
-import { Battery, Wrench, Zap } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, Battery, Gauge, Zap } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/shared/reveal";
+import { SAVINGS } from "@/lib/constants";
 
 const PILLARS = [
   {
     icon: Zap,
-    title: "Energy Efficiency Redefined",
-    body: "Reduced power consumption from 110W to just 50–55W per hour — cutting electricity bills by nearly half.",
+    title: `${SAVINGS.inverterWatts}W+ Inverter Fans`,
+    body: `Inverter (BLDC) ceiling fans run from about ${SAVINGS.inverterWatts}W, against ${SAVINGS.regularWatts}W or more for a regular fan.`,
   },
   {
-    icon: Wrench,
-    title: "Brushless = Longer Life",
-    body: "No brushes means zero friction, no overheating, and an exponentially extended fan lifespan.",
+    icon: Gauge,
+    title: `Up to ${SAVINGS.savingsPercent}% Energy Saving`,
+    body: "Lower running costs every month — over a Pakistani summer, the saving pays for the fan.",
   },
   {
     icon: Battery,
-    title: "AC/DC Innovation",
-    body: "Runs on efficient 12V DC instead of traditional 220V AC — safer, smarter, and future-ready.",
+    title: "AC/DC for Load-Shedding",
+    body: "AC/DC models also run on 12V DC from a solar panel or battery, so they keep going when the power goes.",
   },
 ];
 
+/** Energy-saving explainer for inverter and AC/DC fans. */
 export function BldcHighlight() {
   return (
     <Section className="metro-wash">
       <SectionHeading
-        eyebrow="🇵🇰 Pakistan's First"
-        title="Revolutionizing Fans with"
-        highlight="BLDC Technology"
+        eyebrow={`Up to ${SAVINGS.savingsPercent}% energy saving`}
+        title="Save Power with"
+        highlight="Inverter Fans"
       />
 
-      <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:gap-12 [&>*]:min-w-0">
         <RevealGroup className="space-y-4">
           {PILLARS.map(({ icon: Icon, title, body }) => (
             <RevealItem key={title}>
@@ -42,9 +45,7 @@ export function BldcHighlight() {
                   </span>
                   <h3 className="font-heading text-base font-bold">{title}</h3>
                 </div>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  {body}
-                </p>
+                <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
               </Card>
             </RevealItem>
           ))}
@@ -52,47 +53,32 @@ export function BldcHighlight() {
 
         <Reveal direction="left" delay={0.1} className="space-y-5 text-sm leading-relaxed text-foreground/80">
           <p>
-            Metro Electric Co. holds the historic distinction of being one of{" "}
-            <strong className="font-semibold text-foreground">
-              Pakistan&apos;s first official manufacturers
-            </strong>{" "}
-            to integrate{" "}
-            <strong className="font-semibold text-foreground">
-              BLDC (Brushless Direct Current) motor technology
-            </strong>{" "}
-            into ceiling and pedestal fans.
+            A regular ceiling fan uses an induction motor that wastes much of its power as heat.
+            An <strong className="font-semibold text-foreground">inverter fan</strong> uses a
+            brushless (BLDC) motor controlled electronically — it moves the same air on a fraction of
+            the power, runs cooler and quieter, and offers precise speed control from a remote.
           </p>
-
           <p>
-            Our BLDC motor uses{" "}
-            <strong className="font-semibold text-foreground">
-              permanent magnets
-            </strong>{" "}
-            on the rotor, driven by a precision-controlled magnetic field from{" "}
-            <strong className="font-semibold text-foreground">
-              99.99% pure copper windings
-            </strong>
-            . With electronic commutation replacing mechanical brushes, we
-            eliminated wear, noise and energy waste — achieving unmatched
-            efficiency and reliability.
+            We stock inverter and AC/DC fans from Pakistan&apos;s leading brands — Pak Fans, Royal,
+            GFC, Tamoor, SK, Sonex, Orient and more — every one genuine, with the official brand
+            warranty.
           </p>
-
-          <blockquote className="border-l-4 border-brand-400 bg-white/70 py-2 pl-4 italic text-muted-foreground">
-            &ldquo;This breakthrough didn&apos;t happen overnight. It took
-            countless sleepless nights, relentless R&amp;D, and the courage to
-            build what didn&apos;t exist.&rdquo;
-          </blockquote>
-
           <p>
-            Today, Metro Electric Co. stands among the market leaders in AC/DC
-            fans — driving national progress, creating jobs, and building a
-            legacy Pakistanis can be proud of.
+            Not sure which is right for you? Our team will help you compare models, wattage and
+            budget before you buy.
           </p>
 
-          <div className="pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-2">
             <span className="inline-flex rounded-full border border-brand-300 bg-white px-5 py-2 font-heading text-sm font-bold text-brand-700 shadow-sm">
-              Pioneers of BLDC in Pakistan
+              Up to {SAVINGS.savingsPercent}% Energy Saving
             </span>
+            <Link
+              href="/catalogue?category=ceiling-fans-inverter"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline"
+            >
+              Shop inverter fans
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
           </div>
         </Reveal>
       </div>
