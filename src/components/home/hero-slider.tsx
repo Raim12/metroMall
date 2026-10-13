@@ -21,7 +21,12 @@ const AUTOPLAY_MS = 6500;
 
 /** Slide 0 is the LEGENDS launch teaser; product slides follow it. */
 const PROMO_SLIDES = 1;
-const LEGENDS_EMBLEM = "/brands/legends-gold-dark.webp";
+/*
+ * The plain gold emblem, not the "-dark" artwork: that one is lit for a black
+ * backdrop and its edges look harsh on the cream panel used here. Same finish
+ * and shadow as the LEGENDS card in <HouseBrands />.
+ */
+const LEGENDS_EMBLEM = "/brands/legends-gold.webp";
 
 export function HeroSlider({ products }: { products: Product[] }) {
   const reduce = useReducedMotion();
@@ -41,6 +46,41 @@ export function HeroSlider({ products }: { products: Product[] }) {
 
   const goTo = (next: number) =>
     setState(([current]) => [next, next > current ? 1 : -1]);
+
+  /*
+   * Swipe, done with raw touch events rather than Framer's `drag`.
+   *
+   * The whole site runs under LazyMotion with the `domAnimation` feature set,
+   * which deliberately excludes the drag/projection engine - pulling in
+   * `domMax` to get it back would undo the bundle work that took mobile Total
+   * Blocking Time down. Three listeners cost nothing by comparison.
+   */
+  const touch = React.useRef<{ x: number; y: number } | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    touch.current = { x: t.clientX, y: t.clientY };
+    // Hold autoplay while a finger is down, so a slide cannot change mid-swipe.
+    setPaused(true);
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touch.current;
+    touch.current = null;
+    setPaused(false);
+    if (!start) return;
+
+    const t = e.changedTouches[0];
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+
+    // Ignore anything that is mostly vertical: that is the page scrolling, not
+    // a swipe. 48px is far enough not to fire on a tap's jitter.
+    if (Math.abs(dx) < 48 || Math.abs(dx) <= Math.abs(dy)) return;
+
+    // Drag left (negative dx) means "show me the next one".
+    paginate(dx < 0 ? 1 : -1);
+  };
 
   React.useEffect(() => {
     if (paused || reduce || count < 2) return;
@@ -63,9 +103,20 @@ export function HeroSlider({ products }: { products: Product[] }) {
       aria-label="Featured products"
     >
       <div
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onTouchCancel={() => {
+          touch.current = null;
+          setPaused(false);
+        }}
         className={cn(
           "relative overflow-hidden rounded-3xl border shadow-xl shadow-ink-950/5 transition-colors duration-500",
-          isPromo ? "border-[#3a2f1c] bg-[#0d0b09]" : "metro-wash bg-white",
+          // Allow vertical scrolling to pass through while we claim horizontal
+          // gestures, so the page still scrolls normally over the carousel.
+          "touch-pan-y",
+          isPromo
+            ? "border-[#e8dcb8] bg-[radial-gradient(ellipse_at_center,#fffdf6_0%,#f6efdc_60%,#ecdfba_100%)]"
+            : "metro-wash bg-white",
         )}
       >
         {isPromo ? (
@@ -184,10 +235,10 @@ export function HeroSlider({ products }: { products: Product[] }) {
                 "h-2 rounded-full transition-all duration-300",
                 i === index
                   ? isPromo
-                    ? "w-7 bg-[#c9a227]"
+                    ? "w-7 bg-[#b8901c]"
                     : "w-7 bg-brand-600"
                   : isPromo
-                    ? "w-2 bg-white/30 hover:bg-white/50"
+                    ? "w-2 bg-[#b8901c]/30 hover:bg-[#b8901c]/50"
                     : "w-2 bg-brand-600/30 hover:bg-brand-600/50",
               )}
             />
@@ -220,39 +271,34 @@ function LegendsSlide({
         transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         className="relative grid items-center gap-8 p-6 pb-14 sm:p-10 sm:pb-14 lg:grid-cols-2 lg:gap-4 lg:p-14 [&>*]:min-w-0"
       >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_75%_45%,rgba(201,162,39,0.25)_0%,transparent_55%)]"
-        />
-
         {/* Copy */}
-        <div className="relative order-2 text-white lg:order-1">
+        <div className="relative order-2 lg:order-1">
           <span className="coming-soon-blink inline-flex items-center gap-2 rounded-full bg-[#c9a227] px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#14100c]">
             Coming soon
           </span>
           <h1 className="mt-4 font-heading text-5xl font-black uppercase italic leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
-            <span className="bg-gradient-to-r from-[#e2c25b] via-[#f6e3a1] to-[#c9a227] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#8a6d12] via-[#c9a227] to-[#8a6d12] bg-clip-text text-transparent">
               Legends
             </span>
           </h1>
-          <p className="mt-2 text-sm font-semibold uppercase tracking-[0.3em] text-white/60">
+          <p className="mt-2 text-sm font-semibold uppercase tracking-[0.3em] text-[#8a6d12]">
             Home Appliances
           </p>
-          <p className="mt-5 max-w-lg text-sm leading-relaxed text-white/70 sm:text-base">
-            Our own home appliance brand is launching soon. Be the first to know when it arrives.
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground sm:text-base">
+            A quality new home appliance brand is coming soon. Be the first to know when it arrives.
           </p>
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <Button
               asChild
               size="lg"
-              className="bg-gradient-to-r from-[#b8901c] via-[#e2c25b] to-[#b8901c] font-bold text-[#14100c] shadow-lg shadow-[#c9a227]/25 hover:opacity-95"
+              className="bg-ink-900 font-bold text-white shadow-lg shadow-ink-950/15 hover:bg-ink-700"
             >
               <Link href="/legends#notify">
                 <Bell className="size-4" aria-hidden />
                 Get notified
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/25 bg-transparent text-white hover:bg-white/10 hover:text-white">
+            <Button asChild size="lg" variant="outline" className="border-[#d8c58c] bg-white/60 text-ink-900 hover:bg-white hover:text-ink-900">
               <Link href="/legends">
                 Discover LEGENDS
                 <ArrowRight className="size-4" aria-hidden />
@@ -269,7 +315,7 @@ function LegendsSlide({
             fill
             priority
             sizes="(min-width: 1024px) 40vw, 90vw"
-            className="object-contain drop-shadow-[0_18px_36px_rgba(201,162,39,0.3)]"
+            className="object-contain drop-shadow-[0_12px_18px_rgba(90,64,10,0.18)]"
           />
           {reduce ? null : (
             <span

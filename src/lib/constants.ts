@@ -40,11 +40,15 @@ export const SITE = {
     facebook: "https://facebook.com",
     linkedin: "https://linkedin.com",
   },
-  /** Keyless Google Maps embed for the footer. */
+  /**
+   * Google Maps embed for the footer, pinned to the shop's own Place entry
+   * rather than a street-name search, which landed in the wrong part of the
+   * road. Plus code V234+QV, Seari Quarters, Karachi.
+   */
   mapEmbed:
-    "https://www.google.com/maps?q=M.A.+Jinnah+Road,+Karachi,+Pakistan&output=embed",
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.274103878947!2d67.00723289999999!3d24.8544862!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e04f81cb153%3A0x94fc163516a37d20!2sMetro%20Electric%20Company!5e0!3m2!1sen!2s!4v1791899672377!5m2!1sen!2s",
   mapLink:
-    "https://www.google.com/maps/search/?api=1&query=M.A.+Jinnah+Road,+Karachi,+Pakistan",
+    "https://www.google.com/maps/place/Metro+Electric+Company/@24.8544862,67.0072329,17z/data=!3m1!4b1!4m6!3m5!1s0x3eb33e04f81cb153:0x94fc163516a37d20!8m2!3d24.8544862!4d67.0072329!16s%2Fg%2F1td63smr",
 } as const;
 
 export const WHATSAPP_LINK = `https://wa.me/${SITE.whatsappDigits}?text=${encodeURIComponent(
@@ -162,7 +166,7 @@ export const CATEGORIES: {
     singular: "Inverter Ceiling Fan",
     group: "fans",
     blurb:
-      "30W+ inverter fans with remote control — up to 60% energy saving over a regular fan.",
+      "30W+ inverter fans with remote control — up to 70% energy saving over a regular fan.",
     illustration: "ceiling-3",
   },
   {
@@ -363,6 +367,62 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
 
 /**
+ * Brand names for prose, e.g. "Pak Fans, Royal, GFC, SK Fans and more".
+ *
+ * Copy used to hardcode its own list in each place, so the catalogue page, the
+ * BLDC section and the efficiency bullets each named a different subset and
+ * drifted apart. Deriving them from BRANDS keeps every mention in step when a
+ * brand is added or dropped.
+ */
+export function brandListText(slugs: readonly string[], limit = 7): string {
+  const names = slugs
+    .map((slug) => BRANDS.find((b) => b.slug === slug)?.name)
+    .filter((n): n is string => Boolean(n));
+
+  const shown = names.slice(0, limit);
+  const rest = names.length - shown.length;
+  return rest > 0 ? `${shown.join(", ")} and more` : shown.join(", ");
+}
+
+/**
+ * The brands to name in general copy, most prominent first. Every one of these
+ * is stocked; FAN_BRANDS below is the narrower list whose fans we actually
+ * sell, which is what fan-specific copy must use.
+ */
+/**
+ * Fan brands to name in prose, most prominent first.
+ *
+ * Not FAN_BRANDS raw: that is ordered for filtering and includes "Luxus by Pak
+ * Fan", which reads as a repetition next to "Pak Fans" in a sentence. Super
+ * Asia is absent on purpose - it is stocked for home appliances only, so
+ * claiming its inverter fans would advertise something the catalogue hides.
+ */
+export const SHOWCASE_FAN_BRANDS = [
+  "pak-fans",
+  "royal",
+  "gfc",
+  "sk",
+  "tamoor",
+  "orient",
+  "sonex",
+  "voldam",
+] as const;
+
+export const SHOWCASE_BRANDS = [
+  "pak-fans",
+  "royal",
+  "gfc",
+  "sk",
+  "super-asia",
+  "tamoor",
+  "orient",
+  "sonex",
+  "nasgas",
+  "hanco",
+  "voldam",
+] as const;
+
+/**
  * Metro's own home-appliance brands, launching soon. LEGENDS is the lead brand
  * and gets the logo; the others show as wordmarks until their artwork exists.
  * When one launches, add it to BRANDS (to sell its products) and take it off this list.
@@ -396,10 +456,13 @@ export const FAN_BRANDS = [
 
 /** Inverter-fan efficiency figures used in marketing copy. */
 export const SAVINGS = {
-  regularWatts: 110,
-  /** Inverter fans start from this wattage ("30W+"). */
+  /** Typical conventional induction fan draw, as a range. */
+  regularWattsLow: 90,
+  regularWattsHigh: 130,
+  /** Inverter fans run between these at top speed. */
   inverterWatts: 30,
-  savingsPercent: 60,
+  inverterWattsHigh: 55,
+  savingsPercent: 70,
 } as const;
 
 export const HOME_FAQS = [
@@ -436,7 +499,7 @@ export const SUPPORT_FAQS: Record<
   difference: [
     {
       q: "What is the difference between AC/DC and Inverter fans?",
-      a: "An AC/DC fan runs on 220V mains or on 12V DC from a solar panel or battery, which keeps it going during load-shedding. An inverter fan uses a brushless (BLDC) motor driven by an electronic controller: it runs from about 30W instead of 100W or more — up to 60% energy saving. Many models combine both.",
+      a: "An AC/DC fan runs on 220V mains or on 12V DC from a solar panel or battery, which keeps it going during load-shedding. An inverter fan uses a brushless (BLDC) motor driven by an electronic controller: it runs from about 30W instead of 90W or more — up to 70% energy saving. Many models combine both.",
     },
     {
       q: "Why buy from Metro Electric Co.?",

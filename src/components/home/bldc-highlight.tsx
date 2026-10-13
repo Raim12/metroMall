@@ -4,13 +4,13 @@ import { ArrowRight, Battery, Gauge, Zap } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/shared/reveal";
-import { SAVINGS } from "@/lib/constants";
+import { SAVINGS, SHOWCASE_FAN_BRANDS, brandListText } from "@/lib/constants";
 
 const PILLARS = [
   {
     icon: Zap,
     title: `${SAVINGS.inverterWatts}W+ Inverter Fans`,
-    body: `Inverter (BLDC) ceiling fans run from about ${SAVINGS.inverterWatts}W, against ${SAVINGS.regularWatts}W or more for a regular fan.`,
+    body: `Inverter (BLDC) ceiling fans run from about ${SAVINGS.inverterWatts}W, against ${SAVINGS.regularWattsLow}–${SAVINGS.regularWattsHigh}W for a regular fan.`,
   },
   {
     icon: Gauge,
@@ -59,8 +59,8 @@ export function BldcHighlight() {
             the power, runs cooler and quieter, and offers precise speed control from a remote.
           </p>
           <p>
-            We stock inverter and AC/DC fans from Pakistan&apos;s leading brands — Pak Fans, Royal,
-            GFC, Tamoor, SK, Sonex, Orient and more — every one genuine, with the official brand
+            We stock inverter and AC/DC fans from Pakistan&apos;s leading brands —{" "}
+            {brandListText(SHOWCASE_FAN_BRANDS)} — every one genuine, with the official brand
             warranty.
           </p>
           <p>

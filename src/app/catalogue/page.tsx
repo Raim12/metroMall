@@ -3,7 +3,13 @@ import type { Metadata } from "next";
 import { CatalogueBrowser } from "@/components/product/catalogue-browser";
 import { CtaBanner } from "@/components/home/cta-banner";
 import { getCatalogue, getCatalogueFacets, type CatalogueSort } from "@/lib/products";
-import { BRANDS, brandName, categoryBySlug } from "@/lib/constants";
+import {
+  BRANDS,
+  SHOWCASE_BRANDS,
+  brandListText,
+  brandName,
+  categoryBySlug,
+} from "@/lib/constants";
 import type { CategorySlug } from "@/types";
 
 /*
@@ -41,7 +47,7 @@ export async function generateMetadata({
   return {
     title: parts.length ? parts.join(" ") : "Products Catalogue",
     description:
-      "Shop genuine fans and home appliances from Pak Fans, Royal, Super Asia, GFC, Orient, Tamoor, SK, Sonex and more — delivered across Pakistan.",
+      `Shop genuine fans and home appliances from ${brandListText(SHOWCASE_BRANDS)} — delivered across Pakistan.`,
   };
 }
 

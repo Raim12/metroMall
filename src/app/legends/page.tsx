@@ -9,10 +9,10 @@ import { HOUSE_BRANDS, SITE } from "@/lib/constants";
 export const metadata: Metadata = {
   title: "LEGENDS Home Appliances — Launching Soon",
   description:
-    "LEGENDS, the home appliance brand from Metro Electric Co., is launching soon. Get notified the moment it arrives.",
+    "LEGENDS, a quality new home appliance brand coming soon to Metro Electric Co. Get notified the moment it arrives.",
   openGraph: {
     title: "LEGENDS Home Appliances — Launching Soon",
-    description: "The home appliance brand from Metro Electric Co. Get notified at launch.",
+    description: "A quality new home appliance brand coming soon to Metro Electric Co. Get notified at launch.",
     images: [{ url: "/brands/legends-gold.webp" }],
   },
 };
@@ -21,7 +21,8 @@ export const metadata: Metadata = {
 const EMBLEM = "/brands/legends-gold-dark.webp";
 
 /**
- * Teaser page for Metro's own brands, led by LEGENDS. Shareable on its own
+ * Teaser page for the new brands coming to the range, led by LEGENDS.
+ * Shareable on its own
  * (social ads, WhatsApp status); sign-ups land in Admin → Launch list.
  */
 export default async function LegendsPage({
@@ -83,7 +84,7 @@ export default async function LegendsPage({
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base text-white/65">
-            The home appliance brand from {SITE.name} Be the first to know when it arrives.
+            A quality new home appliance brand coming soon to {SITE.name} Be the first to know when it arrives.
           </p>
         </section>
 

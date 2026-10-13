@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPin, Phone } from "lucide-react";
 
@@ -18,7 +19,30 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr]">
           {/* Left: logo + link columns */}
           <div>
-            <Logo tone="light" className="h-11 w-auto sm:h-12" />
+            <div className="flex items-center gap-5">
+              <Logo tone="light" className="h-11 w-auto sm:h-12" />
+
+              {/*
+                Scan-to-navigate code for the shop. On white because a QR code
+                needs a light quiet zone to scan reliably against the dark
+                footer.
+              */}
+              <a
+                href={SITE.mapLink}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="shrink-0 rounded-lg bg-white p-1.5 transition-transform hover:scale-105"
+                aria-label="Scan or tap for shop directions on Google Maps"
+              >
+                <Image
+                  src="/shoplocationqrcode/qrcode.jpg"
+                  alt="QR code linking to the shop location on Google Maps"
+                  width={72}
+                  height={72}
+                  className="size-[72px] rounded"
+                />
+              </a>
+            </div>
 
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink-300/85">
               {SITE.description}

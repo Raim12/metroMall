@@ -173,7 +173,18 @@ export async function getOrder(id: string) {
 
 /* ------------------------------- Products ------------------------------ */
 
-export async function listAdminProducts(search?: string) {
+/** Rows per page in the admin product list. */
+export const ADMIN_PRODUCTS_PER_PAGE = 40;
+
+/**
+ * One page of the admin catalogue.
+ *
+ * The full list is ~1,200 products, which rendered as a single page took the
+ * whole catalogue over the wire on every visit and made the phone view an
+ * endless scroll. Returns the page plus the total, so the UI can show a range
+ * and the page links.
+ */
+export async function listAdminProducts(search?: string, page = 1) {
   const where: Prisma.ProductWhereInput = search
     ? {
         OR: [
@@ -183,9 +194,17 @@ export async function listAdminProducts(search?: string) {
       }
     : {};
 
-  return prisma.product.findMany({
+  // Clamp: a hand-edited ?page=0 or ?page=-3 would otherwise produce a
+  // negative skip, which Prisma rejects at runtime.
+  const current = Math.max(1, Math.floor(page) || 1);
+
+  const [total, products] = await Promise.all([
+    prisma.product.count({ where }),
+    prisma.product.findMany({
     where,
     orderBy: [{ active: "desc" }, { name: "asc" }],
+    skip: (current - 1) * ADMIN_PRODUCTS_PER_PAGE,
+    take: ADMIN_PRODUCTS_PER_PAGE,
     select: {
       id: true,
       slug: true,
@@ -201,7 +220,16 @@ export async function listAdminProducts(search?: string) {
       illustration: true,
       colors: { orderBy: { position: "asc" }, take: 1 },
     },
-  });
+    }),
+  ]);
+
+  return {
+    products,
+    total,
+    page: current,
+    perPage: ADMIN_PRODUCTS_PER_PAGE,
+    pageCount: Math.max(1, Math.ceil(total / ADMIN_PRODUCTS_PER_PAGE)),
+  };
 }
 
 export async function getAdminProduct(id: string) {

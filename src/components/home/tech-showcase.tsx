@@ -5,13 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Eyebrow, Section } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
 import { ProductImage } from "@/components/product/product-image";
-import { SAVINGS, brandName } from "@/lib/constants";
+import {
+  SAVINGS,
+  SHOWCASE_FAN_BRANDS,
+  brandListText,
+  brandName,
+} from "@/lib/constants";
 import type { Product } from "@/types";
 
 const POINTS = [
-  "30–55W at top speed instead of 110–120W",
+  "30–55W at top speed instead of 90–130W",
   "AC/DC models run straight off solar panels and UPS batteries",
-  "Inverter fans from Royal, Pak Fans, GFC, Super Asia and more",
+  // Fan brands only: FAN_BRANDS is the list whose fans we actually sell.
+  `Inverter fans from ${brandListText(SHOWCASE_FAN_BRANDS, 5)}`,
   "Official brand warranty on every fan we sell",
 ];
 
@@ -26,7 +32,7 @@ export function TechShowcase({ product }: { product: Product }) {
           <Eyebrow>Energy, rethought</Eyebrow>
 
           <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-            Cut your fan&apos;s power bill by up to{" "}
+            Cut your power bill by up to{" "}
             <span className="text-brand-600">
               {SAVINGS.savingsPercent}%
             </span>
@@ -34,11 +40,12 @@ export function TechShowcase({ product }: { product: Product }) {
           </h2>
 
           <p className="mt-5 text-base leading-relaxed text-muted-foreground">
-            A conventional induction fan burns around {SAVINGS.regularWatts}W.
-            An inverter (BLDC) fan moves the same air on as little as{" "}
-            {SAVINGS.inverterWatts}W by replacing brushes with electronic
-            commutation — less friction, less heat, and far less current. Over a
-            Pakistani summer, that difference pays for the fan.
+            A conventional induction fan burns {SAVINGS.regularWattsLow}–
+            {SAVINGS.regularWattsHigh}W. An inverter (BLDC) fan moves the same
+            air on {SAVINGS.inverterWatts}–{SAVINGS.inverterWattsHigh}W by
+            replacing brushes with electronic commutation — less friction, less
+            heat, and far less current. Over a Pakistani summer, that difference
+            pays for the fan.
           </p>
 
           <ul className="mt-7 space-y-3">

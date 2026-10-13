@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Lightbulb } from "lucide-react";
 
@@ -12,6 +13,26 @@ import type { CategorySlug } from "@/types";
 
 /** Groups announced before they are stocked: their empty categories show as "Coming soon". */
 const ANNOUNCED_GROUPS = new Set(["lights", "electrical"]);
+
+/**
+ * Stand-in photography for categories that have no stock yet, so an announced
+ * range reads as a range rather than six empty cards. Files are 800x600 WebP in
+ * public/categories/.
+ *
+ * These are placeholders: once the supplier's own product shots arrive, swap
+ * the file and the tile picks it up. Any slug missing here falls back to the
+ * line icon, which is still the right treatment for a category with nothing to
+ * show.
+ */
+const UPCOMING_COVERS: Record<string, string> = {
+  "wall-lights": "/categories/wall-lights.webp",
+  chandeliers: "/categories/chandeliers.webp",
+  "down-lights": "/categories/down-lights.webp",
+  "outdoor-lights": "/categories/outdoor-lights.webp",
+  "table-lamps": "/categories/table-lamps.webp",
+  "stand-lamps": "/categories/stand-lamps.webp",
+  "electric-switches": "/categories/electric-switches.webp",
+};
 
 /** Category tiles, each fronted by a real product photo from that category. */
 export function ProductCategories({
@@ -67,11 +88,23 @@ export function ProductCategories({
               ))}
               {upcoming.map((category) => {
                 const Icon = CATEGORY_ICONS[category.slug] ?? Lightbulb;
+                const cover = UPCOMING_COVERS[category.slug];
                 return (
                   <RevealItem key={category.slug}>
                     <Card className="h-full gap-0 overflow-hidden border-dashed p-0">
-                      <div className="grid aspect-[4/3] place-items-center bg-brand-50/60">
-                        <Icon className="size-14 text-brand-300" strokeWidth={1.25} aria-hidden />
+                      <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-brand-50/60">
+                        {cover ? (
+                          /* Decorative: the category name sits directly below. */
+                          <Image
+                            src={cover}
+                            alt=""
+                            fill
+                            sizes="(min-width: 1024px) 22vw, (min-width: 768px) 30vw, 45vw"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <Icon className="size-14 text-brand-300" strokeWidth={1.25} aria-hidden />
+                        )}
                       </div>
                       <div className="border-t p-4">
                         <h4 className="font-heading text-sm font-bold sm:text-base">{category.name}</h4>

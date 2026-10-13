@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Plus, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Search } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,10 +17,23 @@ export const dynamic = "force-dynamic";
 export default async function AdminProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const { q } = await searchParams;
-  const products = await listAdminProducts(q);
+  const { q, page } = await searchParams;
+  const { products, total, page: current, perPage, pageCount } =
+    await listAdminProducts(q, Number(page) || 1);
+
+  // Preserves the search term when moving between pages.
+  const hrefFor = (p: number) => {
+    const params = new URLSearchParams();
+    if (q) params.set("q", q);
+    if (p > 1) params.set("page", String(p));
+    const query = params.toString();
+    return query ? `/admin/products?${query}` : "/admin/products";
+  };
+
+  const firstRow = total === 0 ? 0 : (current - 1) * perPage + 1;
+  const lastRow = Math.min(current * perPage, total);
 
   return (
     <div className="space-y-6">
@@ -28,8 +41,10 @@ export default async function AdminProductsPage({
         <div>
           <h1 className="font-heading text-2xl font-extrabold">Products</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {products.length} product{products.length === 1 ? "" : "s"}. Edit
-            stock inline; click a product for full details and photos.
+            {total === 0
+              ? "No products"
+              : `${firstRow}–${lastRow} of ${total} product${total === 1 ? "" : "s"}`}
+            . Edit stock inline; click a product for full details and photos.
           </p>
         </div>
         <Button asChild className="bg-brand-600 hover:bg-brand-700">
@@ -159,6 +174,55 @@ export default async function AdminProductsPage({
           </div>
         )}
       </Card>
+
+      {pageCount > 1 ? (
+        <nav
+          className="flex items-center justify-between gap-4"
+          aria-label="Product list pages"
+        >
+          <Button
+            asChild={current > 1}
+            variant="outline"
+            disabled={current === 1}
+            className="bg-white"
+          >
+            {current > 1 ? (
+              <Link href={hrefFor(current - 1)} rel="prev">
+                <ChevronLeft className="size-4" aria-hidden />
+                Previous
+              </Link>
+            ) : (
+              <span>
+                <ChevronLeft className="size-4" aria-hidden />
+                Previous
+              </span>
+            )}
+          </Button>
+
+          <p className="text-sm text-muted-foreground" aria-live="polite">
+            Page {current} of {pageCount}
+          </p>
+
+          <Button
+            asChild={current < pageCount}
+            variant="outline"
+            disabled={current === pageCount}
+            className="bg-white"
+          >
+            {current < pageCount ? (
+              <Link href={hrefFor(current + 1)} rel="next">
+                Next
+                <ChevronRight className="size-4" aria-hidden />
+              </Link>
+            ) : (
+              <span>
+                Next
+                <ChevronRight className="size-4" aria-hidden />
+              </span>
+            )}
+          </Button>
+        </nav>
+      ) : null}
     </div>
   );
 }

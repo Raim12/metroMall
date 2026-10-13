@@ -22,9 +22,11 @@ function ComingSoonBadge({ className = "" }: { className?: string }) {
 }
 
 /**
- * Metro's own brands, launching soon: LEGENDS as the lead, with its emblem
- * cycling through the gold, silver and black finishes, and KARETEK and M.TEK
- * alongside it.
+ * New brands arriving soon, led by LEGENDS, whose emblem cycles through the
+ * gold, silver and black finishes, with KARETEK and M.TEK alongside it.
+ *
+ * Deliberately does NOT describe these as Metro's own brands - per the client,
+ * they are presented as quality new brands coming to the range.
  */
 export function HouseBrands() {
   const lead = HOUSE_BRANDS.find((b) => b.lead)!;
@@ -35,14 +37,14 @@ export function HouseBrands() {
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-600">
-            Our own brands
+            New brands
           </p>
           <h2 className="mt-2 font-heading text-3xl font-extrabold sm:text-4xl">
             Launching <span className="italic text-[#b8901c]">soon</span>
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Alongside Pakistan&apos;s leading brands, Metro Electric Co. is launching
-            home appliances of its own.
+            Alongside Pakistan&apos;s leading brands, quality new home appliance
+            brands are arriving at Metro Electric Co.
           </p>
         </div>
 
@@ -51,7 +53,7 @@ export function HouseBrands() {
           <article className="relative overflow-hidden rounded-3xl border border-[#e8dcb8] bg-[radial-gradient(ellipse_at_center,#fffdf6_0%,#f6efdc_60%,#ecdfba_100%)] p-6 sm:p-10 lg:col-span-2">
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#8a6d12]">
-                Our main brand
+                Arriving soon
               </span>
               <ComingSoonBadge />
             </div>
@@ -73,12 +75,12 @@ export function HouseBrands() {
 
             <div className="mt-6 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
               <div>
+                {/* The emblem above already carries the LEGENDS wordmark. */}
                 <h3 className="font-heading text-2xl font-black tracking-wide">
-                  {lead.name}{" "}
-                  <span className="font-semibold text-muted-foreground">{lead.tagline}</span>
+                  {lead.tagline}
                 </h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Our flagship range is on its way — be the first to know.
+                  A new range is on its way — be the first to know.
                 </p>
               </div>
               <Link
