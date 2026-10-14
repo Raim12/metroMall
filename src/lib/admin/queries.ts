@@ -216,6 +216,7 @@ export async function listAdminProducts(search?: string, page = 1) {
       category: true,
       active: true,
       featured: true,
+      featuredRank: true,
       images: true,
       illustration: true,
       colors: { orderBy: { position: "asc" }, take: 1 },

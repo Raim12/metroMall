@@ -141,6 +141,10 @@ const productSchema = z.object({
   lowStockThreshold: z.coerce.number().int().min(0).max(10_000),
   trackStock: z.coerce.boolean(),
   featured: z.coerce.boolean(),
+  /** Blank means unranked; it sorts after every ranked product. */
+  featuredRank: z
+    .union([z.literal(""), z.coerce.number().int().min(1).max(999)])
+    .transform((v) => (v === "" ? null : v)),
   active: z.coerce.boolean(),
   badge: z.string().max(60).optional(),
   inTheBox: z.string().max(2000).optional(),
@@ -171,6 +175,7 @@ function readProductForm(formData: FormData) {
     lowStockThreshold: formData.get("lowStockThreshold"),
     trackStock: formData.get("trackStock") === "on",
     featured: formData.get("featured") === "on",
+    featuredRank: formData.get("featuredRank") ?? "",
     active: formData.get("active") === "on",
     badge: formData.get("badge") || undefined,
     inTheBox: formData.get("inTheBox") || undefined,
@@ -209,6 +214,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
       lowStockThreshold: d.lowStockThreshold,
       trackStock: d.trackStock,
       featured: d.featured,
+      featuredRank: d.featuredRank,
       active: d.active,
       badge: d.badge || null,
       inTheBox: splitList(d.inTheBox),
@@ -265,6 +271,7 @@ export async function updateProduct(formData: FormData): Promise<ActionResult> {
       lowStockThreshold: d.lowStockThreshold,
       trackStock: d.trackStock,
       featured: d.featured,
+      featuredRank: d.featuredRank,
       active: d.active,
       badge: d.badge || null,
       inTheBox: splitList(d.inTheBox),

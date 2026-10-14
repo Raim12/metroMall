@@ -46,6 +46,7 @@ export interface ProductFormValues {
   lowStockThreshold: number;
   trackStock: boolean;
   featured: boolean;
+  featuredRank: number | null;
   active: boolean;
   badge: string | null;
   inTheBox: string[];
@@ -257,6 +258,22 @@ export function ProductForm({ product }: { product?: ProductFormValues }) {
               required
             />
           </Field>
+          <Field
+            label="Featured position"
+            htmlFor="featuredRank"
+            hint="Lower shows first. Leave blank to sort after ranked ones."
+          >
+            <Input
+              id="featuredRank"
+              name="featuredRank"
+              type="number"
+              min={1}
+              max={999}
+              step={1}
+              placeholder="—"
+              defaultValue={product?.featuredRank ?? ""}
+            />
+          </Field>
         </div>
 
         <Field
@@ -306,7 +323,7 @@ export function ProductForm({ product }: { product?: ProductFormValues }) {
               name: "featured",
               label: "Featured",
               defaultChecked: product?.featured ?? false,
-              hint: "Shows on the homepage",
+              hint: "Shows on the homepage and leads the catalogue",
             },
             {
               name: "active",

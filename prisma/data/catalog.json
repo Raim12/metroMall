@@ -1738,7 +1738,7 @@
    "/api/uploads/products/gfc/gfc-gallant-ac-dc-2-cut.webp"
   ],
   "badge": null,
-  "featured": true,
+  "featured": false,
   "active": true,
   "sourceUrl": "https://gfcfans.com/products/gallant-copy"
  },
@@ -21973,7 +21973,7 @@
    "/api/uploads/products/royal/royal-splendor-iturbo-30-watts-fan-3-cut.webp"
   ],
   "badge": null,
-  "featured": false,
+  "featured": true,
   "active": true,
   "sourceUrl": "https://royalfans.com/products/splendor-iturbo-30-watts-fan"
  },

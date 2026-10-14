@@ -362,7 +362,14 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "lahore", name: "Lahore Fan", website: "" },
   { slug: "wahid", name: "Wahid Fan", website: "" },
   { slug: "ricon", name: "Ricon Fan", website: "" },
+  // Stocked soon - no products yet, so <BrandStrip /> shows these as
+  // "Coming soon" rather than linking to an empty catalogue.
+  { slug: "xpert", name: "Xpert", website: "" },
+  { slug: "glam-gas", name: "Glam Gas", website: "" },
 ];
+
+/** Brands announced before any stock exists. */
+export const UPCOMING_BRANDS = ["xpert", "glam-gas"] as const;
 
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
 

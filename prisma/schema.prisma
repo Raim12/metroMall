@@ -84,6 +84,10 @@ model Product {
   reviewCount Int      @default(0)
   inTheBox    String[] @default([])
   featured    Boolean  @default(false)
+  /// Position among featured products in the catalogue's "Featured" sort.
+  /// Lower sorts first; null means unranked and sorts after everything ranked,
+  /// so adding the column changed no existing ordering.
+  featuredRank Int?
   /// Hidden from the storefront when false, without deleting order history.
   active      Boolean  @default(true)
 
@@ -104,7 +108,7 @@ model Product {
 
   @@index([category, active])
   @@index([brand, active])
-  @@index([featured])
+  @@index([featured, featuredRank])
   @@index([stock])
 }
 

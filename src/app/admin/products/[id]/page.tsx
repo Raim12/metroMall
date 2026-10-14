@@ -65,6 +65,7 @@ export default async function AdminProductPage({
             lowStockThreshold: product.lowStockThreshold,
             trackStock: product.trackStock,
             featured: product.featured,
+            featuredRank: product.featuredRank,
             active: product.active,
             badge: product.badge,
             inTheBox: product.inTheBox,

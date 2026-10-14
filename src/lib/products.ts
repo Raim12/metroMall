@@ -146,7 +146,14 @@ export async function getCatalogue(query: CatalogueQuery) {
         ? [{ price: "desc" }]
         : query.sort === "newest"
           ? [{ createdAt: "desc" }]
-          : [{ featured: "desc" }, { brand: "asc" }, { name: "asc" }];
+          : [
+              { featured: "desc" },
+              // Explicit order first; unranked products fall through to the
+              // old brand/name ordering behind them.
+              { featuredRank: { sort: "asc", nulls: "last" } },
+              { brand: "asc" },
+              { name: "asc" },
+            ];
 
   const [total, rows] = await Promise.all([
     prisma.product.count({ where }),
