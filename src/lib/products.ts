@@ -259,3 +259,13 @@ export async function getAllProductSlugs(): Promise<string[]> {
   });
   return rows.map((r) => r.slug);
 }
+
+/** Brands, and brand + category pairs, that have sellable products — for the sitemap. */
+export async function getSitemapListings() {
+  const rows = await prisma.product.groupBy({
+    by: ["brand", "category"],
+    where: { ...SELLABLE },
+  });
+  const pairs = rows.map((r) => ({ brand: r.brand, category: CATEGORY_TO_SLUG[r.category] }));
+  return { brands: [...new Set(pairs.map((p) => p.brand))], pairs };
+}

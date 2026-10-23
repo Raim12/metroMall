@@ -12,8 +12,9 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/products";
-import { brandName, categoryBySlug } from "@/lib/constants";
-import { formatPkr } from "@/lib/utils";
+import { categoryBySlug } from "@/lib/constants";
+import { JsonLd } from "@/components/shared/json-ld";
+import { absoluteUrl, breadcrumbJsonLd, productJsonLd, productSeo } from "@/lib/seo";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -36,9 +37,18 @@ export async function generateMetadata({
 
   if (!product) return { title: "Product not found" };
 
+  const seo = productSeo(product);
+  const url = absoluteUrl(`/product/${product.slug}`);
   return {
-    title: `${product.name} — ${brandName(product.brand)}`,
-    description: `${product.tagline} — ${product.price > 0 ? formatPkr(product.price) : "Price coming soon"}. ${product.description.slice(0, 120)}…`,
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url,
+      images: product.images?.[0] ? [absoluteUrl(product.images[0])] : undefined,
+    },
   };
 }
 
@@ -50,8 +60,21 @@ export default async function ProductPage({ params }: PageProps) {
 
   const related = await getRelatedProducts(slug, 4);
 
+  const category = categoryBySlug(product.category);
+
   return (
     <>
+      <JsonLd
+        data={[
+          productJsonLd(product),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Products", path: "/catalogue" },
+            { name: category?.name ?? "Category", path: `/catalogue?category=${product.category}` },
+            { name: product.name, path: `/product/${product.slug}` },
+          ]),
+        ]}
+      />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         {/* Breadcrumb */}
         <nav aria-label="Breadcrumb" className="mb-6">

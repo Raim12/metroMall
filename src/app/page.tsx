@@ -1,3 +1,7 @@
+import type { Metadata } from "next";
+
+import { JsonLd } from "@/components/shared/json-ld";
+import { storeJsonLd } from "@/lib/seo";
 import { HeroSlider } from "@/components/home/hero-slider";
 import { HomeSearch } from "@/components/home/home-search";
 import { ValueProposition } from "@/components/home/value-proposition";
@@ -17,6 +21,8 @@ import {
 
 export const revalidate = 300;
 
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
 export default async function HomePage() {
   const [featured, covers, facets] = await Promise.all([
     getFeaturedProducts(),
@@ -32,6 +38,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <JsonLd data={storeJsonLd()} />
       <HomeSearch />
       {featured.length ? <HeroSlider products={featured} /> : null}
       <HouseBrands />

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { CATEGORIES, SITE } from "@/lib/constants";
-import { getAllProductSlugs } from "@/lib/products";
+import { getAllProductSlugs, getSitemapListings } from "@/lib/products";
 
 /**
  * XML sitemap, served at /sitemap.xml and referenced from robots.ts.
@@ -84,9 +84,35 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("[sitemap] could not load product slugs:", error);
   }
 
+  // Brand pages ("Royal fans") and brand + category pages ("Royal inverter
+  // ceiling fans") — only combinations that actually have products. The
+  // parameter order matches the catalogue's canonical URL.
+  let listingEntries: MetadataRoute.Sitemap = [];
+  try {
+    const { brands, pairs } = await getSitemapListings();
+    listingEntries = [
+      ...brands.map((brand) => ({
+        url: `${BASE}/catalogue?brand=${brand}`,
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.8,
+      })),
+      ...pairs.map(({ brand, category }) => ({
+        // The sitemap is XML and Next.js does not escape it, so & must be written as &amp;.
+        url: `${BASE}/catalogue?category=${category}&amp;brand=${brand}`,
+        lastModified: now,
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      })),
+    ];
+  } catch (error) {
+    console.error("[sitemap] could not load brand listings:", error);
+  }
+
   return [
     ...staticEntries,
     ...categoryEntries,
+    ...listingEntries,
     ...policyEntries,
     ...productEntries,
   ];
