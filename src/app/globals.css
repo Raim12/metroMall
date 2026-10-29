@@ -458,3 +458,62 @@
     animation: none;
   }
 }
+
+/*
+ * The logo typeface, for the word "Metro" in running text.
+ *
+ * Only ever applied to the brand word — see <BrandText> — never to whole
+ * sentences: Bazooka is a display face and unreadable at body sizes.
+ */
+.font-brand {
+  font-family: var(--font-brand), var(--font-heading), sans-serif;
+  /* Bazooka's caps sit larger than Archivo's at the same size. */
+  font-size: 1.04em;
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Continuously scrolling product rail.
+ *
+ * The track holds the product list twice, so when the first copy has scrolled
+ * exactly its own width the second copy sits where the first began and the
+ * animation restarts invisibly. `translate3d` keeps it on the compositor
+ * rather than the main thread, which matters on the homepage where Total
+ * Blocking Time is already the limiting metric.
+ *
+ * Paused on hover and on keyboard focus, so a card can actually be clicked.
+ */
+@keyframes product-rail {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.product-rail {
+  display: flex;
+  width: max-content;
+  animation: product-rail var(--rail-duration, 60s) linear infinite;
+}
+
+.product-rail:hover,
+.product-rail:focus-within {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-rail {
+    animation: none;
+  }
+}
+
+/*
+ * Second showcase rail, running the other way. Reversing the direction rather
+ * than defining a mirrored keyframe keeps both rails on one animation, so they
+ * stay on the compositor and cost no extra main-thread work.
+ */
+.product-rail--reverse {
+  animation-direction: reverse;
+}

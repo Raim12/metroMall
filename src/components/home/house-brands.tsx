@@ -51,10 +51,7 @@ export function HouseBrands() {
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {/* LEGENDS — the lead brand */}
           <article className="relative overflow-hidden rounded-3xl border border-[#e8dcb8] bg-[radial-gradient(ellipse_at_center,#fffdf6_0%,#f6efdc_60%,#ecdfba_100%)] p-6 sm:p-10 lg:col-span-2">
-            <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#8a6d12]">
-                Arriving soon
-              </span>
+            <div className="flex items-center justify-end gap-3">
               <ComingSoonBadge />
             </div>
 
@@ -73,13 +70,24 @@ export function HouseBrands() {
               ))}
             </div>
 
+            {/*
+              The descriptor half of the lockup - the emblem already carries
+              the word LEGENDS itself.
+
+              Sits BELOW the artwork, never pulled up into it: all three finish
+              images are cropped flush to the baseline of the wordmark, so a
+              negative margin here lands the text on top of the letters. Width
+              is capped to roughly the span from the E to the D so it reads as
+              tucked under the middle of the word, and the type matches the
+              KARETEK / M.TEK descriptors so the three cards read as a set.
+            */}
+            <h3 className="mx-auto mt-4 max-w-[13rem] text-center font-heading text-xs font-semibold uppercase tracking-[0.3em] text-ink-900/60 sm:mt-5 sm:max-w-[17rem] sm:text-sm">
+              {lead.tagline}
+            </h3>
+
             <div className="mt-6 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
               <div>
-                {/* The emblem above already carries the LEGENDS wordmark. */}
-                <h3 className="font-heading text-2xl font-black tracking-wide">
-                  {lead.tagline}
-                </h3>
-                <p className="mt-1 text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   A new range is on its way — be the first to know.
                 </p>
               </div>
@@ -104,7 +112,7 @@ export function HouseBrands() {
                   <ComingSoonBadge />
                 </div>
                 <div className="py-8 text-center">
-                  <p className="font-heading text-4xl font-black italic tracking-[0.08em] sm:text-5xl">
+                  <p className="coming-soon-blink font-heading text-4xl font-black italic tracking-[0.08em] sm:text-5xl">
                     {brand.name}
                   </p>
                   <p className="mt-2 text-xs font-semibold uppercase tracking-[0.25em] text-ink-300">

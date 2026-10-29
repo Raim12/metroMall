@@ -8,7 +8,9 @@ import { ValueProposition } from "@/components/home/value-proposition";
 import { TechShowcase } from "@/components/home/tech-showcase";
 import { ProductCategories } from "@/components/home/product-categories";
 import { FeaturedProducts } from "@/components/home/featured-products";
+import { ProductShowcase } from "@/components/home/product-showcase";
 import { BrandStrip } from "@/components/home/brand-strip";
+import { TrustShowcase } from "@/components/home/trust-showcase";
 import { HouseBrands } from "@/components/home/house-brands";
 import { BldcHighlight } from "@/components/home/bldc-highlight";
 import { FaqSection } from "@/components/home/faq-section";
@@ -40,13 +42,17 @@ export default async function HomePage() {
     <>
       <JsonLd data={storeJsonLd()} />
       <HomeSearch />
-      {featured.length ? <HeroSlider products={featured} /> : null}
+      {featured.length ? (
+        <HeroSlider products={featured} brandCounts={facets.brands} />
+      ) : null}
       <HouseBrands />
       {showcase ? <TechShowcase product={showcase} /> : null}
       <ValueProposition />
       <ProductCategories covers={covers} counts={facets.categories} />
       <FeaturedProducts products={featured} />
+      <ProductShowcase />
       <BrandStrip counts={facets.brands} />
+      <TrustShowcase />
       <BldcHighlight />
       <FaqSection />
       <CtaBanner />

@@ -4,7 +4,7 @@ import { checkoutSchema } from "@/lib/validation";
 import { CheckoutError, createOrder, priceCart } from "@/lib/orders";
 import { PaymentConfigError, availablePaymentMethods, providerForMethod } from "@/lib/payments";
 import { sendInternalOrderAlert, sendOrderConfirmation } from "@/lib/email";
-import { COD_CITY, isKarachi } from "@/lib/delivery";
+import { BULK_DELIVERY_THRESHOLD, COD_CITY, isKarachi, needsDeliveryQuote } from "@/lib/delivery";
 
 /**
  * POST /api/checkout
@@ -49,6 +49,22 @@ export async function POST(request: Request) {
       {
         error: `Outside ${COD_CITY} we accept bank transfer only. Please choose Bank Transfer.`,
         issues: { paymentMethod: ["Bank transfer only outside Karachi"] },
+      },
+      { status: 422 },
+    );
+  }
+
+  /*
+   * Bulk orders are not priced automatically. One fan goes on a bike, twenty
+   * need a Shehzore, and the flat charge would be wrong by a wide margin.
+   * Above the threshold the customer agrees delivery with us on WhatsApp.
+   */
+  const totalUnits = input.items.reduce((n, i) => n + i.quantity, 0);
+  if (needsDeliveryQuote(totalUnits)) {
+    return NextResponse.json(
+      {
+        error: `Orders over ${BULK_DELIVERY_THRESHOLD} items need a delivery quote. Please send us the list on WhatsApp and we will confirm the delivery charge with you.`,
+        issues: { items: ["Bulk order — delivery quoted separately"] },
       },
       { status: 422 },
     );

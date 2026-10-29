@@ -8594,7 +8594,7 @@
    "/api/uploads/products/hanco/hanco-semi-instant-electric-gas-water-heater-50-liters-body-size-5.webp"
   ],
   "badge": "Sale",
-  "featured": true,
+  "featured": false,
   "active": true,
   "sourceUrl": "https://www.hanco.pk/products/semi-instant-electric-gas-water-heater-50-liters-body-size"
  },
@@ -27308,7 +27308,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/false-ceiling-exhaust-fan"
  },
  {
@@ -27340,7 +27340,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/sonex-electric-pedestal-heater"
  },
  {
@@ -27374,7 +27374,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/wall-exhaust-fan"
  },
  {
@@ -27411,7 +27411,7 @@
   ],
   "badge": "Sale",
   "featured": true,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/crystal-30-watt-series-luxury-fan"
  },
  {
@@ -27442,7 +27442,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/regal"
  },
  {
@@ -27478,7 +27478,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/standard-deluxe-1"
  },
  {
@@ -27515,7 +27515,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/deluxe-regular-water-proof"
  },
  {
@@ -27582,7 +27582,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/decent-daizy"
  },
  {
@@ -27649,7 +27649,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/universal"
  },
  {
@@ -27701,7 +27701,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/tulip"
  },
  {
@@ -27733,7 +27733,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan-industrial-blade"
  },
  {
@@ -27765,7 +27765,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan-4"
  },
  {
@@ -27797,7 +27797,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan-3"
  },
  {
@@ -27828,7 +27828,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan-2"
  },
  {
@@ -27859,7 +27859,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/bracket-fan"
  },
  {
@@ -27890,7 +27890,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan-1"
  },
  {
@@ -27921,7 +27921,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/pedestal-fan"
  },
  {
@@ -27952,7 +27952,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/65"
  },
  {
@@ -27999,7 +27999,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/55"
  },
  {
@@ -28035,7 +28035,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/54"
  },
  {
@@ -28082,7 +28082,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/53"
  },
  {
@@ -28119,7 +28119,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/47"
  },
  {
@@ -28176,7 +28176,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/31"
  },
  {
@@ -28228,7 +28228,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/29"
  },
  {
@@ -28265,7 +28265,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/sonex-marshal-30-watt-inverter-ceiling-fan"
  },
  {
@@ -28302,7 +28302,7 @@
   ],
   "badge": "Sale",
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/sapphire-30-watt-inverter-ceiling-fan"
  },
  {
@@ -28349,7 +28349,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/12"
  },
  {
@@ -28388,7 +28388,7 @@
   ],
   "badge": null,
   "featured": false,
-  "active": true,
+  "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/8"
  },
  {
@@ -32022,7 +32022,7 @@
    "/api/uploads/products/super-asia/super-asia-eh-640-smart-series-1-cut.webp"
   ],
   "badge": null,
-  "featured": false,
+  "featured": true,
   "active": true,
   "sourceUrl": "https://superasiastore.com/products/eh-640"
  },

@@ -204,7 +204,7 @@ export default async function ConfirmationPage({
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            Dispatch is usually within 48 hours. Questions? Call{" "}
+            Delivery takes up to 7 working days, usually sooner. Questions? Call{" "}
             <a
               href={`tel:+${SITE.phoneDigits}`}
               className="font-semibold text-brand-700 hover:underline"

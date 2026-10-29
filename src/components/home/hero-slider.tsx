@@ -13,14 +13,21 @@ import { ArrowRight, Bell, ChevronLeft, ChevronRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { ProductImage } from "@/components/product/product-image";
-import { brandName } from "@/lib/constants";
+import { BRANDS, brandName } from "@/lib/constants";
+import { brandLogo } from "@/lib/brand-logos";
 import { formatPkr, cn } from "@/lib/utils";
 import type { Product } from "@/types";
 
 const AUTOPLAY_MS = 6500;
 
-/** Slide 0 is the LEGENDS launch teaser; product slides follow it. */
-const PROMO_SLIDES = 1;
+/**
+ * Slide 0 is the wall of brand logos, slide 1 the LEGENDS launch teaser, and
+ * the product slides follow. The brands lead because "which brands can I buy
+ * here" is the first thing a dealer's visitor wants answered.
+ */
+const PROMO_SLIDES = 2;
+const BRANDS_SLIDE = 0;
+const LEGENDS_SLIDE = 1;
 /*
  * The plain gold emblem, not the "-dark" artwork: that one is lit for a black
  * backdrop and its edges look harsh on the cream panel used here. Same finish
@@ -28,13 +35,20 @@ const PROMO_SLIDES = 1;
  */
 const LEGENDS_EMBLEM = "/brands/legends-gold.webp";
 
-export function HeroSlider({ products }: { products: Product[] }) {
+export function HeroSlider({
+  products,
+  brandCounts = {},
+}: {
+  products: Product[];
+  /** Product count per brand slug, so the logo wall only shows what we stock. */
+  brandCounts?: Record<string, number>;
+}) {
   const reduce = useReducedMotion();
   const [[index, direction], setState] = React.useState<[number, number]>([0, 1]);
   const [paused, setPaused] = React.useState(false);
 
   const count = products.length + PROMO_SLIDES;
-  const isPromo = index < PROMO_SLIDES;
+  const isLegends = index === LEGENDS_SLIDE;
   const product = products[Math.max(0, index - PROMO_SLIDES)];
   const color = product.colors[0];
 
@@ -114,12 +128,16 @@ export function HeroSlider({ products }: { products: Product[] }) {
           // Allow vertical scrolling to pass through while we claim horizontal
           // gestures, so the page still scrolls normally over the carousel.
           "touch-pan-y",
-          isPromo
+          // Only the LEGENDS teaser gets the cream panel; the brand wall reads
+          // better on white, where the logos keep their own colours.
+          isLegends
             ? "border-[#e8dcb8] bg-[radial-gradient(ellipse_at_center,#fffdf6_0%,#f6efdc_60%,#ecdfba_100%)]"
             : "metro-wash bg-white",
         )}
       >
-        {isPromo ? (
+        {index === BRANDS_SLIDE ? (
+          <BrandsSlide direction={direction} variants={slide} counts={brandCounts} />
+        ) : isLegends ? (
           <LegendsSlide direction={direction} variants={slide} reduce={Boolean(reduce)} />
         ) : (
         <div className="grid items-center gap-8 p-6 sm:p-10 lg:grid-cols-2 lg:gap-4 lg:p-14 [&>*]:min-w-0">
@@ -224,7 +242,11 @@ export function HeroSlider({ products }: { products: Product[] }) {
 
         {/* Dots */}
         <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2">
-          {[{ id: "legends", name: "LEGENDS — coming soon" }, ...products].map((p, i) => (
+          {[
+            { id: "brands", name: "the brands we carry" },
+            { id: "legends", name: "LEGENDS — coming soon" },
+            ...products,
+          ].map((p, i) => (
             <button
               key={p.id}
               type="button"
@@ -234,10 +256,10 @@ export function HeroSlider({ products }: { products: Product[] }) {
               className={cn(
                 "h-2 rounded-full transition-all duration-300",
                 i === index
-                  ? isPromo
+                  ? isLegends
                     ? "w-7 bg-[#b8901c]"
                     : "w-7 bg-brand-600"
-                  : isPromo
+                  : isLegends
                     ? "w-2 bg-[#b8901c]/30 hover:bg-[#b8901c]/50"
                     : "w-2 bg-brand-600/30 hover:bg-brand-600/50",
               )}
@@ -324,6 +346,104 @@ function LegendsSlide({
               style={{ "--shimmer-mask": `url(${LEGENDS_EMBLEM})` } as React.CSSProperties}
             />
           )}
+        </div>
+      </m.div>
+    </AnimatePresence>
+  );
+}
+
+/**
+ * The opening slide: a wall of the logos of every brand the shop stocks.
+ *
+ * Leads the carousel because an authorised dealer's visitor asks "which brands
+ * can I get here" before they ask about any one product.
+ *
+ * Brands without a logo file fall back to their name set as a wordmark, so the
+ * wall stays complete while logos are still being collected - see
+ * `@/lib/brand-logos`.
+ */
+function BrandsSlide({
+  direction,
+  variants,
+  counts,
+}: {
+  direction: number;
+  variants: Variants;
+  counts: Record<string, number>;
+}) {
+  // With counts, show exactly what is stocked. Without them - the prop is
+  // optional - fall back to whichever brands have a logo, so the slide is
+  // never empty.
+  const hasCounts = Object.keys(counts).length > 0;
+  const brands = BRANDS.filter((b) => (hasCounts ? counts[b.slug] : brandLogo(b.slug)));
+
+  return (
+    <AnimatePresence mode="wait" custom={direction}>
+      <m.div
+        key="brands"
+        custom={direction}
+        variants={variants}
+        initial="enter"
+        animate="center"
+        exit="exit"
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        // min-height keeps the carousel from collapsing between this slide and
+        // the taller product slides.
+        className="flex min-h-[26rem] flex-col justify-center p-6 pb-16 sm:p-10 sm:pb-16 lg:min-h-[30rem] lg:p-14 lg:pb-16"
+      >
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-brand-700">
+            Authorised dealer
+          </span>
+          <h1 className="mt-4 font-heading text-3xl font-black uppercase leading-[1.05] tracking-tight sm:text-4xl lg:text-5xl">
+            The brands we <span className="text-brand-600">carry</span>
+          </h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+            Genuine products from trusted brands of Pakistan, every one with
+            official brand warranty.
+          </p>
+        </div>
+
+        <ul className="mt-8 grid grid-cols-3 gap-2.5 sm:grid-cols-4 sm:gap-3 lg:grid-cols-6">
+          {brands.map((brand) => {
+            const logo = brandLogo(brand.slug);
+            return (
+              <li key={brand.slug}>
+                <Link
+                  href={`/catalogue?brand=${brand.slug}`}
+                  className="grid h-16 place-items-center rounded-xl border bg-white px-2.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md sm:h-20 sm:px-3"
+                >
+                  {logo ? (
+                    /*
+                      Fixed intrinsic size with `w-auto`: every logo is
+                      normalised to the same height, so capping the rendered
+                      height lines them all up without squashing any of them.
+                    */
+                    <Image
+                      src={logo}
+                      alt={brand.name}
+                      width={240}
+                      height={80}
+                      className="h-7 w-auto max-w-full object-contain sm:h-9"
+                    />
+                  ) : (
+                    <span className="text-center font-heading text-xs font-extrabold uppercase leading-tight tracking-tight text-ink-800 sm:text-sm">
+                      {brand.name}
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div className="mt-7 flex justify-center">
+          <Button asChild size="lg" className="font-bold">
+            <Link href="/catalogue">
+              Browse the catalogue
+              <ArrowRight className="size-4" aria-hidden />
+            </Link>
+          </Button>
         </div>
       </m.div>
     </AnimatePresence>

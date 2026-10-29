@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 
 import { Reveal } from "@/components/shared/reveal";
 import { SITE } from "@/lib/constants";
-import { BANK_ACCOUNT, COD_CITY, DELIVERY_CHARGE, RECEIPT_NOTE } from "@/lib/delivery";
+import {
+  BANK_ACCOUNT,
+  COD_CITY,
+  DELIVERY_CHARGE,
+  MAX_DELIVERY_WORKING_DAYS,
+  RECEIPT_NOTE,
+} from "@/lib/delivery";
 
 type PolicySlug = "privacy" | "returns" | "delivery" | "terms";
 
@@ -73,8 +79,8 @@ const POLICIES: Record<
         body: `${BANK_ACCOUNT.bank} · IBAN ${BANK_ACCOUNT.iban} · Account title: ${BANK_ACCOUNT.title}. ${RECEIPT_NOTE}`,
       },
       {
-        heading: "Dispatch times",
-        body: "In-stock orders are dispatched once your payment receipt is confirmed. We share the courier or cargo details with you on WhatsApp.",
+        heading: "Delivery times",
+        body: `In-stock orders are dispatched once your payment receipt is confirmed, and delivered within a maximum of ${MAX_DELIVERY_WORKING_DAYS} working days. We aim to deliver sooner wherever we can, and share the courier or cargo details with you on WhatsApp.`,
       },
       {
         heading: "Bulk and dealer orders",
@@ -82,7 +88,7 @@ const POLICIES: Record<
       },
       {
         heading: "Inspection on arrival",
-        body: "Please inspect the packaging before accepting delivery. Report any transit damage within 48 hours, with photos, and we will arrange a replacement or repair with you.",
+        body: "Please inspect the packaging before accepting delivery. Report any transit damage within 24 hours, with photos, and we will arrange a replacement or repair with you.",
       },
     ],
   },
@@ -101,10 +107,6 @@ const POLICIES: Record<
       {
         heading: "Warranty",
         body: `Products carry their brand's official warranty; periods and terms are set by each brand. ${SITE.name} is an authorized dealer: we register warranty complaints with the brand's official service centre on your behalf, or guide you to the brand's direct support, but repairs are carried out by the brand's own authorised technicians.`,
-      },
-      {
-        heading: "Limitation of liability",
-        body: "Our liability in connection with any product is limited to the purchase price of that product. Nothing in these terms limits liability that cannot be limited under Pakistani law.",
       },
       {
         heading: "Contact",

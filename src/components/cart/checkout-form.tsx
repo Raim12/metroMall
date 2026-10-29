@@ -44,11 +44,13 @@ import { ProductImage } from "@/components/product/product-image";
 import { useCartStore, selectSubtotal } from "@/store/cart-store";
 import { formatPkr, cn, variantLabel } from "@/lib/utils";
 import { PROVINCES, shippingSchema, type ShippingValues } from "@/lib/validation";
+import { WHATSAPP_LINK } from "@/lib/constants";
 import {
   COD_CITY,
   DELIVERY_CHARGE,
   advanceAmount,
   isKarachi,
+  needsDeliveryQuote,
   paymentMethodsFor,
 } from "@/lib/delivery";
 import { BankDetails } from "@/components/cart/bank-details";
@@ -99,6 +101,11 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
   // Flat delivery charge on every order (see lib/delivery.ts).
   const shipping = DELIVERY_CHARGE;
   const total = subtotal + shipping;
+
+  // Above the bulk threshold delivery is quoted, not charged, so the order
+  // cannot be completed here. The server enforces the same rule.
+  const totalUnits = items.reduce((n, i) => n + i.quantity, 0);
+  const isBulk = needsDeliveryQuote(totalUnits);
 
   const form = useForm<ShippingValues>({
     resolver: zodResolver(shippingSchema),
@@ -499,14 +506,36 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
               </p>
             ) : null}
 
-            <BankDetails method={method} amount={advanceAmount(method, total)} />
+            {isBulk ? (
+              <div className="rounded-xl border border-cta-300 bg-cta-50 p-4 text-sm">
+                <p className="font-bold">
+                  {totalUnits} items — delivery quoted separately
+                </p>
+                <p className="mt-1 text-muted-foreground">
+                  An order this size travels by truck rather than bike, so we
+                  agree the delivery charge with you directly. Send us the list
+                  on WhatsApp and we will confirm the total and arrange
+                  delivery.
+                </p>
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-4 py-2 font-semibold text-white"
+                >
+                  Get a delivery quote on WhatsApp
+                </a>
+              </div>
+            ) : (
+              <BankDetails method={method} amount={advanceAmount(method, total)} />
+            )}
 
             <Separator />
 
             <div className="flex flex-col gap-2 sm:flex-row-reverse">
               <Button
                 size="lg"
-                disabled={submitting}
+                disabled={submitting || isBulk}
                 onClick={form.handleSubmit(placeOrder)}
                 className="flex-1 bg-cta-400 font-bold text-cta-foreground hover:bg-cta-500"
               >

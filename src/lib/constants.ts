@@ -3,13 +3,20 @@ import type { CategorySlug } from "@/types";
 export const SITE = {
   name: "Metro Electric Co.",
   shortName: "Metro Electric",
-  tagline: "Authorized Dealer & Wholesaler of Home Appliances since 1965",
+  tagline: "Authorized Dealer, Retailer & Wholesaler of Home Appliances",
   /** Shown beside the logo in the header. */
   slogan: "Now we are online!",
-  /** Founding year — the heritage line used across the site. */
+  /**
+   * Founding year. Deliberately NOT repeated across the site: the business was
+   * founded in 1965 but grew into dealership over time, so "since 1965" next to
+   * "authorized dealer" would date the dealership wrongly. The story belongs on
+   * the About page; everywhere else states what we are today.
+   */
   since: 1965,
+  /** Year of the KCCI and KEDA memberships. */
+  memberSince: 1997,
   description:
-    "Since 1965, Metro Electric Co. has been a leading Authorized Dealer and Wholesaler of top-tier electric and gas home appliances in Pakistan — genuine products from the country's top brands at unbeatable prices.",
+    "Metro Electric Co. is a leading Authorized Dealer, Retailer and Wholesaler of top-tier electric and gas home appliances in Pakistan — genuine products from the country's top brands at unbeatable prices.",
   /**
    * Canonical production origin. Drives `metadataBase`, so it is what every
    * canonical link, Open Graph URL and sitemap entry is built from.
@@ -20,13 +27,13 @@ export const SITE = {
   url: "https://metroelectromall.com",
   email: "info@metroelectricco.com.pk",
   /** Primary mobile — same number as WhatsApp. */
-  phone: "+92 333 2299144",
-  phoneDigits: "923332299144",
+  phone: "+92 300 3585100",
+  phoneDigits: "923003585100",
   contactPerson: "Mujahid Shabbir",
   landlines: ["021-32625467", "021-32601516"],
-  whatsapp: "+92 333 2299144",
+  whatsapp: "+92 300 3585100",
   /** Digits only — used to build the wa.me link. */
-  whatsappDigits: "923332299144",
+  whatsappDigits: "923003585100",
   hours: "Sat – Thurs, 10:30 AM – 8:00 PM PKT",
   /** Short form for running text, e.g. FAQs. */
   hoursShort: "10:30 AM to 8:00 PM",
@@ -351,7 +358,6 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "super-asia", name: "Super Asia", website: "https://superasiastore.com" },
   { slug: "sk", name: "SK Fans", website: "https://www.skfans.com.pk" },
   { slug: "tamoor", name: "Tamoor Fans", website: "https://www.tamoorfans.com" },
-  { slug: "sonex", name: "Sonex", website: "https://www.sonexfan.com" },
   { slug: "gfc", name: "GFC", website: "https://gfcfans.com" },
   { slug: "wester", name: "Wester Fans", website: "https://westerfanofficial.pk" },
   { slug: "voldam", name: "Voldam", website: "https://voldam.com.pk" },
@@ -370,6 +376,12 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
 
 /** Brands announced before any stock exists. */
 export const UPCOMING_BRANDS = ["xpert", "glam-gas"] as const;
+
+/**
+ * Brands that are stocked and shoppable, but have more models on the way. The
+ * tile keeps its product count and its link; it just carries a note.
+ */
+export const EXPANDING_BRANDS = ["nasgas"] as const;
 
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
 
@@ -408,10 +420,10 @@ export const SHOWCASE_FAN_BRANDS = [
   "pak-fans",
   "royal",
   "gfc",
+  "super-asia",
   "sk",
   "tamoor",
   "orient",
-  "sonex",
   "voldam",
 ] as const;
 
@@ -423,7 +435,6 @@ export const SHOWCASE_BRANDS = [
   "super-asia",
   "tamoor",
   "orient",
-  "sonex",
   "nasgas",
   "hanco",
   "voldam",
@@ -449,11 +460,11 @@ export const FAN_BRANDS = [
   "pak-fans",
   "luxus",
   "royal",
+  "super-asia",
   "sk",
   "tamoor",
   "gfc",
   "orient",
-  "sonex",
   "voldam",
   "wester",
   "lahore",
@@ -491,7 +502,7 @@ export const HOME_FAQS = [
   },
   {
     q: "What if I receive a damaged item?",
-    a: "Report it to us within 48 hours of delivery, with photos of the box and the product, and we will arrange a replacement or repair with you.",
+    a: "Report it to us within 24 hours of delivery, with photos of the box and the product, and we will arrange a replacement or repair with you.",
   },
   {
     q: "How can I contact customer support?",
@@ -510,7 +521,7 @@ export const SUPPORT_FAQS: Record<
     },
     {
       q: "Why buy from Metro Electric Co.?",
-      a: "We have been an authorized dealer and wholesaler of Pakistan's top brands since 1965, so every product is genuine and carries its official brand warranty. You get a wide choice of brands, designs, colours and budgets in one place, at competitive prices, with trained staff to guide you before and after you buy.",
+      a: "We are an authorized dealer, retailer and wholesaler of Pakistan's top brands, so every product is genuine and carries its official brand warranty. You get a wide choice of brands, designs, colours and budgets in one place, at competitive prices, with trained staff to guide you before and after you buy.",
     },
     {
       q: "Do AC/DC and inverter fans need a dimmer or regulator?",
@@ -555,7 +566,7 @@ export const CORE_ETHOS = [
   },
   {
     title: "Affordability",
-    body: "Premium-quality products at prices that work for every customer. As a wholesaler, we pass the savings on to you.",
+    body: "Premium-quality products at prices that work for every customer. As a retailer and wholesaler, we pass the savings on to you.",
   },
   {
     title: "Expert Guidance",
@@ -567,10 +578,12 @@ export const CORE_ETHOS = [
   },
   {
     title: "Genuine Products Only",
-    body: "As an authorized dealer, everything we sell comes through official brand channels, with the brand's own warranty.",
+    body: "As an authorized dealer, retailer and wholesaler, everything we sell comes through official brand channels, with the brand's own warranty.",
   },
   {
-    title: "Trusted since 1965",
+    // The founding year stays on the About page, where the full story gives it
+    // context; elsewhere the site states what the business is today.
+    title: "Trusted by Generations",
     body: "Generations of Pakistani families have bought their fans and home appliances from Metro Electric Co.",
   },
 ];

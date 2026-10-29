@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 
 import { NotifyForm } from "@/components/legends/notify-form";
 import { HOUSE_BRANDS, SITE } from "@/lib/constants";
+import { BrandText } from "@/components/shared/brand-text";
 
 export const metadata: Metadata = {
   title: "LEGENDS Home Appliances — Launching Soon",
@@ -55,7 +56,7 @@ export default async function LegendsPage({
         {/* ------------------------------- Hero ------------------------------ */}
         <section className="mt-6 text-center">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-[#c9a227]">
-            {SITE.shortName} presents
+            <BrandText>{SITE.shortName}</BrandText> presents
           </p>
 
           <div className="relative mx-auto mt-6 aspect-[10/7] w-full max-w-2xl">
@@ -72,9 +73,18 @@ export default async function LegendsPage({
               className="legends-shimmer"
               style={{ "--shimmer-mask": `url(${EMBLEM})` } as React.CSSProperties}
             />
+            {/* Registered mark, set against the top-right of the wordmark. */}
+            <span className="absolute right-[12%] top-[14%] font-heading text-base font-bold text-[#8a6d12] sm:text-xl">
+              &reg;
+            </span>
           </div>
 
-          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.3em] text-[#8a6d12]">
+          {/*
+            Sits tight under the wordmark and no wider than it, so it reads as
+            part of the lockup rather than a separate line - centred across the
+            E and the D rather than the whole column.
+          */}
+          <p className="-mt-1 mx-auto max-w-[19rem] text-sm font-semibold uppercase tracking-[0.42em] text-[#8a6d12] sm:max-w-sm">
             Home Appliances
           </p>
           <h1 className="mt-4 font-heading text-4xl font-black uppercase tracking-tight sm:text-6xl">
@@ -104,7 +114,7 @@ export default async function LegendsPage({
         {/* --------------------------- Also coming --------------------------- */}
         <section className="mt-16 text-center">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-[#8a6d12]">
-            Also coming from {SITE.shortName}
+            Also coming from <BrandText>{SITE.shortName}</BrandText>
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {others.map((b) => (

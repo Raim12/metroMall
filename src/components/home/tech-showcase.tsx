@@ -15,7 +15,7 @@ import type { Product } from "@/types";
 
 const POINTS = [
   "30–55W at top speed instead of 90–130W",
-  "AC/DC models run straight off solar panels and UPS batteries",
+  "AC/DC models run straight on solar panels, 12V batteries, generator, UPS and electricity",
   // Fan brands only: FAN_BRANDS is the list whose fans we actually sell.
   `Inverter fans from ${brandListText(SHOWCASE_FAN_BRANDS, 5)}`,
   "Official brand warranty on every fan we sell",
@@ -32,11 +32,10 @@ export function TechShowcase({ product }: { product: Product }) {
           <Eyebrow>Energy, rethought</Eyebrow>
 
           <h2 className="mt-4 font-heading text-3xl font-extrabold leading-tight sm:text-4xl lg:text-5xl">
-            Cut your power bill by up to{" "}
-            <span className="text-brand-600">
-              {SAVINGS.savingsPercent}%
+            Save your power bills.{" "}
+            <span className="block text-brand-600">
+              Save energy, save money up to {SAVINGS.savingsPercent}%.
             </span>
-            , not its airflow.
           </h2>
 
           <p className="mt-5 text-base leading-relaxed text-muted-foreground">

@@ -9,6 +9,7 @@ import {
   LinkedinIcon,
 } from "@/components/shared/social-icons";
 import { FOOTER_COLUMNS, SITE } from "@/lib/constants";
+import { BrandText } from "@/components/shared/brand-text";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -135,7 +136,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/15 pt-6 sm:flex-row">
           <p className="text-sm text-ink-300/70">
-            © {year} {SITE.name}. All rights reserved.
+            © {year} <BrandText>{SITE.name}</BrandText>. All rights reserved.
           </p>
           <div className="flex items-center gap-2">
             {[

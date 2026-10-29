@@ -196,15 +196,57 @@ export async function getCatalogueFacets(category?: CategorySlug) {
   };
 }
 
+/**
+ * Categories whose tile photo is chosen by hand rather than left to the
+ * ordering below.
+ *
+ * The automatic pick is "first sellable product in the category", which is
+ * fine until the product that happens to sort first is not the one that should
+ * front the range. Pinning the cover here is deliberately separate from the
+ * `featured` flag: marking a product featured to fix a tile would also push it
+ * into the homepage carousel, which is curated for its own reasons.
+ *
+ * Keyed by category slug, valued by product slug.
+ */
+const COVER_OVERRIDES: Partial<Record<CategorySlug, string>> = {
+  // The GFC wooden fan sorts first but reads as a dated wooden finish. Tamoor
+  // is the same flat-on square shot in white, so the tile keeps its framing.
+  "false-ceiling-fans": "tamoor-false-ceiling-fan",
+};
+
 /** One representative photo per category, for the homepage tiles. */
 export async function getCategoryCovers(): Promise<Partial<Record<CategorySlug, string>>> {
-  const rows = await prisma.product.findMany({
-    where: { ...SELLABLE, NOT: { images: { isEmpty: true } } },
-    select: { category: true, images: true },
-    orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
-    distinct: ["category"],
-  });
-  return Object.fromEntries(rows.map((r) => [CATEGORY_TO_SLUG[r.category], r.images[0]]));
+  const overrideSlugs = Object.values(COVER_OVERRIDES);
+
+  const [rows, pinned] = await Promise.all([
+    prisma.product.findMany({
+      where: { ...SELLABLE, NOT: { images: { isEmpty: true } } },
+      select: { category: true, images: true },
+      orderBy: [{ featured: "desc" }, { createdAt: "asc" }],
+      distinct: ["category"],
+    }),
+    overrideSlugs.length
+      ? prisma.product.findMany({
+          where: { ...SELLABLE, slug: { in: overrideSlugs }, NOT: { images: { isEmpty: true } } },
+          select: { slug: true, images: true },
+        })
+      : Promise.resolve([]),
+  ]);
+
+  const covers = Object.fromEntries(
+    rows.map((r) => [CATEGORY_TO_SLUG[r.category], r.images[0]]),
+  ) as Partial<Record<CategorySlug, string>>;
+
+  // Applied on top, so an override that no longer resolves — product renamed,
+  // delisted or left without photos — quietly falls back to the automatic pick
+  // rather than leaving the tile blank.
+  const bySlug = new Map(pinned.map((p) => [p.slug, p.images[0]]));
+  for (const [category, productSlug] of Object.entries(COVER_OVERRIDES)) {
+    const image = bySlug.get(productSlug);
+    if (image) covers[category as CategorySlug] = image;
+  }
+
+  return covers;
 }
 
 /**

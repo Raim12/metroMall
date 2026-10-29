@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { Section, SectionHeading } from "@/components/shared/section-heading";
-import { BRANDS, UPCOMING_BRANDS } from "@/lib/constants";
+import { BRANDS, EXPANDING_BRANDS, UPCOMING_BRANDS } from "@/lib/constants";
 
 /**
  * "Shop by brand" — one tile per brand we stock, linking to its filtered
@@ -20,7 +20,7 @@ export function BrandStrip({ counts }: { counts: Record<string, number> }) {
         eyebrow="Authorised dealer"
         title="Shop by"
         highlight="Brand"
-        description="Genuine products from the brands Pakistan trusts."
+        description="Genuine products from trusted brands of Pakistan."
       />
 
       <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -36,6 +36,11 @@ export function BrandStrip({ counts }: { counts: Record<string, number> }) {
               <span className="mt-1 text-xs text-muted-foreground">
                 {counts[brand.slug]} products
               </span>
+              {(EXPANDING_BRANDS as readonly string[]).includes(brand.slug) ? (
+                <span className="mt-1 text-xs font-semibold text-brand-600">
+                  More models coming soon
+                </span>
+              ) : null}
             </Link>
           </li>
         ))}

@@ -15,7 +15,26 @@
 export const COD_CITY = "Karachi";
 
 /** Flat delivery charge on every website order (whole PKR). */
-export const DELIVERY_CHARGE = 300;
+export const DELIVERY_CHARGE = 250;
+
+/**
+ * Maximum dispatch-to-delivery window quoted to customers, in working days.
+ * Most orders arrive sooner; this is the outer limit we commit to.
+ */
+export const MAX_DELIVERY_WORKING_DAYS = 7;
+
+/**
+ * Above this many units an order no longer fits the flat charge: one fan goes
+ * by bike, twenty go by Shehzore. Rather than invent a rate, the checkout
+ * stops quoting a delivery price and asks the customer to agree it on
+ * WhatsApp, which is how bulk orders are handled anyway.
+ */
+export const BULK_DELIVERY_THRESHOLD = 5;
+
+/** Whether this basket needs a quoted delivery charge rather than the flat one. */
+export function needsDeliveryQuote(totalUnits: number): boolean {
+  return totalUnits > BULK_DELIVERY_THRESHOLD;
+}
 
 /** Where customers send advance payments. */
 export const BANK_ACCOUNT = {

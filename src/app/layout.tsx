@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo, Inter } from "next/font/google";
+import localFont from "next/font/local";
 
 import { Navbar } from "@/components/layout/navbar";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
@@ -9,6 +10,19 @@ import { DeferredChrome } from "@/components/shared/deferred-chrome";
 import { CartHydrator } from "@/components/cart/cart-hydrator";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
+
+/**
+ * The typeface from the Metro Electric Co. logo, used only for the word
+ * "Metro" in running text so the brand reads consistently with the mark.
+ * `display: "block"` because a brand word swapping typeface mid-read is worse
+ * than a brief pause.
+ */
+const bazooka = localFont({
+  src: "../../public/fonts/bazooka.woff2",
+  variable: "--font-brand",
+  display: "block",
+  weight: "400",
+});
 
 const inter = Inter({
   variable: "--font-sans",
@@ -68,7 +82,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${inter.variable} ${archivo.variable}`}
+      className={`${inter.variable} ${archivo.variable} ${bazooka.variable}`}
     >
       <body className="min-h-dvh bg-background antialiased">
         <a
