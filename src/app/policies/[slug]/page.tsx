@@ -10,6 +10,7 @@ import {
   MAX_DELIVERY_WORKING_DAYS,
   RECEIPT_NOTE,
 } from "@/lib/delivery";
+import { BrandText } from "@/components/shared/brand-text";
 
 type PolicySlug = "privacy" | "returns" | "delivery" | "terms";
 
@@ -64,7 +65,7 @@ const POLICIES: Record<
   },
   delivery: {
     title: "Delivery Policy",
-    intro: `We deliver across Pakistan. A delivery charge of Rs. ${DELIVERY_CHARGE} applies to every order.`,
+    intro: `We deliver across Pakistan. In ${COD_CITY}, a delivery charge of Rs. ${DELIVERY_CHARGE} applies to every order. Outside ${COD_CITY}, orders are sent by cargo and the bilty (cargo) charges are paid by you to the cargo company.`,
     sections: [
       {
         heading: "Cash on Delivery (Karachi only)",
@@ -72,7 +73,7 @@ const POLICIES: Record<
       },
       {
         heading: "Full payment in advance (all cities)",
-        body: `Transfer the full order amount plus the Rs. ${DELIVERY_CHARGE} delivery charge. Outside ${COD_CITY}, this is the only payment option.`,
+        body: `Transfer the full order amount in advance (plus the Rs. ${DELIVERY_CHARGE} delivery charge in ${COD_CITY}). Outside ${COD_CITY}, this is the only payment option, and the bilty charges are paid by you to the cargo company.`,
       },
       {
         heading: "Bank details",
@@ -144,7 +145,7 @@ export default async function PolicyPage({ params }: PageProps) {
           {policy.title}
         </h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-          {policy.intro}
+          <BrandText>{policy.intro}</BrandText>
         </p>
 
         <div className="mt-10 space-y-8">
@@ -154,7 +155,7 @@ export default async function PolicyPage({ params }: PageProps) {
                 {section.heading}
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {section.body}
+                <BrandText>{section.body}</BrandText>
               </p>
             </section>
           ))}

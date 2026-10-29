@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Reveal } from "@/components/shared/reveal";
 import { SITE, SUPPORT_FAQS } from "@/lib/constants";
+import { BrandText } from "@/components/shared/brand-text";
 
 export const metadata: Metadata = {
   title: "FAQs",
@@ -62,10 +63,10 @@ export default function FaqPage() {
                         className="overflow-hidden rounded-xl border bg-card px-4 data-[state=open]:border-brand-300 data-[state=open]:bg-brand-50/50"
                       >
                         <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline">
-                          {faq.q}
+                          <BrandText>{faq.q}</BrandText>
                         </AccordionTrigger>
                         <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                          {faq.a}
+                          <BrandText>{faq.a}</BrandText>
                         </AccordionContent>
                       </AccordionItem>
                     ))}
@@ -91,7 +92,8 @@ export default function FaqPage() {
               </div>
 
               <p className="mt-4 text-xs text-ink-200/85">
-                Prefer direct contact? Email us at{" "}
+                For the quickest reply, WhatsApp or call us on {SITE.phone}. You
+                can also email us at{" "}
                 <a
                   href={`mailto:${SITE.email}`}
                   className="font-semibold text-cta-300 underline underline-offset-2"

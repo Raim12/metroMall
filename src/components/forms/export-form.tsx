@@ -52,7 +52,7 @@ export function ExportForm() {
       }
 
       toast.success("Query sent", {
-        description: `Thanks ${values.firstName}, our wholesale team will reply within one business day.`,
+        description: `Thanks ${values.firstName}, our wholesale & corporate team will reply within one business day.`,
       });
       form.reset();
     } catch {

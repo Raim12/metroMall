@@ -22,13 +22,13 @@ const ANNOUNCED_GROUPS = new Set(["lights", "electrical"]);
  * These are placeholders: once the supplier's own product shots arrive, swap
  * the file and the tile picks it up. Any slug missing here falls back to the
  * line icon, which is still the right treatment for a category with nothing to
- * show.
+ * show. Outdoor and street lights keep the icon on purpose: the client
+ * preferred that style for them.
  */
 const UPCOMING_COVERS: Record<string, string> = {
   "wall-lights": "/categories/wall-lights.webp",
   chandeliers: "/categories/chandeliers.webp",
   "down-lights": "/categories/down-lights.webp",
-  "outdoor-lights": "/categories/outdoor-lights.webp",
   "table-lamps": "/categories/table-lamps.webp",
   "stand-lamps": "/categories/stand-lamps.webp",
   "electric-switches": "/categories/electric-switches.webp",

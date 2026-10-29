@@ -48,6 +48,8 @@ import { WHATSAPP_LINK } from "@/lib/constants";
 import {
   COD_CITY,
   DELIVERY_CHARGE,
+  BILTY_NOTE,
+  deliveryChargeFor,
   advanceAmount,
   isKarachi,
   needsDeliveryQuote,
@@ -67,7 +69,7 @@ const METHOD_META: Record<
   BANK_TRANSFER: {
     Icon: Landmark,
     label: "Bank Transfer",
-    blurb: "Pay the full amount, including delivery, in advance by bank transfer.",
+    blurb: "Pay the full order amount in advance by bank transfer.",
   },
   CARD: {
     Icon: CreditCard,
@@ -98,9 +100,6 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
   const [method, setMethod] = React.useState(availableMethods[0] ?? "COD");
   const [submitting, setSubmitting] = React.useState(false);
 
-  // Flat delivery charge on every order (see lib/delivery.ts).
-  const shipping = DELIVERY_CHARGE;
-  const total = subtotal + shipping;
 
   // Above the bulk threshold delivery is quoted, not charged, so the order
   // cannot be completed here. The server enforces the same rule.
@@ -127,6 +126,12 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
   const city = form.watch("city");
   const inKarachi = isKarachi(city);
   const methods = paymentMethodsFor(city, availableMethods);
+
+  // Rs. 250 in Karachi; elsewhere the customer pays bilty to the cargo company
+  // (see lib/delivery.ts). Until a city is typed, assume Karachi.
+  const outstation = Boolean(city.trim()) && !inKarachi;
+  const shipping = outstation ? 0 : deliveryChargeFor("Karachi");
+  const total = subtotal + shipping;
   React.useEffect(() => {
     if (methods.length && !methods.includes(method)) setMethod(methods[0]);
   }, [methods, method]);
@@ -527,7 +532,7 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
                 </a>
               </div>
             ) : (
-              <BankDetails method={method} amount={advanceAmount(method, total)} />
+              <BankDetails method={method} amount={advanceAmount(method, total)} city={city} />
             )}
 
             <Separator />
@@ -593,9 +598,14 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Delivery</dt>
-            <dd className="tabular-nums">{formatPkr(shipping)}</dd>
+            <dd className="text-right tabular-nums">
+              {outstation ? "Bilty charges paid by you" : formatPkr(shipping)}
+            </dd>
           </div>
         </dl>
+        {outstation ? (
+          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{BILTY_NOTE}</p>
+        ) : null}
 
         <Separator className="my-4" />
 

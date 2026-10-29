@@ -121,7 +121,7 @@ export const FOOTER_COLUMNS: { heading: string; links: NavLink[] }[] = [
   {
     heading: "More",
     links: [
-      { label: "Wholesale & Bulk Orders", href: "/wholesale" },
+      { label: "Wholesale, Corporate & Bulk Orders", href: "/wholesale" },
       { label: "Terms And Conditions", href: "/policies/terms" },
       { label: "Contact Us", href: "/support/contact" },
     ],
@@ -325,6 +325,13 @@ export const CATEGORIES: {
     blurb: "Gate, garden and facade lights built for the weather.",
   },
   {
+    slug: "street-lights",
+    name: "Street Lights",
+    singular: "Street Light",
+    group: "lights",
+    blurb: "LED and solar street lights for roads, lanes and compounds.",
+  },
+  {
     slug: "table-lamps",
     name: "Table Lamps",
     singular: "Table Lamp",
@@ -363,6 +370,8 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "voldam", name: "Voldam", website: "https://voldam.com.pk" },
   { slug: "orient", name: "Orient", website: "https://www.orientappliances.pk" },
   { slug: "jackpot", name: "Jackpot", website: "https://www.jackpotappliances.pk" },
+  { slug: "westpoint", name: "West Point", website: "https://westpoint.pk" },
+  { slug: "star-co", name: "Starco Fans", website: "" },
   { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
   { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
   { slug: "lahore", name: "Lahore Fan", website: "" },
@@ -375,7 +384,7 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
 ];
 
 /** Brands announced before any stock exists. */
-export const UPCOMING_BRANDS = ["xpert", "glam-gas"] as const;
+export const UPCOMING_BRANDS = ["jackpot", "westpoint", "star-co", "xpert", "glam-gas"] as const;
 
 /**
  * Brands that are stocked and shoppable, but have more models on the way. The
@@ -490,11 +499,11 @@ export const HOME_FAQS = [
   },
   {
     q: "What payment methods do you accept?",
-    a: "Cash on Delivery (Karachi only): transfer the Rs. 300 delivery charge in advance and pay for the order on delivery. Full payment in advance (all cities): transfer the order amount plus Rs. 300 delivery. Bank: MCB Bank Limited, IBAN PK10MUCB0003301010064245, title Metro Electric Co. Then WhatsApp us the receipt and we'll confirm and dispatch your order.",
+    a: "Cash on Delivery (Karachi only): transfer the Rs. 250 delivery charge in advance and pay for the order on delivery. Other cities: full payment of the order amount in advance by bank transfer; the bilty (cargo) charges are paid by you to the cargo company. Bank: MCB Bank Limited, IBAN PK10MUCB0003301010064245, title Metro Electric Co. Then WhatsApp us the receipt and we'll confirm and dispatch your order.",
   },
   {
     q: "Do you deliver outside Karachi?",
-    a: "Yes, across Pakistan, for a delivery charge of Rs. 300 per order. Outside Karachi, orders are paid in full in advance by bank transfer and sent by courier or cargo service.",
+    a: "Yes, across Pakistan. In Karachi the delivery charge is Rs. 250 per order. Outside Karachi, orders are paid in full in advance by bank transfer and sent by cargo; the bilty (cargo) charges are paid by you to the cargo company. Large orders are delivered by rickshaw or Shehzore, and the delivery charge is agreed with you on WhatsApp. Every order is delivered within a maximum of 7 working days, and we try to deliver as soon as possible.",
   },
   {
     q: "How do I track my order?",
@@ -506,7 +515,7 @@ export const HOME_FAQS = [
   },
   {
     q: "How can I contact customer support?",
-    a: `Call ${SITE.phone} or our landlines ${SITE.landlines.join(" / ")}, Saturday to Thursday, ${SITE.hoursShort}, message us on WhatsApp any time, or email ${SITE.email}. We respond to most queries within one business day.`,
+    a: `WhatsApp or call us — that's the quickest way to reach us. WhatsApp ${SITE.whatsapp} any time, or call ${SITE.phone} or our landlines ${SITE.landlines.join(" / ")}, Saturday to Thursday, ${SITE.hoursShort}. You can also email ${SITE.email}.`,
   },
 ];
 

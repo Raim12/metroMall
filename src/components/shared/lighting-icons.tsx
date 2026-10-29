@@ -55,6 +55,19 @@ export function FloodLightIcon(props: LucideProps) {
   );
 }
 
+/** Street-light pole with its lamp head arching over the road. */
+export function StreetLightIcon(props: LucideProps) {
+  return (
+    <Svg {...props}>
+      <path d="M8 22V7a4 4 0 0 1 4-4h3" />
+      <path d="M14 3h5a1 1 0 0 1 1 1v1.5a1 1 0 0 1-1 1h-5z" />
+      <path d="m15 9-1 2" />
+      <path d="m19 9 1 2" />
+      <path d="M5 22h6" />
+    </Svg>
+  );
+}
+
 /** Wall switch plate with a rocker. */
 export function SwitchIcon(props: LucideProps) {
   return (
@@ -73,5 +86,6 @@ export const CATEGORY_ICONS: Partial<Record<CategorySlug, React.ComponentType<Lu
   chandeliers: LampCeiling,
   "down-lights": DownLightIcon,
   "outdoor-lights": FloodLightIcon,
+  "street-lights": StreetLightIcon,
   "electric-switches": SwitchIcon,
 };

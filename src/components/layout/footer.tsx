@@ -10,6 +10,7 @@ import {
 } from "@/components/shared/social-icons";
 import { FOOTER_COLUMNS, SITE } from "@/lib/constants";
 import { BrandText } from "@/components/shared/brand-text";
+import { WhatsAppBadge } from "@/components/shared/whatsapp-badge";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -46,7 +47,7 @@ export function Footer() {
             </div>
 
             <p className="mt-4 max-w-md text-base leading-relaxed text-ink-300/85">
-              {SITE.description}
+              <BrandText>{SITE.description}</BrandText>
             </p>
 
             <div className="mt-8 grid grid-cols-2 gap-8 sm:grid-cols-3">
@@ -86,12 +87,15 @@ export function Footer() {
               <li className="flex items-start gap-3 text-base">
                 <Phone className="mt-1 size-5 shrink-0 text-cta-300" aria-hidden />
                 <span className="flex flex-col gap-0.5">
-                  <a
-                    href={`tel:+${SITE.phoneDigits}`}
-                    className="text-ink-200/85 transition-colors hover:text-cta-300"
-                  >
-                    {SITE.phone}
-                  </a>
+                  <span className="flex items-center gap-2">
+                    <a
+                      href={`tel:+${SITE.phoneDigits}`}
+                      className="text-ink-200/85 transition-colors hover:text-cta-300"
+                    >
+                      {SITE.phone}
+                    </a>
+                    <WhatsAppBadge />
+                  </span>
                   {SITE.landlines.map((line) => (
                     <a
                       key={line}

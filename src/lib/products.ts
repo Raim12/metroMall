@@ -3,6 +3,7 @@ import "server-only";
 import { prisma } from "@/lib/prisma";
 import { CATEGORY_TO_SLUG, SLUG_TO_CATEGORY } from "@/lib/category-map";
 import { SELLABLE } from "@/lib/sellable";
+import { BRANDS } from "@/lib/constants";
 import type { Prisma } from "@/generated/prisma/client";
 import type { CategorySlug, FanVariant, Product, ProductFeature } from "@/types";
 
@@ -91,13 +92,22 @@ export async function getProductBySlug(
   return row ? toProduct(row) : undefined;
 }
 
+/**
+ * Featured products, listed brand by brand in the order of BRANDS (Pak Fans
+ * first), then by the owner's featured rank within a brand.
+ */
 export async function getFeaturedProducts(): Promise<Product[]> {
   const rows = await prisma.product.findMany({
     where: { ...SELLABLE, featured: true },
     include: withRelations,
-    orderBy: { createdAt: "asc" },
+    orderBy: [{ featuredRank: { sort: "asc", nulls: "last" } }, { createdAt: "asc" }],
   });
-  return rows.map(toListing);
+  const brandOrder = (slug: string) => {
+    const i = BRANDS.findIndex((b) => b.slug === slug);
+    return i === -1 ? BRANDS.length : i;
+  };
+  // Array.prototype.sort is stable, so the rank order above survives within a brand.
+  return rows.sort((a, b) => brandOrder(a.brand) - brandOrder(b.brand)).map(toListing);
 }
 
 export const CATALOGUE_PAGE_SIZE = 24;
@@ -210,8 +220,12 @@ export async function getCatalogueFacets(category?: CategorySlug) {
  */
 const COVER_OVERRIDES: Partial<Record<CategorySlug, string>> = {
   // The GFC wooden fan sorts first but reads as a dated wooden finish. Tamoor
-  // is the same flat-on square shot in white, so the tile keeps its framing.
+  // is the same flat-on square shot in white, which the client prefers.
   "false-ceiling-fans": "tamoor-false-ceiling-fan",
+  // Super Asia fronts geysers (a featured Hanco geyser otherwise wins the tile).
+  "water-heaters": "super-asia-geh-735ai-auto-ignition",
+  // Ignition, tempered-glass stove, as the client asked.
+  "gas-stoves": "nasgas-dg-117-gt-2-burner-auto-ignition-tempered-glass-gas-stove",
 };
 
 /** One representative photo per category, for the homepage tiles. */

@@ -94,7 +94,7 @@ export default async function LegendsPage({
             </span>
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground">
-            A quality new home appliance brand coming soon to {SITE.name} Be the first to know when it arrives.
+            A quality new home appliance brand coming soon to <BrandText>{SITE.name}</BrandText> Be the first to know when it arrives.
           </p>
         </section>
 
@@ -124,7 +124,7 @@ export default async function LegendsPage({
                 scroll={false}
                 className="group rounded-2xl border border-[#e8dcb8] bg-white/60 px-6 py-8 transition-colors hover:border-[#c9a227]"
               >
-                <p className="font-heading text-3xl font-black italic tracking-[0.08em] sm:text-4xl">{b.name}</p>
+                <p className="coming-soon-blink font-heading text-3xl font-black italic tracking-[0.08em] sm:text-4xl">{b.name}</p>
                 <p className="mt-2 text-xs font-semibold uppercase tracking-[0.25em] text-muted-foreground">
                   {b.tagline} · <span className="text-[#b8901c]">Coming soon</span>
                 </p>

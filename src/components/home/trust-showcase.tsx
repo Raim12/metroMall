@@ -13,8 +13,10 @@ import { cn } from "@/lib/utils";
  * the trade memberships behind the "authorized dealer" claim.
  *
  * The outlet photos run as a carousel because they are worth looking through
- * one at a time; the certificates sit still beneath it, because a certificate
- * that slides away before it can be read proves nothing.
+ * one at a time. The certificates slide too, but as a swipeable rail that
+ * shows two at a time on wider screens and pauses under the pointer, so a
+ * certificate can always be stopped and read. Add a brand's dealership
+ * certificate to CERTIFICATES and the rail picks it up.
  */
 
 const OUTLET_PHOTOS = [
@@ -146,11 +148,53 @@ export function TrustShowcase() {
       </div>
 
       {/* -------------------------- Certificates -------------------------- */}
-      <div className="mt-10 grid gap-5 sm:grid-cols-2">
+      <CertificateRail />
+    </Section>
+  );
+}
+
+function CertificateRail() {
+  const rail = React.useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = React.useState(false);
+
+  const step = React.useCallback((delta: number) => {
+    const el = rail.current;
+    if (!el) return;
+    const card = el.firstElementChild as HTMLElement | null;
+    const width = card ? card.offsetWidth + 20 : el.clientWidth;
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 4;
+    if (delta > 0 && atEnd) el.scrollTo({ left: 0, behavior: "smooth" });
+    else el.scrollBy({ left: delta * width, behavior: "smooth" });
+  }, []);
+
+  // Auto-advance only when there is somewhere to go: with every certificate
+  // already on screen, sliding would just jiggle the row.
+  React.useEffect(() => {
+    if (paused) return;
+    const id = window.setInterval(() => {
+      const el = rail.current;
+      if (el && el.scrollWidth > el.clientWidth + 4) step(1);
+    }, AUTOPLAY_MS + 1000);
+    return () => window.clearInterval(id);
+  }, [paused, step]);
+
+  return (
+    <div
+      className="relative mt-10"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={() => setPaused(true)}
+    >
+      <div
+        ref={rail}
+        className="flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        aria-roledescription="carousel"
+        aria-label="Our certificates and memberships"
+      >
         {CERTIFICATES.map((cert) => (
           <figure
             key={cert.src}
-            className="overflow-hidden rounded-2xl border bg-white shadow-sm"
+            className="w-[85%] shrink-0 snap-start overflow-hidden rounded-2xl border bg-white shadow-sm sm:w-[calc(50%-0.625rem)]"
           >
             <div className="relative aspect-[4/3] bg-muted/30">
               <Image
@@ -173,6 +217,29 @@ export function TrustShowcase() {
           </figure>
         ))}
       </div>
-    </Section>
+
+      {/* Two certificates fit side by side from sm up, so arrows are only
+          needed on phones until a third is added. */}
+      {CERTIFICATES.length > 1 ? (
+        <div className={cn("mt-4 flex justify-center gap-2", CERTIFICATES.length <= 2 && "sm:hidden")}>
+          <button
+            type="button"
+            onClick={() => step(-1)}
+            aria-label="Previous certificate"
+            className="grid size-10 place-items-center rounded-full border bg-white text-ink-900 shadow-sm transition-colors hover:bg-muted"
+          >
+            <ChevronLeft className="size-5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => step(1)}
+            aria-label="Next certificate"
+            className="grid size-10 place-items-center rounded-full border bg-white text-ink-900 shadow-sm transition-colors hover:bg-muted"
+          >
+            <ChevronRight className="size-5" aria-hidden />
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 }

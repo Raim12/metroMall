@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Reveal } from "@/components/shared/reveal";
+import { WhatsAppIcon } from "@/components/shared/social-icons";
+import { WhatsAppBadge } from "@/components/shared/whatsapp-badge";
 import { SITE, WHATSAPP_LINK } from "@/lib/constants";
 
 export const metadata: Metadata = {
@@ -13,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 interface Channel {
-  Icon: typeof Mail;
+  Icon: React.ComponentType<{ className?: string }>;
   title: string;
   blurb: string;
   value: string;
@@ -31,9 +33,9 @@ const CHANNELS: Channel[] = [
     href: `mailto:${SITE.email}`,
   },
   {
-    Icon: MessageCircle,
-    title: "Live chat",
-    blurb: "Message us on WhatsApp any time.",
+    Icon: WhatsAppIcon,
+    title: "WhatsApp",
+    blurb: "Our preferred channel — message us any time.",
     value: SITE.whatsapp,
     href: WHATSAPP_LINK,
   },
@@ -47,7 +49,7 @@ const CHANNELS: Channel[] = [
   {
     Icon: Phone,
     title: "Phone",
-    blurb: SITE.hours,
+    blurb: `Call us, ${SITE.hours}`,
     value: SITE.phone,
     href: `tel:+${SITE.phoneDigits}`,
     /** Landlines, listed under the mobile number. */
@@ -67,8 +69,8 @@ export default function ContactPage() {
             Chat with our friendly team!
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-muted-foreground">
-            We&apos;d love to hear from you. Fill out the form or reach us
-            through any of the channels below.
+            WhatsApp or call us for the quickest reply, or fill out the form
+            and we&apos;ll get back to you.
           </p>
         </Reveal>
 
@@ -83,14 +85,17 @@ export default function ContactPage() {
                   <Icon className="size-5 text-cta-300" aria-hidden />
                   <h2 className="font-heading text-base font-bold">{title}</h2>
                   <p className="text-xs text-ink-200/85">{blurb}</p>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
-                    className="mt-1 break-words text-sm font-semibold text-cta-300 underline underline-offset-4"
-                  >
-                    {value}
-                  </a>
+                  <span className="mt-1 flex items-center gap-2">
+                    <a
+                      href={href}
+                      target={href.startsWith("http") ? "_blank" : undefined}
+                      rel={href.startsWith("http") ? "noreferrer noopener" : undefined}
+                      className="break-words text-sm font-semibold text-cta-300 underline underline-offset-4"
+                    >
+                      {value}
+                    </a>
+                    {title === "Phone" ? <WhatsAppBadge /> : null}
+                  </span>
                   {extra?.map((line) => (
                     <a
                       key={line.value}

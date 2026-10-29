@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Section, SectionHeading } from "@/components/shared/section-heading";
 import { Reveal } from "@/components/shared/reveal";
 import { HOME_FAQS } from "@/lib/constants";
+import { BrandText } from "@/components/shared/brand-text";
 
 export function FaqSection() {
   // Two balanced columns, matching the reference layout.
@@ -34,10 +35,10 @@ export function FaqSection() {
                   className="overflow-hidden rounded-xl border bg-card px-4 data-[state=open]:border-brand-300 data-[state=open]:bg-brand-50/50"
                 >
                   <AccordionTrigger className="text-left text-sm font-semibold hover:no-underline">
-                    {faq.q}
+                    <BrandText>{faq.q}</BrandText>
                   </AccordionTrigger>
                   <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
-                    {faq.a}
+                    <BrandText>{faq.a}</BrandText>
                   </AccordionContent>
                 </AccordionItem>
               ))}

@@ -3,7 +3,7 @@ import "server-only";
 import { Resend } from "resend";
 import { SITE } from "@/lib/constants";
 import { formatPkr, variantLabel } from "@/lib/utils";
-import { BANK_ACCOUNT, RECEIPT_NOTE, advanceAmount, advanceInstruction } from "@/lib/delivery";
+import { BANK_ACCOUNT, BILTY_NOTE, RECEIPT_NOTE, advanceAmount, advanceInstruction, isKarachi } from "@/lib/delivery";
 import type { OrderWithItems } from "@/lib/orders";
 
 /**
@@ -107,10 +107,10 @@ function escapeHtml(value: string): string {
 function totalsBlock(order: OrderWithItems): string {
   return `<table role="presentation" width="100%" style="margin-top:12px;font-size:14px">
     <tr><td style="padding:4px 0;color:#777">Subtotal</td><td style="text-align:right">${formatPkr(order.subtotal)}</td></tr>
-    <tr><td style="padding:4px 0;color:#777">Delivery</td><td style="text-align:right">${order.shipping === 0 ? "Free" : formatPkr(order.shipping)}</td></tr>
+    <tr><td style="padding:4px 0;color:#777">Delivery</td><td style="text-align:right">${order.shipping === 0 ? (isKarachi(order.city) ? "Free" : "Bilty charges paid by you") : formatPkr(order.shipping)}</td></tr>
     <tr><td style="padding:8px 0;font-weight:bold;border-top:2px solid ${INK}">Total</td>
         <td style="padding:8px 0;text-align:right;font-weight:bold;border-top:2px solid ${INK}">${formatPkr(order.total)}</td></tr>
-  </table>`;
+  </table>${order.shipping === 0 && !isKarachi(order.city) ? `<p style="font-size:12px;color:#777">${BILTY_NOTE}</p>` : ""}`;
 }
 
 const METHOD_LABEL: Record<string, string> = {
@@ -138,7 +138,7 @@ export async function sendOrderConfirmation(order: OrderWithItems) {
          Your order <strong>${order.orderNumber}</strong> is placed.
          ${
            isCod || isBankTransfer
-             ? `To confirm it, please transfer <strong>${formatPkr(advance)}</strong> — ${escapeHtml(advanceInstruction(order.paymentMethod))}`
+             ? `To confirm it, please transfer <strong>${formatPkr(advance)}</strong> — ${escapeHtml(advanceInstruction(order.paymentMethod, order.city))}`
              : `We'll confirm once your payment clears.`
          }
        </p>

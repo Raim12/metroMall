@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ProductImage } from "@/components/product/product-image";
 import { ClearCartOnOrder } from "@/components/cart/clear-cart-on-order";
 import { BankDetails } from "@/components/cart/bank-details";
-import { advanceAmount } from "@/lib/delivery";
+import { BILTY_NOTE, advanceAmount, isKarachi } from "@/lib/delivery";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatPkr, variantLabel } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
@@ -106,6 +106,7 @@ export default async function ConfirmationPage({
               method={order.paymentMethod}
               amount={advanceAmount(order.paymentMethod, order.total)}
               orderNumber={order.orderNumber}
+              city={order.city}
             />
           </div>
         ) : null}
@@ -147,9 +148,14 @@ export default async function ConfirmationPage({
             <div className="flex justify-between">
               <dt className="text-muted-foreground">Delivery</dt>
               <dd className="tabular-nums">
-                {order.shipping === 0 ? "Free" : formatPkr(order.shipping)}
+                {order.shipping === 0
+                  ? isKarachi(order.city) ? "Free" : "Bilty charges paid by you"
+                  : formatPkr(order.shipping)}
               </dd>
             </div>
+            {order.shipping === 0 && !isKarachi(order.city) ? (
+              <p className="text-xs text-muted-foreground">{BILTY_NOTE}</p>
+            ) : null}
             <div className="flex justify-between border-t pt-2 text-base font-bold">
               <dt>Total</dt>
               <dd className="tabular-nums">{formatPkr(order.total)}</dd>

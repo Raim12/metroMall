@@ -46,6 +46,7 @@ export type CategorySlug =
   | "chandeliers"
   | "down-lights"
   | "outdoor-lights"
+  | "street-lights"
   | "table-lamps"
   | "stand-lamps"
   | "electric-switches";

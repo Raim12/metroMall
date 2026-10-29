@@ -75,7 +75,7 @@ export async function POST(request: Request) {
     // doesn't leave an orphaned order behind.
     const provider = providerForMethod(input.paymentMethod);
 
-    const cart = await priceCart(input.items);
+    const cart = await priceCart(input.items, input.city);
     const order = await createOrder(input, cart);
 
     let redirectUrl: string | null = null;

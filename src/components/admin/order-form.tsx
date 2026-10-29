@@ -18,6 +18,7 @@ import {
 } from "@/lib/admin/order-actions";
 import { PAYMENT_METHODS, PROVINCES } from "@/lib/validation";
 import { brandName } from "@/lib/constants";
+import { DELIVERY_CHARGE } from "@/lib/delivery";
 import { cn, formatPkr, hasChoice, STANDARD_VARIANT } from "@/lib/utils";
 
 const PAYMENT_LABELS: Record<(typeof PAYMENT_METHODS)[number], string> = {
@@ -336,7 +337,7 @@ export function OrderForm(
               ))}
             </select>
           </Field>
-          <Field label="Delivery charge (Rs.)" hint="Website orders use Rs. 300. Change it if you agreed a different charge.">
+          <Field label="Delivery charge (Rs.)" hint={`Website orders use Rs. ${DELIVERY_CHARGE} in Karachi and 0 elsewhere (customer pays bilty). Change it if you agreed a different charge.`}>
             <Input
               type="number"
               min={0}

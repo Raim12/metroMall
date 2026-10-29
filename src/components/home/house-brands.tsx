@@ -2,7 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { HOUSE_BRANDS } from "@/lib/constants";
+import { HOUSE_BRANDS, SITE } from "@/lib/constants";
+import { BrandText } from "@/components/shared/brand-text";
 
 /** Gold first: it is the one shown when motion is reduced (see globals.css). */
 const LEGENDS_FINISHES = [
@@ -44,7 +45,7 @@ export function HouseBrands() {
           </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
             Alongside Pakistan&apos;s leading brands, quality new home appliance
-            brands are arriving at Metro Electric Co.
+            brands are arriving at <BrandText>{SITE.name}</BrandText>
           </p>
         </div>
 

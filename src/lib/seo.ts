@@ -51,7 +51,7 @@ export function catalogueSeo({
     lead = `Genuine fans, home and gas appliances from ${brandListText(SHOWCASE_BRANDS)} at dealer prices.`;
   }
 
-  const intro = `${lead} ${models}, all with official brand warranty — from ${SITE.name}, authorized dealer since ${SITE.since}. Cash on Delivery in Karachi, delivery across Pakistan.`;
+  const intro = `${lead} ${models}, all with official brand warranty — from ${SITE.name}, authorized dealer, retailer and wholesaler. Cash on Delivery in Karachi, delivery across Pakistan.`;
   return { h1, title, description: intro, intro };
 }
 
@@ -74,7 +74,7 @@ export function productSeo(product: Product) {
     : `${b} ${product.name}`;
   const title = `${name} Price in Pakistan`;
   const price = priced ? `Rs. ${product.price.toLocaleString("en-PK")}` : "Price coming soon";
-  const description = `${name} — ${price}. Genuine ${b} ${categoryBySlug(product.category)?.singular.toLowerCase() ?? "product"} with official brand warranty from ${SITE.name}, authorized dealer since ${SITE.since}. Cash on Delivery in Karachi, delivery across Pakistan.`;
+  const description = `${name} — ${price}. Genuine ${b} ${categoryBySlug(product.category)?.singular.toLowerCase() ?? "product"} with official brand warranty from ${SITE.name}, authorized dealer, retailer and wholesaler. Cash on Delivery in Karachi, delivery across Pakistan.`;
   return { title, description };
 }
 

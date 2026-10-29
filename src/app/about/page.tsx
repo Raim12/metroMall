@@ -16,7 +16,7 @@ const MILESTONES = [
   { value: String(SITE.since), label: "Trusted since" },
   { value: `${BRANDS.length}+`, label: "National brands" },
   { value: "Electric & Gas", label: "Home appliances" },
-  { value: "Dealer & Wholesale", label: "Prices for every budget" },
+  { value: "Dealer, Retail & Wholesale", label: "Prices for every budget" },
 ];
 
 export default function AboutPage() {
@@ -95,7 +95,7 @@ export default function AboutPage() {
             <RevealItem key={item.title} className="h-full">
               <Card className="h-full gap-3 border-t-4 border-t-brand-600 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-ink-950/10">
                 <h3 className="font-heading text-base font-bold">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground"><BrandText>{item.body}</BrandText></p>
               </Card>
             </RevealItem>
           ))}

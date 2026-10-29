@@ -69,6 +69,7 @@ export interface PricedCart {
  */
 export async function priceCart(
   items: CheckoutValues["items"],
+  city: string,
 ): Promise<PricedCart> {
   const slugs = [...new Set(items.map((i) => i.slug))];
 
@@ -137,7 +138,7 @@ export async function priceCart(
   });
 
   const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
-  const shipping = calculateShipping();
+  const shipping = calculateShipping(city);
 
   return { lines, subtotal, shipping, total: subtotal + shipping };
 }

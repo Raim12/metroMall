@@ -16,11 +16,14 @@ export function BankDetails({
   method,
   amount,
   orderNumber,
+  city,
 }: {
   method: string;
   /** What the customer must transfer now (delivery only for COD, full total otherwise). */
   amount: number;
   orderNumber?: string;
+  /** Delivery city: outside Karachi the instruction explains bilty instead of the delivery charge. */
+  city?: string;
 }) {
   const [copied, setCopied] = React.useState(false);
 
@@ -42,7 +45,7 @@ export function BankDetails({
     <div className="space-y-3 rounded-xl border border-brand-200 bg-brand-50/60 p-4">
       <p className="text-sm leading-relaxed">
         <span className="font-semibold">Transfer {formatPkr(amount)}</span>{" "}
-        <span className="text-muted-foreground">— {advanceInstruction(method)}</span>
+        <span className="text-muted-foreground">— {advanceInstruction(method, city)}</span>
       </p>
 
       <dl className="space-y-1.5 rounded-lg bg-white p-3 text-sm">

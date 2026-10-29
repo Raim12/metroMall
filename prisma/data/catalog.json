@@ -27240,7 +27240,7 @@
    "/api/uploads/products/sk/sk-iris-inverter-1-cut.webp"
   ],
   "badge": null,
-  "featured": false,
+  "featured": true,
   "active": true,
   "sourceUrl": "https://www.skfans.com.pk/product/iris/"
  },
@@ -27410,7 +27410,7 @@
    "/api/uploads/products/sonex/sonex-crystal-5-cut.webp"
   ],
   "badge": "Sale",
-  "featured": true,
+  "featured": false,
   "active": false,
   "sourceUrl": "https://www.sonexfan.com/products/crystal-30-watt-series-luxury-fan"
  },

@@ -92,9 +92,39 @@ the links below are the originals.
 - **GEH-735 Ai Geyser** — local: public/showcase/super-asia-geh-735ai.webp
   - https://cdn.shopify.com/s/files/1/0599/9116/2933/products/36-GEH-735Ai.jpg
 
+## Added later
+
+- **Luxus LX-800 (8-blade)** — local: public/showcase/luxus-lx-800.webp, from uploads/products/luxus (Luxus Product Catalogue 2026 PDF)
+- **Luxus LX-300L (3-blade)** — local: public/showcase/luxus-lx-300l.webp, same source
+- **Voldam Exhaust VF-N6** — local: public/showcase/voldam-exhaust-n6.webp
+  - https://cdn.shopify.com/s/files/1/0790/3536/7727/files/6inchexhaustfanpriceinpakistan.jpg (listed as "Voldam Slim, Unique & Stylish Exhaust Fan", sizes VF-N4/N6/N8; the photo is labelled VF-N6)
+
+- **Jackpot JP-7991 Washing Machine** — local: public/showcase/jackpot-jp-7991.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/jackpot-jp-7991-single-tub-washing-machine_22dc7fab-a071-4753-9b27-4e4053790475.webp
+- **Jackpot JP-9500 Air Cooler** — local: public/showcase/jackpot-jp-9500.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/jackpot-jp-9500-super-size-air-room-cooler-a-c_6e2ca4aa-c124-4fae-ba7f-0bec10163a8d.webp
+- **Jackpot JP-180 Juicer Blender** — local: public/showcase/jackpot-jp-180.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/jackpot-jp-180-juicer-blender-and-mixer_49617f47-756d-4d63-b7b6-257d645559a8.webp
+- **Jackpot JP-976 Toaster** — local: public/showcase/jackpot-jp-976.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/jackpot-jp-976-2-slice-toaster-white_d40ee478-daa9-47fe-a41e-2c150fbb4e67.webp
+- **West Point WF-152 Ceramic Cooker** — local: public/showcase/westpoint-wf-152.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/westpoint-deluxe-ceramic-cooker-wf-152.webp
+- **West Point WF-3117 Cordless Kettle** — local: public/showcase/westpoint-wf-3117.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/westpoint-wf-3117-cordless-kettle.webp
+- **West Point WF-3040 Meat Grinder** — local: public/showcase/westpoint-wf-3040.webp
+  - https://cdn.shopify.com/s/files/1/0726/3541/6891/files/westpoint-wf-3040-meat-grinder.webp
+- **Starco Opal** — local: public/showcase/starco-opal.webp
+  - https://pakistantradeportal.gov.pk/storage/product_images/627d1930e51201652365616.webp
+- **Starco Magnum** — local: public/showcase/starco-magnum.webp
+  - https://pakistantradeportal.gov.pk/storage/product_images/6231a1c3b05671647419843.jpg
+- **Starco Supreme** — local: public/showcase/starco-supreme.webp
+  - https://pakistantradeportal.gov.pk/storage/product_images/627d1ec0a63911652367040.jpg
+- **Starco New Pak** — local: public/showcase/starco-new-pak.webp
+  - https://pakistantradeportal.gov.pk/storage/product_images/627d1f17582531652367127.jpg
+
+Jackpot and West Point photos are from Powerhouse Express (a Pakistani retailer's Shopify store); Starco photos are from the Starco Electrical Industries listings on the Pakistan Trade Portal.
+
 ## Requested but not found
 
-- **Luxus 8-blade / 3-blade** — Luxus has no public product site. Our catalogue already holds LX-800, LX-800L, LX-300L and LX-200 S with photos.
 - **Orient Icon** — no product page exists on orientappliances.pk.
-- **Voldam Exhaust N6** — not present in Voldam product feed; a second False Ceiling size is used in its place.
 - **Voldam Exhaust BD1030** — exact model number not listed; "Ceiling Mount Exhaust Fan BD Series" used instead.

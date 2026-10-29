@@ -3,7 +3,9 @@
  * checkout API (to enforce them), the confirmation page and the policies, so
  * they can never disagree.
  *
- *  - Every order carries a flat delivery charge (DELIVERY_CHARGE).
+ *  - Karachi orders carry a flat delivery charge (DELIVERY_CHARGE).
+ *  - Outside Karachi, orders go by cargo. The website charges no delivery:
+ *    the customer pays the bilty (cargo) charges to the cargo company.
  *  - Cash on Delivery (Karachi only): the customer transfers the delivery
  *    charge in advance and pays for the goods on delivery.
  *  - Bank Transfer (anywhere): the customer transfers the full amount,
@@ -14,8 +16,12 @@
 
 export const COD_CITY = "Karachi";
 
-/** Flat delivery charge on every website order (whole PKR). */
+/** Flat delivery charge on Karachi orders (whole PKR). */
 export const DELIVERY_CHARGE = 250;
+
+/** Shown wherever an order outside Karachi is priced. */
+export const BILTY_NOTE =
+  "Outside Karachi, orders are sent by cargo. Bilty (cargo) charges are not included and are paid by you to the cargo company.";
 
 /**
  * Maximum dispatch-to-delivery window quoted to customers, in working days.
@@ -58,14 +64,22 @@ export function paymentMethodsFor(city: string, offered: string[]): string[] {
   return offered.filter((m) => m === "BANK_TRANSFER");
 }
 
+/** Delivery charged on the website: Karachi only; elsewhere bilty is paid to the cargo company. */
+export function deliveryChargeFor(city: string | null | undefined): number {
+  return isKarachi(city) ? DELIVERY_CHARGE : 0;
+}
+
 /** How much the customer must transfer in advance for a given method. */
 export function advanceAmount(method: string, total: number): number {
   return method === "COD" ? DELIVERY_CHARGE : total;
 }
 
 /** One-line explanation of the advance payment, for a given method. */
-export function advanceInstruction(method: string): string {
-  return method === "COD"
-    ? `Transfer the Rs. ${DELIVERY_CHARGE} delivery charge in advance; pay for your order in cash when it arrives.`
-    : `Transfer the full amount, including the Rs. ${DELIVERY_CHARGE} delivery charge, in advance.`;
+export function advanceInstruction(method: string, city?: string | null): string {
+  if (method === "COD") {
+    return `Transfer the Rs. ${DELIVERY_CHARGE} delivery charge in advance; pay for your order in cash when it arrives.`;
+  }
+  return isKarachi(city)
+    ? `Transfer the full amount, including the Rs. ${DELIVERY_CHARGE} delivery charge, in advance.`
+    : "Transfer the full order amount in advance. Bilty (cargo) charges are paid by you to the cargo company.";
 }

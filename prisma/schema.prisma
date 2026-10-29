@@ -47,6 +47,7 @@ enum Category {
   CHANDELIERS        @map("chandeliers")
   DOWN_LIGHTS        @map("down-lights")
   OUTDOOR_LIGHTS     @map("outdoor-lights")
+  STREET_LIGHTS      @map("street-lights")
   TABLE_LAMPS        @map("table-lamps")
   STAND_LAMPS        @map("stand-lamps")
   // Electrical accessories.

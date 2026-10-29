@@ -5,12 +5,13 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { ExportForm } from "@/components/forms/export-form";
 import { Reveal } from "@/components/shared/reveal";
+import { WhatsAppBadge } from "@/components/shared/whatsapp-badge";
 import { SITE, WHATSAPP_LINK } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Wholesale & Bulk Orders",
+  title: "Wholesale, Corporate & Bulk Orders",
   description:
-    "Wholesale and bulk prices on fans and home appliances from Pakistan's top brands — for dealers, builders, offices and projects.",
+    "Wholesale, corporate and bulk prices on fans and home appliances from Pakistan's top brands — for dealers, companies, builders, offices and projects.",
 };
 
 export default function WholesalePage() {
@@ -19,12 +20,13 @@ export default function WholesalePage() {
       <div className="mx-auto w-full max-w-5xl px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
         <Reveal className="text-center">
           <h1 className="font-heading text-4xl font-extrabold sm:text-5xl">
-            Wholesale &amp; Bulk Orders
+            Wholesale, Corporate &amp; Bulk Orders
           </h1>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-            Buying for a shop, a building project or an office? As an authorized
-            wholesaler since {SITE.since}, we offer bulk prices across every brand we
-            stock. Tell us what you need and we&apos;ll send you a quote.
+            Buying for a shop, a company, a building project or an office? As an
+            authorized dealer, retailer and wholesaler, we supply corporate and
+            bulk orders at special prices across every brand we stock. Tell us what you
+            need and we&apos;ll send you a quote.
           </p>
         </Reveal>
 
@@ -33,7 +35,7 @@ export default function WholesalePage() {
           <Reveal direction="right">
             <Card className="h-full gap-0 p-6 sm:p-8">
               <h2 className="font-heading text-xl font-extrabold">
-                Contact Our Wholesale Team
+                Contact Our Wholesale &amp; Corporate Team
               </h2>
 
               <ul className="mt-6 space-y-5">
@@ -43,7 +45,7 @@ export default function WholesalePage() {
                     label: "Phone",
                     caption: SITE.contactPerson,
                     entries: [
-                      { value: SITE.phone, href: `tel:+${SITE.phoneDigits}` },
+                      { value: SITE.phone, href: `tel:+${SITE.phoneDigits}`, whatsapp: true },
                       ...SITE.landlines.map((line) => ({
                         value: line,
                         href: `tel:${line.replace(/[^\d+]/g, "")}`,
@@ -78,13 +80,15 @@ export default function WholesalePage() {
                       </p>
                       <div className="flex flex-col">
                         {entries.map((entry) => (
-                          <a
-                            key={entry.value}
-                            href={entry.href}
-                            className="break-words text-sm text-muted-foreground transition-colors hover:text-brand-700"
-                          >
-                            {entry.value}
-                          </a>
+                          <span key={entry.value} className="flex items-center gap-2">
+                            <a
+                              href={entry.href}
+                              className="break-words text-sm text-muted-foreground transition-colors hover:text-brand-700"
+                            >
+                              {entry.value}
+                            </a>
+                            {"whatsapp" in entry && entry.whatsapp ? <WhatsAppBadge /> : null}
+                          </span>
                         ))}
                       </div>
                     </div>
