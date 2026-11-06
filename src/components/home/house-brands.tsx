@@ -3,7 +3,10 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { HOUSE_BRANDS, SITE } from "@/lib/constants";
+import { LEGENDS_PREVIEW } from "@/lib/legends-preview";
+import { formatPkr } from "@/lib/utils";
 import { BrandText } from "@/components/shared/brand-text";
+import { LazyVideo } from "@/components/shared/lazy-video";
 
 /** Gold first: it is the one shown when motion is reduced (see globals.css). */
 const LEGENDS_FINISHES = [
@@ -32,6 +35,8 @@ function ComingSoonBadge({ className = "" }: { className?: string }) {
 export function HouseBrands() {
   const lead = HOUSE_BRANDS.find((b) => b.lead)!;
   const others = HOUSE_BRANDS.filter((b) => !b.lead);
+  // The first previewed model that has footage, shown inside the LEGENDS card.
+  const firstLook = LEGENDS_PREVIEW.find((p) => p.video && p.image);
 
   return (
     <section id="our-brands" className="scroll-mt-28 bg-white py-16 sm:py-20">
@@ -85,6 +90,49 @@ export function HouseBrands() {
             <h3 className="mx-auto mt-4 max-w-[13rem] text-center font-heading text-xs font-semibold uppercase tracking-[0.3em] text-ink-900/60 sm:mt-5 sm:max-w-[17rem] sm:text-sm">
               {lead.tagline}
             </h3>
+
+            {/*
+              First look at the range, so the card shows an actual product
+              rather than only a wordmark. Links through to /legends, where the
+              full preview and pricing live.
+            */}
+            {firstLook?.video && firstLook.image ? (
+              <Link
+                href="/legends"
+                className="group/look mt-7 flex items-center gap-4 rounded-2xl border border-[#e8dcb8] bg-white/70 p-3 transition-colors hover:border-[#c9a227] sm:gap-5 sm:p-4"
+              >
+                <span className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-white sm:size-24">
+                  <LazyVideo
+                    src={firstLook.video}
+                    poster={firstLook.image}
+                    label={`${firstLook.name} in motion`}
+                    className="size-full object-cover"
+                  />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#b8901c]">
+                    First look
+                  </span>
+                  <span className="mt-0.5 block truncate font-heading text-base font-extrabold text-ink-900 sm:text-lg">
+                    {firstLook.name}
+                  </span>
+                  {firstLook.salePrice && firstLook.price ? (
+                    <span className="mt-1 flex flex-wrap items-baseline gap-2">
+                      <span className="font-heading text-base font-black text-ink-900">
+                        {formatPkr(firstLook.salePrice)}
+                      </span>
+                      <span className="text-xs text-muted-foreground line-through">
+                        {formatPkr(firstLook.price)}
+                      </span>
+                    </span>
+                  ) : null}
+                </span>
+                <ArrowRight
+                  className="size-4 shrink-0 text-ink-900/40 transition-transform group-hover/look:translate-x-0.5"
+                  aria-hidden
+                />
+              </Link>
+            ) : null}
 
             <div className="mt-6 flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
               <div>

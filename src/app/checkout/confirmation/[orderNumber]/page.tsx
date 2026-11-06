@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { ProductImage } from "@/components/product/product-image";
 import { ClearCartOnOrder } from "@/components/cart/clear-cart-on-order";
 import { BankDetails } from "@/components/cart/bank-details";
-import { BILTY_NOTE, advanceAmount, isKarachi } from "@/lib/delivery";
+import { BILTY_NOTE, DELIVERY_QUOTE_NOTE, advanceAmount, isKarachi } from "@/lib/delivery";
 import { getOrderByNumber } from "@/lib/orders";
 import { formatPkr, variantLabel } from "@/lib/utils";
 import { SITE } from "@/lib/constants";
@@ -104,7 +104,7 @@ export default async function ConfirmationPage({
           <div className="mx-auto mt-8 max-w-md text-left">
             <BankDetails
               method={order.paymentMethod}
-              amount={advanceAmount(order.paymentMethod, order.total)}
+              amount={advanceAmount(order.paymentMethod, order.total, order.shipping)}
               orderNumber={order.orderNumber}
               city={order.city}
             />
@@ -198,10 +198,25 @@ export default async function ConfirmationPage({
                 <p className="mt-1.5 text-xs text-muted-foreground">
                   Please keep{" "}
                   <span className="font-semibold text-foreground">
-                    {formatPkr(order.total - advanceAmount("COD", order.total))}
+                    {formatPkr(order.total - advanceAmount("COD", order.total, order.shipping))}
                   </span>{" "}
-                  ready for the courier — the rest after your{" "}
-                  {formatPkr(advanceAmount("COD", order.total))} advance for delivery.
+                  ready for the courier
+                  {/*
+                    Only mention an advance when one was actually taken. New
+                    orders carry no delivery charge - it is agreed by area on
+                    WhatsApp - so without this guard the line would read "after
+                    your Rs 0 advance".
+                  */}
+                  {order.shipping > 0 ? (
+                    <>
+                      {" "}
+                      — the rest after your{" "}
+                      {formatPkr(advanceAmount("COD", order.total, order.shipping))} advance for
+                      delivery.
+                    </>
+                  ) : (
+                    <>. {DELIVERY_QUOTE_NOTE}</>
+                  )}
                 </p>
               ) : null}
             </div>

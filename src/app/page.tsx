@@ -48,11 +48,16 @@ export default async function HomePage() {
       <HouseBrands />
       {showcase ? <TechShowcase product={showcase} /> : null}
       <ValueProposition />
-      <ProductCategories covers={covers} counts={facets.categories} />
-      <FeaturedProducts products={featured} />
+      {/*
+        Order set by the client: the reason to buy here (ValueProposition),
+        then the breadth of the range, then the proof the shop is real, and
+        only then the individual products and the way into the catalogue.
+      */}
       <ProductShowcase />
-      <BrandStrip counts={facets.brands} />
       <TrustShowcase />
+      <FeaturedProducts products={featured} />
+      <ProductCategories covers={covers} counts={facets.categories} />
+      <BrandStrip counts={facets.brands} />
       <BldcHighlight />
       <FaqSection />
       <CtaBanner />

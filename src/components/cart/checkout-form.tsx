@@ -47,7 +47,7 @@ import { PROVINCES, shippingSchema, type ShippingValues } from "@/lib/validation
 import { WHATSAPP_LINK } from "@/lib/constants";
 import {
   COD_CITY,
-  DELIVERY_CHARGE,
+  DELIVERY_QUOTE_NOTE,
   BILTY_NOTE,
   deliveryChargeFor,
   advanceAmount,
@@ -64,7 +64,7 @@ const METHOD_META: Record<
   COD: {
     Icon: Banknote,
     label: "Cash on Delivery",
-    blurb: `Pay the Rs. ${DELIVERY_CHARGE} delivery charge in advance, the rest in cash on delivery. Karachi only.`,
+    blurb: "Pay for your order in cash when it arrives. Karachi only; delivery charged by area.",
   },
   BANK_TRANSFER: {
     Icon: Landmark,
@@ -598,14 +598,19 @@ export function CheckoutForm({ availableMethods }: { availableMethods: string[] 
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-muted-foreground">Delivery</dt>
+            {/*
+              Never a figure inside Karachi: the charge depends on the area and
+              is agreed on WhatsApp, so printing the zero the website holds
+              would read as free delivery.
+            */}
             <dd className="text-right tabular-nums">
-              {outstation ? "Bilty charges paid by you" : formatPkr(shipping)}
+              {outstation ? "Bilty charges paid by you" : "Confirmed on WhatsApp"}
             </dd>
           </div>
         </dl>
-        {outstation ? (
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{BILTY_NOTE}</p>
-        ) : null}
+        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+          {outstation ? BILTY_NOTE : DELIVERY_QUOTE_NOTE}
+        </p>
 
         <Separator className="my-4" />
 

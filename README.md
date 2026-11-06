@@ -198,10 +198,10 @@ Safepay redirects back to whatever `NEXT_PUBLIC_SITE_URL` says.
 ```bash
 cp .env.example .env          # then edit DATABASE_URL if not using Docker
 
-# Local Postgres (throwaway container on port 55432)
+# Local Postgres (throwaway container on port 15432)
 docker run -d --name metro-pg \
   -e POSTGRES_USER=metro -e POSTGRES_PASSWORD=metro -e POSTGRES_DB=metro \
-  -p 55432:5432 postgres:16-alpine
+  -p 15432:5432 postgres:16-alpine
 
 npm run db:migrate            # apply migrations
 npm run db:seed               # load the 14 products

@@ -29,6 +29,8 @@ const UPCOMING_COVERS: Record<string, string> = {
   "wall-lights": "/categories/wall-lights.webp",
   chandeliers: "/categories/chandeliers.webp",
   "down-lights": "/categories/down-lights.webp",
+  "outdoor-lights": "/categories/outdoor-lights.webp",
+  "street-lights": "/categories/street-lights.webp",
   "table-lamps": "/categories/table-lamps.webp",
   "stand-lamps": "/categories/stand-lamps.webp",
   "electric-switches": "/categories/electric-switches.webp",

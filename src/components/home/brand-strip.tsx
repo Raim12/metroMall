@@ -1,7 +1,12 @@
 import Link from "next/link";
 
 import { Section, SectionHeading } from "@/components/shared/section-heading";
-import { BRANDS, EXPANDING_BRANDS, UPCOMING_BRANDS } from "@/lib/constants";
+import {
+  BRANDS,
+  EXPANDING_BRANDS,
+  SOON_BADGE_BRANDS,
+  UPCOMING_BRANDS,
+} from "@/lib/constants";
 
 /**
  * "Shop by brand" — one tile per brand we stock, linking to its filtered
@@ -36,6 +41,15 @@ export function BrandStrip({ counts }: { counts: Record<string, number> }) {
               <span className="mt-1 text-xs text-muted-foreground">
                 {counts[brand.slug]} products
               </span>
+              {/*
+                Stocked, but flagged: the tile still links to its products, so
+                the badge sits under the count rather than replacing it.
+              */}
+              {(SOON_BADGE_BRANDS as readonly string[]).includes(brand.slug) ? (
+                <span className="coming-soon-blink mt-1.5 inline-flex items-center rounded-full bg-[#c9a227] px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-ink-900">
+                  Coming soon
+                </span>
+              ) : null}
               {(EXPANDING_BRANDS as readonly string[]).includes(brand.slug) ? (
                 <span className="mt-1 text-xs font-semibold text-brand-600">
                   More models coming soon

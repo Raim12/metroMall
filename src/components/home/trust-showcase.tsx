@@ -30,14 +30,43 @@ const CERTIFICATES = [
   {
     src: "/trust/cert-kcci.webp",
     title: "Karachi Chamber of Commerce & Industry",
-    detail: "Membership No. 42788 · valid to 31 March 2027",
+    // Membership number and expiry deliberately omitted: the point of this
+    // card is the standing, not the paperwork, and a printed expiry date ages
+    // the page the moment the certificate is renewed.
+    detail: `Member of KCCI since ${SITE.memberSince}`,
     alt: "KCCI membership certificate issued to Metro Electric Co.",
   },
   {
     src: "/trust/cert-keda.webp",
     title: "Karachi Electronics Dealers Association",
-    detail: "Lifetime member",
+    detail: `Lifetime member since ${SITE.memberSince}`,
     alt: "KEDA lifetime membership certificate issued to Metro Electric Company",
+  },
+  {
+    src: "/trust/cert-super-asia.webp",
+    title: "Super Asia — Authorised Dealer",
+    detail: "Metro Electric Co. · 17 October 2026",
+    alt: "Super Asia letter certifying Metro Electric Co. as an authorised dealer",
+  },
+  {
+    // Same letter as above, issued in the online trading name rather than the
+    // company name - both are kept so either can be produced on request.
+    src: "/trust/cert-super-asia-2.webp",
+    title: "Super Asia — Authorised Dealer",
+    detail: "Metro Electro Mall · 17 October 2026",
+    alt: "Super Asia letter certifying Metro Electro Mall as an authorised dealer",
+  },
+  {
+    src: "/trust/cert-royal.webp",
+    title: "Royal — Authorised Dealer",
+    detail: "Dealership certificate, 2026",
+    alt: "Royal Home Appliances dealership certificate naming Metro Electric Co. an authorised dealer",
+  },
+  {
+    src: "/trust/cert-pak-fan.webp",
+    title: "Pak Fan — Authorised Dealer",
+    detail: "Dealership certificate, 2026",
+    alt: "Pak Fan dealership certificate naming Metro Electric Co. an authorised dealer",
   },
 ];
 

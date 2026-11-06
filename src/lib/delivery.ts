@@ -3,21 +3,32 @@
  * checkout API (to enforce them), the confirmation page and the policies, so
  * they can never disagree.
  *
- *  - Karachi orders carry a flat delivery charge (DELIVERY_CHARGE).
+ *  - Karachi orders carry a delivery charge that depends on the area. The
+ *    website does not quote it: the team agrees it with the customer on
+ *    WhatsApp before dispatch (DELIVERY_QUOTE_NOTE).
  *  - Outside Karachi, orders go by cargo. The website charges no delivery:
  *    the customer pays the bilty (cargo) charges to the cargo company.
- *  - Cash on Delivery (Karachi only): the customer transfers the delivery
- *    charge in advance and pays for the goods on delivery.
- *  - Bank Transfer (anywhere): the customer transfers the full amount,
- *    delivery included, in advance.
+ *  - Cash on Delivery (Karachi only): the customer pays for the goods on
+ *    delivery; the delivery charge is settled as agreed on WhatsApp.
+ *  - Bank Transfer (anywhere): the customer transfers the order amount in
+ *    advance; delivery is added separately once agreed.
  *  - Either way the customer WhatsApps the payment receipt; the team confirms
  *    the order, dispatches it, and updates its status in the admin panel.
+ *
+ * A flat charge used to be quoted here. It was withdrawn because Karachi is
+ * too spread out for one number to be honest: the same fan costs very
+ * different amounts to deliver to Saddar and to Gadap.
  */
 
 export const COD_CITY = "Karachi";
 
-/** Flat delivery charge on Karachi orders (whole PKR). */
-export const DELIVERY_CHARGE = 250;
+/**
+ * What the customer is told in place of a price. Used anywhere the old flat
+ * charge was printed, so the checkout, the cart, the policies and the emails
+ * all say the same thing.
+ */
+export const DELIVERY_QUOTE_NOTE =
+  "Delivery charges inside Karachi depend on your area. We'll confirm the exact charge with you on WhatsApp before dispatch.";
 
 /** Shown wherever an order outside Karachi is priced. */
 export const BILTY_NOTE =
@@ -64,22 +75,38 @@ export function paymentMethodsFor(city: string, offered: string[]): string[] {
   return offered.filter((m) => m === "BANK_TRANSFER");
 }
 
-/** Delivery charged on the website: Karachi only; elsewhere bilty is paid to the cargo company. */
+/**
+ * Delivery charged on a website order: nothing, anywhere.
+ *
+ * In Karachi the charge is agreed by area on WhatsApp and recorded on the
+ * order by the admin; outside Karachi the customer pays bilty direct to the
+ * cargo company. Either way the website is not the place it gets priced.
+ */
 export function deliveryChargeFor(city: string | null | undefined): number {
-  return isKarachi(city) ? DELIVERY_CHARGE : 0;
+  // `city` is kept in the signature because callers pass one and the rule may
+  // well become city-dependent again; nothing reads it today.
+  void city;
+  return 0;
 }
 
-/** How much the customer must transfer in advance for a given method. */
-export function advanceAmount(method: string, total: number): number {
-  return method === "COD" ? DELIVERY_CHARGE : total;
+/**
+ * How much the customer must transfer in advance.
+ *
+ * `shipping` is the delivery charge recorded on the order, which is zero for a
+ * fresh website order and whatever the admin agreed for a confirmed one. It is
+ * passed in rather than read from a constant so that orders placed under the
+ * old flat charge still show the amount that was actually asked for.
+ */
+export function advanceAmount(method: string, total: number, shipping = 0): number {
+  return method === "COD" ? shipping : total;
 }
 
 /** One-line explanation of the advance payment, for a given method. */
 export function advanceInstruction(method: string, city?: string | null): string {
   if (method === "COD") {
-    return `Transfer the Rs. ${DELIVERY_CHARGE} delivery charge in advance; pay for your order in cash when it arrives.`;
+    return `Pay for your order in cash when it arrives. ${DELIVERY_QUOTE_NOTE}`;
   }
   return isKarachi(city)
-    ? `Transfer the full amount, including the Rs. ${DELIVERY_CHARGE} delivery charge, in advance.`
+    ? `Transfer the order amount in advance. ${DELIVERY_QUOTE_NOTE}`
     : "Transfer the full order amount in advance. Bilty (cargo) charges are paid by you to the cargo company.";
 }

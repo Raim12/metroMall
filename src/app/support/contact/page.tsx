@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Reveal } from "@/components/shared/reveal";
 import { WhatsAppIcon } from "@/components/shared/social-icons";
 import { WhatsAppBadge } from "@/components/shared/whatsapp-badge";
-import { SITE, WHATSAPP_LINK } from "@/lib/constants";
+import { OPENING_HOURS, SITE, WHATSAPP_LINK } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -108,6 +108,27 @@ export default function ContactPage() {
                 </Card>
               ))}
             </div>
+
+            {/* The full week, since the cards above only have room for a byline. */}
+            <Card className="mt-4 gap-0 p-6">
+              <h2 className="flex items-center gap-2.5 font-heading text-base font-extrabold">
+                <Clock className="size-4 text-brand-600" aria-hidden />
+                Opening hours
+              </h2>
+              <dl className="mt-4 space-y-2.5">
+                {OPENING_HOURS.map((row) => (
+                  <div key={row.days}>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 text-sm">
+                      <dt className="font-semibold text-ink-900">{row.days}</dt>
+                      <dd className="tabular-nums text-muted-foreground">{row.time}</dd>
+                    </div>
+                    {row.note ? (
+                      <p className="mt-0.5 text-xs text-brand-700">{row.note}</p>
+                    ) : null}
+                  </div>
+                ))}
+              </dl>
+            </Card>
           </Reveal>
 
           <Reveal direction="left" delay={0.08}>

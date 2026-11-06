@@ -89,7 +89,7 @@ export default async function AdminOrderPage({
         {order.status === "PENDING" && (order.paymentMethod === "COD" || order.paymentMethod === "BANK_TRANSFER") ? (
           <p className="mb-3 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-900">
             Awaiting the payment receipt on WhatsApp:{" "}
-            <strong>{formatPkr(advanceAmount(order.paymentMethod, order.total))}</strong>{" "}
+            <strong>{formatPkr(advanceAmount(order.paymentMethod, order.total, order.shipping))}</strong>{" "}
             {order.paymentMethod === "COD" ? "(delivery charge; rest is cash on delivery)" : "(full amount)"}.
             Mark <strong>Paid</strong> once the receipt is received, then <strong>Fulfilled</strong> after dispatch.
           </p>

@@ -126,7 +126,7 @@ const METHOD_LABEL: Record<string, string> = {
 export async function sendOrderConfirmation(order: OrderWithItems) {
   const isCod = order.paymentMethod === "COD";
   const isBankTransfer = order.paymentMethod === "BANK_TRANSFER";
-  const advance = advanceAmount(order.paymentMethod, order.total);
+  const advance = advanceAmount(order.paymentMethod, order.total, order.shipping);
 
   return send({
     to: order.email,

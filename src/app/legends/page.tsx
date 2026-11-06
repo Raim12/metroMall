@@ -4,7 +4,9 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 import { NotifyForm } from "@/components/legends/notify-form";
-import { HOUSE_BRANDS, SITE } from "@/lib/constants";
+import { HOUSE_BRANDS, SITE, productEnquiryLink } from "@/lib/constants";
+import { LEGENDS_PREVIEW } from "@/lib/legends-preview";
+import { formatPkr } from "@/lib/utils";
 import { BrandText } from "@/components/shared/brand-text";
 
 export const metadata: Metadata = {
@@ -97,6 +99,114 @@ export default async function LegendsPage({
             A quality new home appliance brand coming soon to <BrandText>{SITE.name}</BrandText> Be the first to know when it arrives.
           </p>
         </section>
+
+        {/* ----------------------------- First look --------------------------- */}
+        {LEGENDS_PREVIEW.length > 0 ? (
+          <section className="mt-16">
+            <div className="text-center">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.35em] text-[#8a6d12]">
+                First look
+              </p>
+              <h2 className="mt-3 font-heading text-2xl font-extrabold sm:text-3xl">
+                The first <span className="italic text-[#b8901c]">LEGENDS</span> models
+              </h2>
+              <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
+                Launch pricing, shown ahead of release. These are not on sale
+                yet — message us on WhatsApp to reserve one or ask about it.
+              </p>
+            </div>
+
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              {LEGENDS_PREVIEW.map((item) => (
+                <article
+                  key={item.slug}
+                  className="overflow-hidden rounded-3xl border border-[#e8dcb8] bg-white/70 shadow-sm backdrop-blur-sm"
+                >
+                  <div className="relative aspect-square bg-white">
+                    {item.video && item.image ? (
+                      /*
+                        Muted, looping and inline: this is product footage, not
+                        something to sit and watch, so it behaves like a moving
+                        photograph. `poster` holds the still until the first
+                        frame decodes, and a browser that blocks autoplay shows
+                        that still instead of an empty box.
+                      */
+                      <video
+                        src={item.video}
+                        poster={item.image}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
+                        aria-label={`${item.name} in motion`}
+                        className="size-full object-cover"
+                      />
+                    ) : item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        sizes="(min-width: 640px) 45vw, 92vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      /* Listed before its photo arrives: a labelled panel
+                         rather than an empty frame, so the gap looks intended. */
+                      <div className="grid h-full place-items-center bg-[#faf6ea] text-center">
+                        <span className="px-6 text-xs font-semibold uppercase tracking-[0.2em] text-[#b8901c]">
+                          Photo coming soon
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-5 sm:p-6">
+                    <h3 className="font-heading text-lg font-extrabold">{item.name}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {item.blurb}
+                    </p>
+
+                    {item.price ? (
+                      <p className="mt-4 flex flex-wrap items-baseline gap-2">
+                        {item.salePrice ? (
+                          <>
+                            <span className="font-heading text-2xl font-black text-ink-900">
+                              {formatPkr(item.salePrice)}
+                            </span>
+                            <span className="text-sm text-muted-foreground line-through">
+                              {formatPkr(item.price)}
+                            </span>
+                            <span className="rounded-full bg-[#c9a227] px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-ink-900">
+                              Save {formatPkr(item.price - item.salePrice)}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="font-heading text-2xl font-black text-ink-900">
+                            {formatPkr(item.price)}
+                          </span>
+                        )}
+                      </p>
+                    ) : (
+                      <p className="mt-4 text-sm font-semibold text-[#b8901c]">
+                        Price on enquiry
+                      </p>
+                    )}
+
+                    <a
+                      href={productEnquiryLink(`LEGENDS ${item.name}`)}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="mt-5 inline-flex items-center gap-2 rounded-xl bg-ink-900 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-ink-700"
+                    >
+                      Enquire on WhatsApp
+                    </a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* ------------------------------ Notify ----------------------------- */}
         <section

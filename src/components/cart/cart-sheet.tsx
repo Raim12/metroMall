@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ProductImage } from "@/components/product/product-image";
 import { useCartStore, selectSubtotal } from "@/store/cart-store";
-import { DELIVERY_CHARGE } from "@/lib/delivery";
 import { formatPkr, variantLabel } from "@/lib/utils";
 
 export function CartSheet() {
@@ -144,7 +143,7 @@ export function CartSheet() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-muted-foreground">
-                Karachi delivery Rs. {DELIVERY_CHARGE}, Cash on Delivery available.
+                Karachi delivery charged by area, Cash on Delivery available.
                 Other cities pay in full in advance, plus bilty charges to the cargo company.
               </p>
               <Separator className="my-3" />

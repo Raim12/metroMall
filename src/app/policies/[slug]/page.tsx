@@ -6,7 +6,7 @@ import { SITE } from "@/lib/constants";
 import {
   BANK_ACCOUNT,
   COD_CITY,
-  DELIVERY_CHARGE,
+  DELIVERY_QUOTE_NOTE,
   MAX_DELIVERY_WORKING_DAYS,
   RECEIPT_NOTE,
 } from "@/lib/delivery";
@@ -55,7 +55,7 @@ const POLICIES: Record<
       },
       {
         heading: "Installed products and warranty",
-        body: "Once a product has been installed it is covered by its official brand warranty rather than the return policy. Warranty periods depend on the brand — from 1 year, up to 5–10 years for some brands such as Lahore Fan. We register warranty complaints with the brand's official service centre on your behalf, or guide you to the brand's direct support; repairs are carried out by the brand's authorised technicians.",
+        body: "Once a product has been installed it is covered by its official brand warranty rather than the return policy. Warranty periods depend on the brand and the product — from 1 year up to 5–10 years. We register warranty complaints with the brand's official service centre on your behalf, or guide you to the brand's direct support; repairs are carried out by the brand's authorised technicians.",
       },
       {
         heading: "Refunds",
@@ -65,15 +65,15 @@ const POLICIES: Record<
   },
   delivery: {
     title: "Delivery Policy",
-    intro: `We deliver across Pakistan. In ${COD_CITY}, a delivery charge of Rs. ${DELIVERY_CHARGE} applies to every order. Outside ${COD_CITY}, orders are sent by cargo and the bilty (cargo) charges are paid by you to the cargo company.`,
+    intro: `We deliver across Pakistan. In ${COD_CITY}, the delivery charge depends on your area, so we confirm it with you on WhatsApp before dispatch rather than quoting one figure for the whole city. Outside ${COD_CITY}, orders are sent by cargo and the bilty (cargo) charges are paid by you to the cargo company.`,
     sections: [
       {
         heading: "Cash on Delivery (Karachi only)",
-        body: `Transfer the Rs. ${DELIVERY_CHARGE} delivery charge in advance, then pay for your order in cash when it arrives.`,
+        body: `Pay for your order in cash when it arrives. ${DELIVERY_QUOTE_NOTE}`,
       },
       {
         heading: "Full payment in advance (all cities)",
-        body: `Transfer the full order amount in advance (plus the Rs. ${DELIVERY_CHARGE} delivery charge in ${COD_CITY}). Outside ${COD_CITY}, this is the only payment option, and the bilty charges are paid by you to the cargo company.`,
+        body: `Transfer the full order amount in advance. In ${COD_CITY} the delivery charge is agreed with you on WhatsApp and added separately. Outside ${COD_CITY}, this is the only payment option, and the bilty charges are paid by you to the cargo company.`,
       },
       {
         heading: "Bank details",

@@ -34,9 +34,10 @@ export const SITE = {
   whatsapp: "+92 300 3585100",
   /** Digits only — used to build the wa.me link. */
   whatsappDigits: "923003585100",
-  hours: "Sat – Thurs, 10:30 AM – 8:00 PM PKT",
+  /** One-line form, for a byline next to a phone number. */
+  hours: "Mon – Fri, 10:30 AM – 8:00 PM · Sun, 11:30 AM – 5:00 PM PKT",
   /** Short form for running text, e.g. FAQs. */
-  hoursShort: "10:30 AM to 8:00 PM",
+  hoursShort: "10:30 AM to 8:00 PM, Monday to Friday",
   address: {
     line1: "Opp. Session Court, Gate # 1",
     line2: "M.A. Jinnah Road, Karachi, Pakistan",
@@ -56,6 +57,38 @@ export const SITE = {
     "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.274103878947!2d67.00723289999999!3d24.8544862!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33e04f81cb153%3A0x94fc163516a37d20!2sMetro%20Electric%20Company!5e0!3m2!1sen!2s!4v1791899672377!5m2!1sen!2s",
   mapLink:
     "https://www.google.com/maps/place/Metro+Electric+Company/@24.8544862,67.0072329,17z/data=!3m1!4b1!4m6!3m5!1s0x3eb33e04f81cb153:0x94fc163516a37d20!8m2!3d24.8544862!4d67.0072329!16s%2Fg%2F1td63smr",
+} as const;
+
+/**
+ * Opening hours, day by day, so the contact page and the wholesale page can
+ * show the real schedule rather than a flattened one-liner.
+ *
+ * Friday keeps the same hours as the rest of the week but closes over Jummah
+ * prayers, which is worth stating explicitly - a customer who turns up at 1 PM
+ * on a Friday to a closed shop does not come back.
+ */
+export const OPENING_HOURS: { days: string; time: string; note?: string }[] = [
+  { days: "Monday – Thursday", time: "10:30 AM – 8:00 PM" },
+  {
+    days: "Friday",
+    time: "10:30 AM – 8:00 PM",
+    note: "Closed 12:40 PM – 1:40 PM for Jummah prayers",
+  },
+  { days: "Sunday", time: "11:30 AM – 5:00 PM" },
+];
+
+/**
+ * The headline offer, shown in the announcement strip above the header.
+ *
+ * Kept here rather than inline so the figure is changed in one place - it will
+ * be edited far more often than the markup around it. Set `active: false` to
+ * pull the strip without deleting the copy.
+ */
+export const PROMO = {
+  active: true,
+  headline: "Up to 12% off",
+  detail: "across fans and home appliances",
+  href: "/catalogue",
 } as const;
 
 export const WHATSAPP_LINK = `https://wa.me/${SITE.whatsappDigits}?text=${encodeURIComponent(
@@ -374,7 +407,6 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "star-co", name: "Starco Fans", website: "" },
   { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
   { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
-  { slug: "lahore", name: "Lahore Fan", website: "" },
   { slug: "wahid", name: "Wahid Fan", website: "" },
   { slug: "ricon", name: "Ricon Fan", website: "" },
   // Stocked soon - no products yet, so <BrandStrip /> shows these as
@@ -390,7 +422,17 @@ export const UPCOMING_BRANDS = ["jackpot", "westpoint", "star-co", "xpert", "gla
  * Brands that are stocked and shoppable, but have more models on the way. The
  * tile keeps its product count and its link; it just carries a note.
  */
-export const EXPANDING_BRANDS = ["nasgas"] as const;
+export const EXPANDING_BRANDS = [] as const;
+
+/**
+ * Stocked brands flagged "Coming soon" on their tile.
+ *
+ * Distinct from UPCOMING_BRANDS: those have no stock at all and their tile
+ * does not link anywhere. These keep every product, their count and their
+ * catalogue link - the badge is a signal about the brand's standing with us,
+ * not about whether it can be bought.
+ */
+export const SOON_BADGE_BRANDS = ["nasgas"] as const;
 
 export const brandName = (slug: string) => BRANDS.find((b) => b.slug === slug)?.name ?? slug;
 
@@ -476,7 +518,6 @@ export const FAN_BRANDS = [
   "orient",
   "voldam",
   "wester",
-  "lahore",
   "wahid",
   "ricon",
 ];
@@ -540,7 +581,7 @@ export const SUPPORT_FAQS: Record<
   warranty: [
     {
       q: "What does the warranty cover?",
-      a: "Every product carries its brand's official warranty. The period depends on the brand and the product — from 1 year, up to 5–10 years for some brands such as Lahore Fan. Coverage and terms are set by each brand.",
+      a: "Every product carries its brand's official warranty. The period depends on the brand and the product — from 1 year up to 5–10 years. Coverage and terms are set by each brand.",
     },
     {
       q: "How do I claim warranty service?",
