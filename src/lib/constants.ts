@@ -407,7 +407,7 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "star-co", name: "Starco Fans", website: "" },
   { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
   { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
-  { slug: "wahid", name: "Wahid Fan", website: "" },
+  { slug: "wahid", name: "Wahid Fans", website: "https://wahidfans.com" },
   { slug: "ricon", name: "Ricon Fan", website: "" },
   // Stocked soon - no products yet, so <BrandStrip /> shows these as
   // "Coming soon" rather than linking to an empty catalogue.

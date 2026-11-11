@@ -24,6 +24,7 @@ export const BRAND_LOGOS: Record<string, string> = {
   "super-asia": "/brands/logos/super-asia.webp",
   tamoor: "/brands/logos/tamoor.webp",
   voldam: "/brands/logos/voldam.webp",
+  wahid: "/brands/logos/wahid.webp",
   wester: "/brands/logos/wester.webp",
 };
 
