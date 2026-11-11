@@ -21,20 +21,22 @@ export function AnnouncementBar() {
       {PROMO.active ? (
         <Link
           href={PROMO.href}
-          className="group block bg-gradient-to-r from-brand-700 via-brand-600 to-brand-700 text-white"
+          className="group relative block overflow-hidden bg-gradient-to-r from-brand-700 via-brand-600 to-brand-700 text-white"
         >
-          <div className="mx-auto flex w-full max-w-7xl items-center justify-center gap-2.5 px-4 py-2 text-center text-xs sm:text-sm">
-            {/*
-              The flashing dot carries the urgency, so the text itself can stay
-              still - a whole blinking sentence is hard to read and harder to
-              ignore.
-            */}
+          {/* Sweeps across the whole strip every few seconds. */}
+          <span className="promo-sheen" aria-hidden />
+
+          <div className="relative mx-auto flex w-full max-w-7xl items-center justify-center gap-2.5 px-4 py-2 text-center text-xs sm:text-sm">
             <span
               className="coming-soon-blink size-2 shrink-0 rounded-full bg-white"
               aria-hidden
             />
             <span>
-              <span className="font-heading font-black uppercase italic tracking-wide">
+              {/*
+                Pulses between full and near-full opacity rather than blinking
+                out: the offer stays readable at every point in the cycle.
+              */}
+              <span className="promo-pulse font-heading font-black uppercase italic tracking-wide">
                 {PROMO.headline}
               </span>{" "}
               <span className="text-white/90">{PROMO.detail}</span>

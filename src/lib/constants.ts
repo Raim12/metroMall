@@ -86,8 +86,8 @@ export const OPENING_HOURS: { days: string; time: string; note?: string }[] = [
  */
 export const PROMO = {
   active: true,
-  headline: "Up to 12% off",
-  detail: "across fans and home appliances",
+  headline: "Upto 12% off",
+  detail: "on selected items",
   href: "/catalogue",
 } as const;
 

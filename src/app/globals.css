@@ -517,3 +517,85 @@
 .product-rail--reverse {
   animation-direction: reverse;
 }
+
+/*
+ * Promo strip attention effects.
+ *
+ * Two layers rather than one: a sheen that sweeps the whole bar every few
+ * seconds, and a blink on the headline itself. Neither touches layout, so
+ * nothing around them reflows.
+ *
+ * The sheen is transform-only and stays on the compositor. The blink also
+ * animates colour and text-shadow, which do repaint - but on one short text
+ * node twice every 1.4s, which is immaterial next to the attention it buys.
+ */
+@keyframes promo-sheen {
+  0% {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  /* Long tail: one sweep, then a pause before the next. */
+  55%,
+  100% {
+    transform: translateX(320%) skewX(-18deg);
+  }
+}
+
+.promo-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 28%;
+  background: linear-gradient(
+    90deg,
+    rgb(255 255 255 / 0) 0%,
+    rgb(255 255 255 / 0.38) 50%,
+    rgb(255 255 255 / 0) 100%
+  );
+  animation: promo-sheen 4.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/*
+ * The headline blink. Swings hard - full white down to a dim amber - so it
+ * reads as flashing rather than breathing.
+ *
+ * `steps(1, end)` with `alternate` snaps between the two states instead of
+ * easing, which is what makes it read as a blink rather than a fade. At 0.7s
+ * per half that is one flash every 1.4s - about 0.7Hz, comfortably under the
+ * 3Hz ceiling WCAG 2.3.1 sets for flashing content - and it never reaches zero
+ * opacity, so the offer stays legible throughout. Colour does most of the
+ * work: white to amber pops against the orange strip far more than dimming
+ * alone, without the text ever disappearing.
+ */
+@keyframes promo-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    color: #ffffff;
+    transform: scale(1.06);
+    text-shadow: 0 0 14px rgb(255 255 255 / 0.65);
+  }
+  50% {
+    opacity: 0.55;
+    color: #ffe066;
+    transform: scale(1);
+    text-shadow: 0 0 0 rgb(255 255 255 / 0);
+  }
+}
+
+.promo-pulse {
+  animation: promo-pulse 0.7s steps(1, end) infinite alternate;
+  /* Scaling inline text nudges neighbours; a block box scales in place. */
+  display: inline-block;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-sheen,
+  .promo-pulse {
+    animation: none;
+  }
+  .promo-sheen {
+    display: none;
+  }
+}
