@@ -400,14 +400,14 @@ export const BRANDS: { slug: string; name: string; website: string }[] = [
   { slug: "tamoor", name: "Tamoor Fans", website: "https://www.tamoorfans.com" },
   { slug: "gfc", name: "GFC", website: "https://gfcfans.com" },
   { slug: "wester", name: "Wester Fans", website: "https://westerfanofficial.pk" },
+  { slug: "wahid", name: "Wahid Fans", website: "https://wahidfans.com" },
   { slug: "voldam", name: "Voldam", website: "https://voldam.com.pk" },
-  { slug: "orient", name: "Orient", website: "https://www.orientappliances.pk" },
   { slug: "jackpot", name: "Jackpot", website: "https://www.jackpotappliances.pk" },
   { slug: "westpoint", name: "West Point", website: "https://westpoint.pk" },
   { slug: "star-co", name: "Starco Fans", website: "" },
   { slug: "nasgas", name: "NasGas", website: "https://nasgas.com" },
   { slug: "hanco", name: "Hanco", website: "https://www.hanco.pk" },
-  { slug: "wahid", name: "Wahid Fans", website: "https://wahidfans.com" },
+  { slug: "orient", name: "Orient", website: "https://www.orientappliances.pk" },
   { slug: "ricon", name: "Ricon Fan", website: "" },
   // Stocked soon - no products yet, so <BrandStrip /> shows these as
   // "Coming soon" rather than linking to an empty catalogue.
